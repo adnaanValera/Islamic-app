@@ -28,6 +28,8 @@ let latestPrayerTimes = [];
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
+const nextPrayerName = document.getElementById("next-prayer-name");
+const nextPrayerTime = document.getElementById("next-prayer-time");
 const prayerStatus = document.getElementById("prayer-status");
 const lastUpdated = document.getElementById("last-updated");
 const malawiTime = document.getElementById("malawi-time");
@@ -36,6 +38,7 @@ const refreshButton = document.getElementById("refresh-prayers");
 const notificationButton = document.getElementById("enable-notifications");
 const downloadAppButton = document.getElementById("download-app");
 const prayerActions = document.getElementById("prayer-actions");
+const prayerChecklistStorageKey = "nooriva-prayer-checklist";
 
 function getMalawiDateParts() {
   const formatter = new Intl.DateTimeFormat("en-GB", {
@@ -64,19 +67,72 @@ function updateMalawiClock() {
   }
 }
 
+function getChecklistState() {
+  const { dateKey } = getMalawiDateParts();
+  const raw = localStorage.getItem(prayerChecklistStorageKey);
+
+  if (!raw) {
+    return { dateKey, checked: {} };
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+
+    if (parsed.dateKey !== dateKey) {
+      return { dateKey, checked: {} };
+    }
+
+    return {
+      dateKey,
+      checked: parsed.checked ?? {},
+    };
+  } catch (error) {
+    return { dateKey, checked: {} };
+  }
+}
+
+function saveChecklistState(checked) {
+  const { dateKey } = getMalawiDateParts();
+  localStorage.setItem(
+    prayerChecklistStorageKey,
+    JSON.stringify({
+      dateKey,
+      checked,
+    }),
+  );
+}
+
+function resetChecklistIfNeeded() {
+  const checklist = getChecklistState();
+  saveChecklistState(checklist.checked);
+}
+
 function renderPrayerTimes() {
   if (!prayerTimeList) {
     return;
   }
 
   const { timeKey } = getMalawiDateParts();
+  const checklist = getChecklistState();
   const nextPrayer =
     latestPrayerTimes.find((prayer) => prayer.athan >= timeKey) ?? latestPrayerTimes[0];
+
+  if (nextPrayerName) {
+    nextPrayerName.textContent = nextPrayer?.label ?? "Prayer times";
+  }
+
+  if (nextPrayerTime) {
+    nextPrayerTime.textContent = nextPrayer?.athan ?? "--:--";
+  }
 
   prayerTimeList.innerHTML = latestPrayerTimes
     .map(
       (prayer) => `
         <div class="prayer-time-row${nextPrayer?.label === prayer.label ? " is-next" : ""}">
+          <label class="prayer-check" aria-label="Mark ${prayer.label} as completed">
+            <input type="checkbox" data-prayer-check="${prayer.label}" ${checklist.checked?.[prayer.label] ? "checked" : ""} />
+            <span></span>
+          </label>
           <span>${prayer.label}</span>
           <strong>${prayer.athan}</strong>
           <strong>${prayer.salah}</strong>
@@ -84,6 +140,14 @@ function renderPrayerTimes() {
       `,
     )
     .join("");
+
+  prayerTimeList.querySelectorAll("[data-prayer-check]").forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      const current = getChecklistState();
+      current.checked[event.target.dataset.prayerCheck] = event.target.checked;
+      saveChecklistState(current.checked);
+    });
+  });
 }
 
 function renderJumuahTimes(times) {
@@ -267,6 +331,7 @@ if (downloadAppButton) {
 }
 
 updateMalawiClock();
+resetChecklistIfNeeded();
 updateNotificationStatus();
 updateActionVisibility();
 registerServiceWorker();
@@ -286,6 +351,9 @@ window.addEventListener("nooriva:installed", () => {
   updateActionVisibility();
 });
 
-setInterval(updateMalawiClock, 1000);
+setInterval(() => {
+  updateMalawiClock();
+  resetChecklistIfNeeded();
+}, 1000);
 setInterval(maybeSendPrayerNotification, 15000);
 setInterval(loadPrayerTimes, 300000);

@@ -411,6 +411,7 @@ h3 {
 .prayer-page {
   display: grid;
   gap: 24px;
+  padding-bottom: 88px;
 }
 
 .prayer-hero {
@@ -447,6 +448,34 @@ h3 {
 
 .prayer-table-card-hero {
   align-self: stretch;
+}
+
+.next-prayer-banner {
+  display: grid;
+  gap: 4px;
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(191, 149, 77, 0.16);
+  background: linear-gradient(135deg, rgba(197, 150, 78, 0.18), rgba(37, 68, 60, 0.08));
+}
+
+.next-prayer-label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.next-prayer-name {
+  color: var(--text-strong);
+  font-size: 1.35rem;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.next-prayer-time {
+  color: var(--gold-soft);
+  font-size: 0.96rem;
+  font-weight: 800;
 }
 
 .prayer-table-section {
@@ -502,7 +531,7 @@ h3 {
 .prayer-table-head,
 .prayer-time-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: 40px minmax(0, 1fr) auto auto;
   gap: 14px;
   align-items: center;
 }
@@ -541,6 +570,51 @@ h3 {
   color: var(--gold-soft);
   min-width: 56px;
   text-align: right;
+}
+
+.prayer-check {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.prayer-check input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.prayer-check span {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(191, 149, 77, 0.55);
+  background: rgba(255, 255, 255, 0.66);
+  display: inline-block;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.prayer-check input:checked + span {
+  background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
+  border-color: #bc8740;
+  transform: scale(1.02);
+}
+
+.prayer-check input:checked + span::after {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  color: #fffaf2;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+  width: 100%;
+  height: 100%;
 }
 
 .prayer-time-row.is-next {
@@ -599,6 +673,10 @@ h3 {
   text-align: right;
   color: var(--gold-soft);
   font-size: 1.05rem;
+}
+
+.mobile-bottom-nav {
+  display: none;
 }
 
 @media (max-width: 960px) {
@@ -715,7 +793,7 @@ h3 {
 
   .prayer-table-head,
   .prayer-time-row {
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: 34px minmax(0, 1fr) auto auto;
     gap: 10px;
     padding-left: 16px;
     padding-right: 16px;
@@ -725,6 +803,14 @@ h3 {
     padding-top: 14px;
     padding-bottom: 14px;
     font-size: 0.72rem;
+  }
+
+  .next-prayer-banner {
+    padding: 14px 16px;
+  }
+
+  .next-prayer-name {
+    font-size: 1.2rem;
   }
 
   .prayer-table-head-jumuah,
@@ -761,6 +847,11 @@ h3 {
     min-width: 48px;
   }
 
+  .prayer-check span {
+    width: 20px;
+    height: 20px;
+  }
+
   .prayer-meta-pill {
     min-width: 0;
     padding: 11px 12px;
@@ -789,6 +880,15 @@ h3 {
 
   .site-header {
     padding: 4px 0 12px;
+  }
+
+  .prayer-mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding: 8px 0 10px;
+    background: linear-gradient(180deg, rgba(252, 248, 241, 0.96), rgba(252, 248, 241, 0.88));
+    backdrop-filter: blur(14px);
   }
 
   .site-nav {
@@ -832,7 +932,7 @@ h3 {
 
   .prayer-table-head,
   .prayer-time-row {
-    grid-template-columns: 1.1fr 0.9fr 0.9fr;
+    grid-template-columns: 30px 1.05fr 0.88fr 0.88fr;
   }
 
   .prayer-table-head,
@@ -853,8 +953,57 @@ h3 {
     min-width: 42px;
   }
 
+  .next-prayer-banner {
+    gap: 2px;
+  }
+
+  .next-prayer-label {
+    font-size: 0.7rem;
+  }
+
+  .next-prayer-name {
+    font-size: 1.1rem;
+  }
+
+  .next-prayer-time {
+    font-size: 0.9rem;
+  }
+
   .timing-row {
     grid-template-columns: 1fr auto;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(252, 248, 241, 0.92);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 16px 30px rgba(79, 66, 39, 0.12);
+  }
+
+  .mobile-bottom-nav a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .mobile-bottom-nav a[aria-current="page"] {
+    background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
+    color: #fffaf2;
   }
 
   .footer-brand {
@@ -863,5 +1012,9 @@ h3 {
 
   .footer-logo {
     width: 94px;
+  }
+
+  .site-footer {
+    padding-bottom: 72px;
   }
 }

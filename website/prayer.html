@@ -22,7 +22,7 @@
   </head>
   <body>
     <div class="page-shell page-shell-prayer">
-      <header class="site-header">
+      <header class="site-header prayer-mobile-header">
         <div class="brand-lockup">
           <a href="./index.html" aria-label="Back to Nooriva home">
             <img
@@ -61,7 +61,13 @@
           </div>
 
           <div class="prayer-table-card prayer-table-card-hero">
+            <div class="next-prayer-banner" id="next-prayer-banner">
+              <span class="next-prayer-label">Next prayer</span>
+              <strong class="next-prayer-name" id="next-prayer-name">Loading...</strong>
+              <span class="next-prayer-time" id="next-prayer-time">--:--</span>
+            </div>
             <div class="prayer-table-head">
+              <span>Done</span>
               <span>Prayer</span>
               <span>Adhan</span>
               <span>Salah</span>
@@ -69,6 +75,10 @@
 
             <div class="prayer-time-list" id="prayer-time-list">
               <div class="prayer-time-row">
+                <label class="prayer-check" aria-label="Mark Fajr as completed">
+                  <input type="checkbox" />
+                  <span></span>
+                </label>
                 <span>Fajr</span>
                 <strong>--:--</strong>
                 <strong>--:--</strong>
@@ -136,6 +146,12 @@
             </div>
           </div>
         </section>
+
+        <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html" aria-current="page">Prayer</a>
+          <a href="./index.html#contact">Contact</a>
+        </nav>
       </main>
     </div>
 
