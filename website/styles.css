@@ -784,6 +784,9 @@ h3 {
   display: grid;
   place-items: center;
   padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(197, 150, 78, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
 }
 
 .qibla-compass-shell {
@@ -791,6 +794,19 @@ h3 {
   justify-items: center;
   gap: 14px;
   width: 100%;
+}
+
+.qibla-premium-shell {
+  gap: 16px;
+}
+
+.qibla-topline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .qibla-target-label {
@@ -801,6 +817,32 @@ h3 {
   text-transform: uppercase;
 }
 
+.qibla-mode-badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 149, 77, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--green-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.qibla-compass-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.qibla-compass-glow {
+  position: absolute;
+  width: min(320px, 90vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 150, 78, 0.24), transparent 62%);
+  filter: blur(14px);
+}
+
 .qibla-compass {
   position: relative;
   width: min(280px, 78vw);
@@ -808,7 +850,9 @@ h3 {
   border-radius: 50%;
   border: 1px solid var(--line);
   background: radial-gradient(circle at center, rgba(255, 255, 255, 0.82), rgba(245, 236, 223, 0.96));
-  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 0 0 12px rgba(255, 255, 255, 0.3),
+    0 24px 44px rgba(79, 66, 39, 0.12);
 }
 
 .qibla-north-mark {
@@ -875,7 +919,7 @@ h3 {
   width: 18px;
   height: 74px;
   background: linear-gradient(180deg, #25443c 0%, #17312a 100%);
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
 .qibla-center-dot::before {
@@ -895,9 +939,30 @@ h3 {
   margin: 0;
   max-width: 24ch;
   color: var(--text-strong);
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-weight: 700;
   text-align: center;
+}
+
+.qibla-guidance-card {
+  width: min(100%, 340px);
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 149, 77, 0.16);
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.qibla-guidance-card strong {
+  color: var(--text-strong);
+  font-size: 0.94rem;
+}
+
+.qibla-guidance-card span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
 .standalone-app .home-mobile-header .site-nav {
@@ -1027,6 +1092,11 @@ h3 {
 
   .qibla-hero-card {
     padding: 18px;
+  }
+
+  .qibla-mode-badge {
+    width: 100%;
+    text-align: center;
   }
 
   .prayer-table-head,

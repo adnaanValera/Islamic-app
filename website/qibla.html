@@ -44,7 +44,11 @@
         <section class="prayer-hero">
           <div class="prayer-hero-copy">
             <p class="eyebrow">Qibla direction</p>
-            <h1>Face the Kaaba with a calm, clear live compass.</h1>
+            <h1>Face the Kaaba with a calm, premium live compass.</h1>
+            <p class="hero-text">
+              Nooriva blends live direction, alignment confidence, and practical fallback guidance
+              so the Qibla still feels usable on real devices in real rooms.
+            </p>
             <div class="hero-actions qibla-actions" id="qibla-actions">
               <button class="button button-primary" id="enable-qibla" type="button">
                 Enable qibla
@@ -53,20 +57,36 @@
             </div>
             <div class="status-stack">
               <p class="status-line" id="qibla-status">Allow location and motion access to begin.</p>
+              <p class="status-line status-line-soft" id="qibla-guidance-text">
+                Hold your phone flat and away from strong magnets or metal surfaces for the
+                cleanest reading.
+              </p>
             </div>
           </div>
 
           <div class="prayer-table-card prayer-table-card-hero qibla-hero-card">
-            <div class="qibla-compass-shell">
-              <div class="qibla-target-label">Kaaba direction</div>
-              <div class="qibla-compass">
-                <div class="qibla-ring"></div>
-                <div class="qibla-north-mark">N</div>
-                <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
-                <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
-                <div class="qibla-center-dot"></div>
+            <div class="qibla-compass-shell qibla-premium-shell">
+              <div class="qibla-topline">
+                <div class="qibla-target-label">Kaaba direction</div>
+                <div class="qibla-mode-badge" id="qibla-mode">Awaiting sensors</div>
+              </div>
+              <div class="qibla-compass-frame">
+                <div class="qibla-compass-glow"></div>
+                <div class="qibla-compass">
+                  <div class="qibla-ring"></div>
+                  <div class="qibla-north-mark">N</div>
+                  <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
+                  <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
+                  <div class="qibla-center-dot"></div>
+                </div>
               </div>
               <p class="qibla-angle" id="qibla-angle">Calculating...</p>
+              <div class="qibla-guidance-card">
+                <strong id="qibla-guidance-title">Best results</strong>
+                <span id="qibla-guidance-detail">
+                  Keep the gold Qibla arrow and the dark phone arrow aligned.
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -89,6 +109,10 @@
               <span>Accuracy guide</span>
               <strong id="qibla-accuracy">Needs calibration</strong>
             </div>
+            <div class="prayer-meta-pill">
+              <span>Fallback mode</span>
+              <strong id="qibla-fallback">Compass first</strong>
+            </div>
           </div>
         </section>
 
@@ -102,7 +126,7 @@
             <article class="feature-card">
               <p>02</p>
               <h3>Compass access</h3>
-              <span>Some phones need motion permission before the compass can rotate correctly.</span>
+              <span>Some phones need motion permission first, while others expose only partial sensor data.</span>
             </article>
             <article class="feature-card">
               <p>03</p>
@@ -113,6 +137,16 @@
               <p>04</p>
               <h3>What the arrows mean</h3>
               <span>The gold arrow shows the Qibla. The dark arrow follows your phone heading so you can line them up.</span>
+            </article>
+            <article class="feature-card">
+              <p>05</p>
+              <h3>If your compass is weak</h3>
+              <span>Nooriva falls back to bearing mode, showing the exact Qibla angle from north so you can still orient yourself manually.</span>
+            </article>
+            <article class="feature-card">
+              <p>06</p>
+              <h3>Trust the environment</h3>
+              <span>Elevators, speakers, cars, metal desks, and phone cases with magnets can all distort readings even when permissions are allowed.</span>
             </article>
           </div>
         </section>

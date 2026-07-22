@@ -1,4 +1,7 @@
 const prayerApiUrl = "/api/prayer-times";
+const pushPublicKeyApiUrl = "/api/push-public-key";
+const pushSubscribeApiUrl = "/api/push-subscribe";
+const pushUnsubscribeApiUrl = "/api/push-unsubscribe";
 const malawiTimeZone = "Africa/Blantyre";
 
 const prayers = [
@@ -25,6 +28,8 @@ const startTimings = [
 
 let latestPrayerTimes = [];
 let nextPrayerNotificationTimeout = null;
+let serviceWorkerRegistration = null;
+let pushPublicKey = "";
 
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
@@ -334,7 +339,99 @@ function updateActionVisibility() {
 }
 
 async function registerServiceWorker() {
-  return window.noorivaInstall?.registerServiceWorker?.();
+  serviceWorkerRegistration = await window.noorivaInstall?.registerServiceWorker?.();
+  return serviceWorkerRegistration;
+}
+
+function base64UrlToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = window.atob(base64);
+  const output = new Uint8Array(raw.length);
+
+  for (let index = 0; index < raw.length; index += 1) {
+    output[index] = raw.charCodeAt(index);
+  }
+
+  return output;
+}
+
+async function loadPushPublicKey() {
+  try {
+    const response = await fetch(pushPublicKeyApiUrl, { cache: "no-store" });
+
+    if (!response.ok) {
+      return "";
+    }
+
+    const payload = await response.json();
+    pushPublicKey = payload?.configured ? payload?.publicKey ?? "" : "";
+    return pushPublicKey;
+  } catch (error) {
+    return "";
+  }
+}
+
+async function subscribeToBackendPush() {
+  if (
+    !("serviceWorker" in navigator) ||
+    !("PushManager" in window) ||
+    Notification.permission !== "granted"
+  ) {
+    return false;
+  }
+
+  const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
+
+  if (!registration) {
+    return false;
+  }
+
+  const publicKey = pushPublicKey || (await loadPushPublicKey());
+
+  if (!publicKey) {
+    return false;
+  }
+
+  let subscription = await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: base64UrlToUint8Array(publicKey),
+    });
+  }
+
+  const response = await fetch(pushSubscribeApiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ subscription }),
+  });
+
+  return response.ok;
+}
+
+async function removeBackendPushSubscription() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
+  const subscription = await registration?.pushManager?.getSubscription?.();
+
+  if (!subscription) {
+    return;
+  }
+
+  await fetch(pushUnsubscribeApiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ endpoint: subscription.endpoint }),
+  }).catch(() => undefined);
 }
 
 async function showPrayerNotification(prayer) {
@@ -508,7 +605,10 @@ if (notificationButton) {
     updateActionVisibility();
 
     if (permission === "granted") {
-      prayerStatus.textContent = "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
+      const pushSubscribed = await subscribeToBackendPush();
+      prayerStatus.textContent = pushSubscribed
+        ? "Notifications enabled. Nooriva will use installed-app reminders and server push for stronger closed-app delivery."
+        : "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
       await maybeSendPrayerNotification();
       scheduleNextPrayerNotification();
     }
@@ -533,7 +633,12 @@ updateMalawiClock();
 resetChecklistIfNeeded();
 updateNotificationStatus();
 updateActionVisibility();
-registerServiceWorker();
+registerServiceWorker().then(() => {
+  if (Notification.permission === "granted") {
+    subscribeToBackendPush().catch(() => undefined);
+  }
+});
+loadPushPublicKey();
 loadPrayerTimes();
 
 window.addEventListener("nooriva:install-available", () => {
@@ -556,6 +661,9 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
     maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
+    if (Notification.permission === "granted") {
+      subscribeToBackendPush().catch(() => undefined);
+    }
   }
 });
 
