@@ -481,7 +481,7 @@ h3 {
 .prayer-table-head,
 .prayer-time-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 14px;
   align-items: center;
 }
@@ -518,6 +518,8 @@ h3 {
 .prayer-time-row strong {
   font-size: 1.05rem;
   color: var(--gold-soft);
+  min-width: 56px;
+  text-align: right;
 }
 
 .prayer-time-row.is-next {
@@ -578,7 +580,7 @@ h3 {
 
   .prayer-table-head,
   .prayer-time-row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
   }
 
   .prayer-section-meta {

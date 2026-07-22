@@ -2,18 +2,17 @@ const prayerApiUrl = "/api/prayer-times";
 const malawiTimeZone = "Africa/Blantyre";
 
 const prayers = [
-  { key: "fajrAthan", label: "Fajr" },
-  { key: "dhuhrAthan", label: "Zuhr" },
-  { key: "asrAthan", label: "Asr" },
-  { key: "maghribAthan", label: "Maghrib" },
-  { key: "eshaAthan", label: "Esha" },
+  { athanKey: "fajrAthan", salahKey: "fajrJamaah", label: "Fajr" },
+  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", label: "Zuhr" },
+  { athanKey: "asrAthan", salahKey: "asrJamaah", label: "Asr" },
+  { athanKey: "maghribAthan", salahKey: "maghribJamaah", label: "Maghrib" },
+  { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha" },
 ];
 
 let latestPrayerTimes = [];
 
 const prayerTimeList = document.getElementById("prayer-time-list");
 const prayerStatus = document.getElementById("prayer-status");
-const notificationStatus = document.getElementById("notification-status");
 const lastUpdated = document.getElementById("last-updated");
 const malawiTime = document.getElementById("malawi-time");
 const boardLocation = document.getElementById("board-location");
@@ -63,7 +62,8 @@ function renderPrayerTimes() {
       (prayer) => `
         <div class="prayer-time-row${nextPrayer?.label === prayer.label ? " is-next" : ""}">
           <span>${prayer.label}</span>
-          <strong>${prayer.time}</strong>
+          <strong>${prayer.athan}</strong>
+          <strong>${prayer.salah}</strong>
         </div>
       `,
     )
@@ -71,34 +71,26 @@ function renderPrayerTimes() {
 }
 
 function updateNotificationStatus() {
-  if (!notificationStatus || !notificationButton) {
+  if (!notificationButton) {
     return;
   }
 
   if (!("Notification" in window)) {
-    notificationStatus.textContent =
-      "This browser does not support notifications.";
     notificationButton.disabled = true;
     return;
   }
 
   if (Notification.permission === "granted") {
-    notificationStatus.textContent =
-      "Notifications are on for this device when the site is open or installed.";
     notificationButton.textContent = "Notifications enabled";
     notificationButton.disabled = true;
     return;
   }
 
   if (Notification.permission === "denied") {
-    notificationStatus.textContent =
-      "Notifications are blocked in this browser. You can re-enable them in browser settings.";
     notificationButton.textContent = "Notifications blocked";
     notificationButton.disabled = true;
     return;
   }
-
-  notificationStatus.textContent = "Notifications are off.";
 }
 
 async function loadPrayerTimes() {
@@ -117,7 +109,8 @@ async function loadPrayerTimes() {
 
     latestPrayerTimes = prayers.map((prayer) => ({
       label: prayer.label,
-      time: data?.[prayer.key] ?? "--:--",
+      athan: data?.[prayer.athanKey] ?? "--:--",
+      salah: data?.[prayer.salahKey] ?? "--:--",
     }));
 
     renderPrayerTimes();
@@ -130,10 +123,9 @@ async function loadPrayerTimes() {
       lastUpdated.textContent = data?.last_updated ?? "Live source available";
     }
 
-    prayerStatus.textContent = `Live times loaded from ${meta?.masjid ?? "the masjid board"}.`;
+    prayerStatus.textContent = "Prayer times updated.";
   } catch (error) {
-    prayerStatus.textContent =
-      "We couldn’t refresh the live times just now. Please try again.";
+    prayerStatus.textContent = "We couldn’t refresh the prayer times just now.";
   }
 }
 
@@ -147,7 +139,7 @@ function maybeSendPrayerNotification() {
   latestPrayerTimes.forEach((prayer) => {
     const storageKey = `nooriva-notified-${dateKey}-${prayer.label.toLowerCase()}`;
 
-    if (prayer.time === timeKey && !localStorage.getItem(storageKey)) {
+    if (prayer.athan === timeKey && !localStorage.getItem(storageKey)) {
       new Notification(`${prayer.label} time`, {
         body: `It is now time for ${prayer.label} in Malawi.`,
         icon: "./assets/nooriva-logo-transparent.png",
