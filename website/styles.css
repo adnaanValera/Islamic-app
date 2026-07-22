@@ -531,6 +531,55 @@ h3 {
   color: var(--green-accent);
 }
 
+.prayer-table-head-jumuah,
+.jumuah-time-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: center;
+}
+
+.jumuah-time-list,
+.timings-list {
+  padding: 8px 0;
+}
+
+.jumuah-time-row {
+  padding: 18px 22px;
+}
+
+.jumuah-time-row strong {
+  color: var(--gold-soft);
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.timing-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 22px;
+  border-top: 1px solid rgba(191, 149, 77, 0.14);
+}
+
+.timing-row:first-child {
+  border-top: 0;
+}
+
+.timing-row span {
+  font-size: 1rem;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.timing-row strong {
+  min-width: 56px;
+  text-align: right;
+  color: var(--gold-soft);
+  font-size: 1.05rem;
+}
+
 @media (max-width: 960px) {
   .hero-section,
   .feature-grid,
@@ -581,6 +630,15 @@ h3 {
   .prayer-table-head,
   .prayer-time-row {
     grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .prayer-table-head-jumuah,
+  .jumuah-time-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .timing-row {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .prayer-section-meta {

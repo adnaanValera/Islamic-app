@@ -9,9 +9,25 @@ const prayers = [
   { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha" },
 ];
 
+const startTimings = [
+  { key: "sehriEnds", label: "Suhoor ends" },
+  { key: "fajrStarts", label: "Fajr starts" },
+  { key: "sunrise", label: "Sunrise" },
+  { key: "ishraaq", label: "Ishraaq" },
+  { key: "duha", label: "Duha" },
+  { key: "istiwa", label: "Istiwa" },
+  { key: "zawaalEnd", label: "Zawaal ends" },
+  { key: "asrShafi", label: "Asr (Shafi)" },
+  { key: "asrHanafi", label: "Asr (Hanafi)" },
+  { key: "sunset", label: "Sunset" },
+  { key: "eshaStarts", label: "Esha starts" },
+];
+
 let latestPrayerTimes = [];
 
 const prayerTimeList = document.getElementById("prayer-time-list");
+const jumuahTimeList = document.getElementById("jumuah-time-list");
+const timingsList = document.getElementById("timings-list");
 const prayerStatus = document.getElementById("prayer-status");
 const lastUpdated = document.getElementById("last-updated");
 const malawiTime = document.getElementById("malawi-time");
@@ -41,11 +57,9 @@ function getMalawiDateParts() {
 }
 
 function updateMalawiClock() {
-  if (!malawiTime) {
-    return;
+  if (malawiTime) {
+    malawiTime.textContent = getMalawiDateParts().timeDisplay;
   }
-
-  malawiTime.textContent = getMalawiDateParts().timeDisplay;
 }
 
 function renderPrayerTimes() {
@@ -55,7 +69,7 @@ function renderPrayerTimes() {
 
   const { timeKey } = getMalawiDateParts();
   const nextPrayer =
-    latestPrayerTimes.find((prayer) => prayer.time >= timeKey) ?? latestPrayerTimes[0];
+    latestPrayerTimes.find((prayer) => prayer.athan >= timeKey) ?? latestPrayerTimes[0];
 
   prayerTimeList.innerHTML = latestPrayerTimes
     .map(
@@ -64,6 +78,37 @@ function renderPrayerTimes() {
           <span>${prayer.label}</span>
           <strong>${prayer.athan}</strong>
           <strong>${prayer.salah}</strong>
+        </div>
+      `,
+    )
+    .join("");
+}
+
+function renderJumuahTimes(times) {
+  if (!jumuahTimeList) {
+    return;
+  }
+
+  jumuahTimeList.innerHTML = `
+    <div class="jumuah-time-row">
+      <strong>${times.adhan}</strong>
+      <strong>${times.sunan}</strong>
+      <strong>${times.khutbah}</strong>
+    </div>
+  `;
+}
+
+function renderStartTimings(items) {
+  if (!timingsList) {
+    return;
+  }
+
+  timingsList.innerHTML = items
+    .map(
+      (item) => `
+        <div class="timing-row">
+          <span>${item.label}</span>
+          <strong>${item.time}</strong>
         </div>
       `,
     )
@@ -89,7 +134,6 @@ function updateNotificationStatus() {
   if (Notification.permission === "denied") {
     notificationButton.textContent = "Notifications blocked";
     notificationButton.disabled = true;
-    return;
   }
 }
 
@@ -114,6 +158,17 @@ async function loadPrayerTimes() {
     }));
 
     renderPrayerTimes();
+    renderJumuahTimes({
+      adhan: data?.jumuahTime1 || "--:--",
+      sunan: data?.jumuahTime2 || "--:--",
+      khutbah: data?.jumuahTime3 || "--:--",
+    });
+    renderStartTimings(
+      startTimings.map((timing) => ({
+        label: timing.label,
+        time: data?.[timing.key] || "--:--",
+      })),
+    );
 
     if (boardLocation && meta) {
       boardLocation.textContent = `${meta.city}, Malawi`;
@@ -125,7 +180,7 @@ async function loadPrayerTimes() {
 
     prayerStatus.textContent = "Prayer times updated.";
   } catch (error) {
-    prayerStatus.textContent = "We couldn’t refresh the prayer times just now.";
+    prayerStatus.textContent = "We couldn't refresh the prayer times just now.";
   }
 }
 
