@@ -50,17 +50,23 @@
       "Notification" in window && Notification.permission === "granted";
 
     if (homeActions) {
-      if (isStandaloneApp() && notificationsEnabled) {
+      if (downloadButton && isStandaloneApp()) {
+        downloadButton.style.display = "none";
+      } else if (downloadButton) {
+        downloadButton.style.display = "";
+      }
+
+      const visibleButtons = homeActions.querySelectorAll(
+        ".button:not([style*='display: none'])",
+      );
+
+      if (visibleButtons.length === 0 || (isStandaloneApp() && notificationsEnabled)) {
         homeActions.classList.add("prayer-actions-hidden");
         if (installStatus) {
           installStatus.textContent = "";
         }
       } else {
         homeActions.classList.remove("prayer-actions-hidden");
-      }
-
-      if (downloadButton && isStandaloneApp()) {
-        downloadButton.style.display = "none";
       }
     }
 
@@ -77,6 +83,9 @@
     registerServiceWorker,
     triggerInstall,
     updateHomepageInstallVisibility,
+    updateInstallButtonVisibility() {
+      updateHomepageInstallVisibility();
+    },
   };
 
   window.addEventListener("beforeinstallprompt", (event) => {

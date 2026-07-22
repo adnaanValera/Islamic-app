@@ -775,11 +775,122 @@ h3 {
   display: none;
 }
 
+.qibla-hero-card {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.qibla-compass-shell {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.qibla-target-label {
+  color: var(--gold-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.qibla-compass {
+  position: relative;
+  width: min(280px, 78vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.82), rgba(245, 236, 223, 0.96));
+  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.qibla-ring,
+.qibla-direction-arrow,
+.qibla-phone-arrow,
+.qibla-center-dot {
+  position: absolute;
+  inset: 0;
+}
+
+.qibla-ring::before,
+.qibla-ring::after {
+  content: "";
+  position: absolute;
+  background: rgba(37, 68, 60, 0.12);
+}
+
+.qibla-ring::before {
+  top: 14px;
+  bottom: 14px;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.qibla-ring::after {
+  left: 14px;
+  right: 14px;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.qibla-direction-arrow::before,
+.qibla-phone-arrow::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.qibla-direction-arrow::before {
+  top: 16px;
+  width: 26px;
+  height: 96px;
+  background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
+}
+
+.qibla-phone-arrow::before {
+  top: 34px;
+  width: 18px;
+  height: 74px;
+  background: linear-gradient(180deg, #25443c 0%, #17312a 100%);
+  opacity: 0.85;
+}
+
+.qibla-center-dot::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #25443c;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.68);
+}
+
+.qibla-angle {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.96rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 .standalone-app .home-mobile-header .site-nav {
   display: none;
 }
 
 .standalone-app .prayer-mobile-header .site-nav {
+  display: none;
+}
+
+.standalone-app .qibla-actions .button-primary {
   display: none;
 }
 
@@ -894,6 +1005,10 @@ h3 {
   .prayer-hero-copy .hero-actions {
     display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .qibla-hero-card {
+    padding: 18px;
   }
 
   .prayer-table-head,
@@ -1054,6 +1169,10 @@ h3 {
   .install-status,
   .status-line {
     font-size: 0.9rem;
+  }
+
+  .qibla-compass {
+    width: min(250px, 78vw);
   }
 
   .button {

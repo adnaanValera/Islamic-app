@@ -293,15 +293,20 @@ function updateNotificationStatus() {
   }
 
   if (Notification.permission === "granted") {
-    notificationButton.textContent = "Notifications enabled";
-    notificationButton.disabled = true;
+    notificationButton.style.display = "none";
+    updateActionVisibility();
     return;
   }
 
   if (Notification.permission === "denied") {
     notificationButton.textContent = "Notifications blocked";
     notificationButton.disabled = true;
+    notificationButton.style.display = "";
+    return;
   }
+
+  notificationButton.style.display = "";
+  notificationButton.disabled = false;
 }
 
 function updateActionVisibility() {
@@ -309,10 +314,11 @@ function updateActionVisibility() {
     return;
   }
 
-  const notificationsEnabled =
-    "Notification" in window && Notification.permission === "granted";
+  const visibleButtons = prayerActions.querySelectorAll(
+    ".button:not([style*='display: none'])",
+  );
 
-  if (window.noorivaInstall?.isStandaloneApp() && notificationsEnabled) {
+  if (visibleButtons.length === 0) {
     prayerActions.classList.add("prayer-actions-hidden");
     return;
   }
@@ -439,9 +445,10 @@ registerServiceWorker();
 loadPrayerTimes();
 
 window.addEventListener("nooriva:install-available", () => {
-  if (downloadAppButton) {
+  if (downloadAppButton && !window.noorivaInstall?.isStandaloneApp()) {
     downloadAppButton.style.display = "inline-flex";
   }
+  updateActionVisibility();
 });
 
 window.addEventListener("nooriva:installed", () => {

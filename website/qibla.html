@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nooriva | Qibla</title>
+    <meta
+      name="description"
+      content="Find the Qibla direction with Nooriva using your location and device compass."
+    />
+    <meta name="theme-color" content="#f8f3ea" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-prayer">
+      <header class="site-header prayer-mobile-header">
+        <div class="brand-lockup">
+          <a href="./index.html" aria-label="Back to Nooriva home">
+            <img
+              class="brand-logo"
+              src="./assets/nooriva-logo-transparent.png"
+              alt="Nooriva logo"
+            />
+          </a>
+        </div>
+        <nav class="site-nav">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html" aria-current="page">Qibla</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </header>
+
+      <main class="prayer-page">
+        <section class="prayer-hero">
+          <div class="prayer-hero-copy">
+            <p class="eyebrow">Qibla direction</p>
+            <h1>Face the Kaaba with a simple live compass.</h1>
+            <div class="hero-actions qibla-actions" id="qibla-actions">
+              <button class="button button-primary" id="enable-qibla" type="button">
+                Enable qibla
+              </button>
+              <a class="button button-secondary" href="./prayer.html">Open prayer</a>
+            </div>
+            <div class="status-stack">
+              <p class="status-line" id="qibla-status">Allow location and motion access to begin.</p>
+            </div>
+          </div>
+
+          <div class="prayer-table-card prayer-table-card-hero qibla-hero-card">
+            <div class="qibla-compass-shell">
+              <div class="qibla-target-label">Kaaba</div>
+              <div class="qibla-compass">
+                <div class="qibla-ring"></div>
+                <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
+                <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
+                <div class="qibla-center-dot"></div>
+              </div>
+              <p class="qibla-angle" id="qibla-angle">Calculating...</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="prayer-table-section prayer-meta-section">
+          <div class="prayer-section-meta">
+            <div class="prayer-meta-pill">
+              <span>Your heading</span>
+              <strong id="device-heading">--°</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Qibla bearing</span>
+              <strong id="qibla-bearing">--°</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Alignment</span>
+              <strong id="qibla-alignment">Waiting...</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="features-section settings-grid-section">
+          <div class="feature-grid settings-grid">
+            <article class="feature-card">
+              <p>01</p>
+              <h3>Location needed</h3>
+              <span>Nooriva uses your live location to calculate the direction to the Kaaba from where you are.</span>
+            </article>
+            <article class="feature-card">
+              <p>02</p>
+              <h3>Compass access</h3>
+              <span>Some phones need motion permission before the compass can rotate correctly.</span>
+            </article>
+            <article class="feature-card">
+              <p>03</p>
+              <h3>Best accuracy</h3>
+              <span>Hold the phone flat and move away from large metal objects if the compass feels off.</span>
+            </article>
+          </div>
+        </section>
+
+        <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html" aria-current="page">Qibla</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </main>
+    </div>
+
+    <script src="./install-app.js"></script>
+    <script src="./qibla.js"></script>
+  </body>
+</html>
