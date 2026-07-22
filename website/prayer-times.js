@@ -37,8 +37,6 @@ const notificationButton = document.getElementById("enable-notifications");
 const downloadAppButton = document.getElementById("download-app");
 const prayerActions = document.getElementById("prayer-actions");
 
-let deferredInstallPrompt = null;
-
 function getMalawiDateParts() {
   const formatter = new Intl.DateTimeFormat("en-GB", {
     timeZone: malawiTimeZone,
@@ -141,13 +139,6 @@ function updateNotificationStatus() {
   }
 }
 
-function isStandaloneApp() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true
-  );
-}
-
 function updateActionVisibility() {
   if (!prayerActions) {
     return;
@@ -156,7 +147,7 @@ function updateActionVisibility() {
   const notificationsEnabled =
     "Notification" in window && Notification.permission === "granted";
 
-  if (isStandaloneApp() && notificationsEnabled) {
+  if (window.noorivaInstall?.isStandaloneApp() && notificationsEnabled) {
     prayerActions.classList.add("prayer-actions-hidden");
     return;
   }
@@ -165,15 +156,7 @@ function updateActionVisibility() {
 }
 
 async function registerServiceWorker() {
-  if (!("serviceWorker" in navigator)) {
-    return;
-  }
-
-  try {
-    await navigator.serviceWorker.register("./sw.js");
-  } catch (error) {
-    // Ignore registration failures for now.
-  }
+  await window.noorivaInstall?.registerServiceWorker?.();
 }
 
 async function loadPrayerTimes() {
@@ -271,16 +254,9 @@ if (notificationButton) {
 
 if (downloadAppButton) {
   downloadAppButton.addEventListener("click", async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      downloadAppButton.style.display = "none";
-      updateActionVisibility();
-      return;
-    }
+    const installResult = await window.noorivaInstall?.triggerInstall?.();
 
-    if (isStandaloneApp()) {
+    if (installResult === "installed" || installResult === "standalone") {
       downloadAppButton.style.display = "none";
       updateActionVisibility();
       return;
@@ -290,30 +266,25 @@ if (downloadAppButton) {
   });
 }
 
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
+updateMalawiClock();
+updateNotificationStatus();
+updateActionVisibility();
+registerServiceWorker();
+loadPrayerTimes();
 
+window.addEventListener("nooriva:install-available", () => {
   if (downloadAppButton) {
     downloadAppButton.style.display = "inline-flex";
   }
 });
 
-window.addEventListener("appinstalled", () => {
-  deferredInstallPrompt = null;
-
+window.addEventListener("nooriva:installed", () => {
   if (downloadAppButton) {
     downloadAppButton.style.display = "none";
   }
 
   updateActionVisibility();
 });
-
-updateMalawiClock();
-updateNotificationStatus();
-updateActionVisibility();
-registerServiceWorker();
-loadPrayerTimes();
 
 setInterval(updateMalawiClock, 1000);
 setInterval(maybeSendPrayerNotification, 15000);

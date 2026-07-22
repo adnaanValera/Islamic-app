@@ -147,7 +147,8 @@ h3 {
 .hero-text,
 .feature-card span,
 .section-support,
-.cta-card p {
+.cta-card p,
+.install-status {
   color: var(--muted);
   line-height: 1.65;
 }
@@ -171,6 +172,11 @@ h3 {
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 16px;
+}
+
+.install-status {
+  margin: 10px 0 0;
+  font-size: 0.92rem;
 }
 
 .hero-meta span {

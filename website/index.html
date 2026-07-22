@@ -51,10 +51,14 @@
               Nooriva brings essential Islamic tools into a calm, premium experience
               that feels focused, modern, and easy to come back to.
             </p>
-            <div class="hero-actions">
+            <div class="hero-actions" id="home-install-actions">
+              <button class="button button-primary" id="home-download-app" type="button">
+                Download app
+              </button>
               <a class="button button-primary" href="#features">View features</a>
               <a class="button button-secondary" href="#contact">Contact us</a>
             </div>
+            <p class="install-status" id="home-install-status"></p>
             <div class="hero-meta">
               <span>Prayer</span>
               <span>Quran</span>
@@ -188,12 +192,5 @@
       </footer>
     </div>
   </body>
-  <script>
-    if (
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true
-    ) {
-      window.location.replace("./prayer.html");
-    }
-  </script>
+  <script src="./install-app.js"></script>
 </html>
