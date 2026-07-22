@@ -1,8 +1,9 @@
 {
   "name": "Nooriva",
   "short_name": "Nooriva",
+  "id": "/prayer.html",
   "description": "Nooriva prayer times and Islamic essentials.",
-  "start_url": "./prayer.html",
+  "start_url": "/prayer.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f8f3ea",
@@ -17,6 +18,20 @@
       "src": "./assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Prayer Timings",
+      "short_name": "Prayer",
+      "url": "/prayer.html",
+      "icons": [
+        {
+          "src": "./assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

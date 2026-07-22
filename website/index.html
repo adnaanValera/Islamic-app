@@ -188,4 +188,12 @@
       </footer>
     </div>
   </body>
+  <script>
+    if (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    ) {
+      window.location.replace("./prayer.html");
+    }
+  </script>
 </html>
