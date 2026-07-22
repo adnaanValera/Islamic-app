@@ -1,0 +1,22 @@
+{
+  "name": "Nooriva",
+  "short_name": "Nooriva",
+  "description": "Nooriva prayer times and Islamic essentials.",
+  "start_url": "./prayer.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f3ea",
+  "theme_color": "#f8f3ea",
+  "icons": [
+    {
+      "src": "./assets/nooriva-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/nooriva-logo-transparent.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

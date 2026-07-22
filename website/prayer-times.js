@@ -34,6 +34,10 @@ const malawiTime = document.getElementById("malawi-time");
 const boardLocation = document.getElementById("board-location");
 const refreshButton = document.getElementById("refresh-prayers");
 const notificationButton = document.getElementById("enable-notifications");
+const downloadAppButton = document.getElementById("download-app");
+const prayerActions = document.getElementById("prayer-actions");
+
+let deferredInstallPrompt = null;
 
 function getMalawiDateParts() {
   const formatter = new Intl.DateTimeFormat("en-GB", {
@@ -137,6 +141,41 @@ function updateNotificationStatus() {
   }
 }
 
+function isStandaloneApp() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+function updateActionVisibility() {
+  if (!prayerActions) {
+    return;
+  }
+
+  const notificationsEnabled =
+    "Notification" in window && Notification.permission === "granted";
+
+  if (isStandaloneApp() && notificationsEnabled) {
+    prayerActions.classList.add("prayer-actions-hidden");
+    return;
+  }
+
+  prayerActions.classList.remove("prayer-actions-hidden");
+}
+
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  try {
+    await navigator.serviceWorker.register("./sw.js");
+  } catch (error) {
+    // Ignore registration failures for now.
+  }
+}
+
 async function loadPrayerTimes() {
   try {
     prayerStatus.textContent = "Refreshing live prayer times...";
@@ -216,11 +255,13 @@ if (notificationButton) {
   notificationButton.addEventListener("click", async () => {
     if (!("Notification" in window)) {
       updateNotificationStatus();
+      updateActionVisibility();
       return;
     }
 
     const permission = await Notification.requestPermission();
     updateNotificationStatus();
+    updateActionVisibility();
 
     if (permission === "granted") {
       maybeSendPrayerNotification();
@@ -228,8 +269,50 @@ if (notificationButton) {
   });
 }
 
+if (downloadAppButton) {
+  downloadAppButton.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      downloadAppButton.style.display = "none";
+      updateActionVisibility();
+      return;
+    }
+
+    if (isStandaloneApp()) {
+      downloadAppButton.style.display = "none";
+      updateActionVisibility();
+      return;
+    }
+
+    prayerStatus.textContent = "Use your browser's install option to add Nooriva to your device.";
+  });
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+
+  if (downloadAppButton) {
+    downloadAppButton.style.display = "inline-flex";
+  }
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+
+  if (downloadAppButton) {
+    downloadAppButton.style.display = "none";
+  }
+
+  updateActionVisibility();
+});
+
 updateMalawiClock();
 updateNotificationStatus();
+updateActionVisibility();
+registerServiceWorker();
 loadPrayerTimes();
 
 setInterval(updateMalawiClock, 1000);

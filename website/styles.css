@@ -408,7 +408,10 @@ h3 {
 }
 
 .prayer-hero {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.95fr);
+  gap: 22px;
+  align-items: start;
   padding: 18px 0 8px;
 }
 
@@ -436,8 +439,16 @@ h3 {
   box-shadow: var(--shadow);
 }
 
+.prayer-table-card-hero {
+  align-self: stretch;
+}
+
 .prayer-table-section {
   padding: 4px 0 0;
+}
+
+.prayer-meta-section {
+  padding-top: 0;
 }
 
 .prayer-section-heading {
@@ -471,6 +482,10 @@ h3 {
 .prayer-meta-pill strong {
   color: var(--text-strong);
   font-size: 0.96rem;
+}
+
+.prayer-actions-hidden {
+  display: none;
 }
 
 .prayer-table-card {
@@ -584,7 +599,8 @@ h3 {
   .hero-section,
   .feature-grid,
   .cta-card,
-  .section-heading-inline {
+  .section-heading-inline,
+  .prayer-hero {
     grid-template-columns: 1fr;
   }
 
