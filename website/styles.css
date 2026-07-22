@@ -408,10 +408,7 @@ h3 {
 }
 
 .prayer-hero {
-  display: grid;
-  grid-template-columns: 1.08fr 0.92fr;
-  gap: 22px;
-  align-items: stretch;
+  display: block;
   padding: 18px 0 8px;
 }
 
@@ -433,44 +430,47 @@ h3 {
   font-weight: 500;
 }
 
-.prayer-summary-card,
 .prayer-table-card {
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
   box-shadow: var(--shadow);
 }
 
-.prayer-summary-card {
-  border-radius: 22px;
-  padding: 22px;
-  display: grid;
-  align-content: start;
-  gap: 14px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.summary-row:last-child {
-  border-bottom: 0;
-}
-
-.summary-row span {
-  color: var(--muted);
-}
-
-.summary-row strong {
-  color: var(--text-strong);
-  text-align: right;
-}
-
 .prayer-table-section {
   padding: 4px 0 0;
+}
+
+.prayer-section-heading {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.prayer-section-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.prayer-meta-pill {
+  min-width: 170px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.prayer-meta-pill span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.prayer-meta-pill strong {
+  color: var(--text-strong);
+  font-size: 0.96rem;
 }
 
 .prayer-table-card {
@@ -533,8 +533,7 @@ h3 {
   .hero-section,
   .feature-grid,
   .cta-card,
-  .section-heading-inline,
-  .prayer-hero {
+  .section-heading-inline {
     grid-template-columns: 1fr;
   }
 
@@ -577,9 +576,13 @@ h3 {
     width: 100%;
   }
 
-  .summary-row,
   .prayer-table-head,
   .prayer-time-row {
     grid-template-columns: 1fr auto;
+  }
+
+  .prayer-section-meta {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
