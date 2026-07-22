@@ -40,14 +40,11 @@ const nextPrayerTime = document.getElementById("next-prayer-time");
 const nextPrayerCountdown = document.getElementById("next-prayer-countdown");
 const nextPrayerProgressFill = document.getElementById("next-prayer-progress-fill");
 const prayerStatus = document.getElementById("prayer-status");
-const lastUpdated = document.getElementById("last-updated");
-const malawiTime = document.getElementById("malawi-time");
-const boardLocation = document.getElementById("board-location");
-const refreshButton = document.getElementById("refresh-prayers");
 const notificationButton = document.getElementById("enable-notifications");
 const downloadAppButton = document.getElementById("download-app");
 const prayerActions = document.getElementById("prayer-actions");
 const prayerChecklistStorageKey = "nooriva-prayer-checklist";
+let lastPrayerRefreshSlot = "";
 
 function getMalawiDateParts() {
   const formatter = new Intl.DateTimeFormat("en-GB", {
@@ -68,12 +65,6 @@ function getMalawiDateParts() {
     timeKey: `${values.hour}:${values.minute}`,
     timeDisplay: `${values.hour}:${values.minute}`,
   };
-}
-
-function updateMalawiClock() {
-  if (malawiTime) {
-    malawiTime.textContent = getMalawiDateParts().timeDisplay;
-  }
 }
 
 function getMinutesFromTimeString(timeValue) {
@@ -265,7 +256,6 @@ function renderJumuahTimes(times) {
   jumuahTimeList.innerHTML = `
     <div class="jumuah-time-row">
       <strong>${times.adhan}</strong>
-      <strong>${times.sunan}</strong>
       <strong>${times.khutbah}</strong>
     </div>
   `;
@@ -530,8 +520,6 @@ async function loadPrayerTimes() {
 
     const payload = await response.json();
     const data = payload?.data;
-    const meta = data?.meta;
-
     latestPrayerTimes = prayers.map((prayer) => ({
       label: prayer.label,
       athan: data?.[prayer.athanKey] ?? "--:--",
@@ -541,7 +529,6 @@ async function loadPrayerTimes() {
     renderPrayerTimes();
     renderJumuahTimes({
       adhan: data?.jumuahTime1 || "--:--",
-      sunan: data?.jumuahTime2 || "--:--",
       khutbah: data?.jumuahTime3 || "--:--",
     });
     renderStartTimings(
@@ -550,14 +537,6 @@ async function loadPrayerTimes() {
         time: data?.[timing.key] || "--:--",
       })),
     );
-
-    if (boardLocation && meta) {
-      boardLocation.textContent = `${meta.city}, Malawi`;
-    }
-
-    if (lastUpdated) {
-      lastUpdated.textContent = data?.last_updated ?? "Live source available";
-    }
 
     prayerStatus.textContent = "Prayer times updated.";
     scheduleNextPrayerNotification();
@@ -584,12 +563,6 @@ async function maybeSendPrayerNotification() {
       }
     }
   }
-}
-
-if (refreshButton) {
-  refreshButton.addEventListener("click", () => {
-    loadPrayerTimes();
-  });
 }
 
 if (notificationButton) {
@@ -629,7 +602,6 @@ if (downloadAppButton) {
   });
 }
 
-updateMalawiClock();
 resetChecklistIfNeeded();
 updateNotificationStatus();
 updateActionVisibility();
@@ -661,15 +633,26 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
     maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
+    loadPrayerTimes();
     if (Notification.permission === "granted") {
       subscribeToBackendPush().catch(() => undefined);
     }
   }
 });
 
+function maybeRefreshOnPrayerSchedule() {
+  const { dateKey, timeKey } = getMalawiDateParts();
+  const slotKey = `${dateKey}-${timeKey}`;
+
+  if ((timeKey === "00:00" || timeKey === "12:00") && lastPrayerRefreshSlot !== slotKey) {
+    lastPrayerRefreshSlot = slotKey;
+    loadPrayerTimes();
+  }
+}
+
 setInterval(() => {
-  updateMalawiClock();
   resetChecklistIfNeeded();
+  maybeRefreshOnPrayerSchedule();
   if (latestPrayerTimes.length > 0) {
     renderPrayerTimes();
   }
@@ -677,4 +660,3 @@ setInterval(() => {
 setInterval(() => {
   maybeSendPrayerNotification();
 }, 15000);
-setInterval(loadPrayerTimes, 300000);
