@@ -254,10 +254,54 @@ h3 {
   box-shadow: var(--shadow);
 }
 
+.home-quick-card,
+.home-quick-card-soft {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
+  box-shadow: var(--shadow);
+}
+
 .product-card {
   width: min(100%, 390px);
   padding: 20px;
   border-radius: 22px;
+}
+
+.home-quick-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 4px 0 14px;
+}
+
+.home-quick-card {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.home-quick-card strong {
+  color: var(--text-strong);
+  font-size: 1.05rem;
+}
+
+.home-quick-card small {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.home-quick-label {
+  color: var(--gold-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.home-quick-card-soft {
+  background: linear-gradient(180deg, rgba(248, 241, 228, 0.98), rgba(237, 245, 239, 0.96));
 }
 
 .card-label {
@@ -731,12 +775,17 @@ h3 {
   display: none;
 }
 
+.standalone-app .home-mobile-header .site-nav {
+  display: none;
+}
+
 .standalone-app .prayer-mobile-header .site-nav {
   display: none;
 }
 
 @media (max-width: 960px) {
   .hero-section,
+  .home-quick-links,
   .feature-grid,
   .cta-card,
   .section-heading-inline,
@@ -947,6 +996,15 @@ h3 {
     backdrop-filter: blur(14px);
   }
 
+  .home-mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding: 8px 0 10px;
+    background: linear-gradient(180deg, rgba(252, 248, 241, 0.96), rgba(252, 248, 241, 0.88));
+    backdrop-filter: blur(14px);
+  }
+
   .site-nav {
     width: 100%;
     display: grid;
@@ -967,6 +1025,24 @@ h3 {
   .prayer-page,
   .prayer-hero {
     gap: 14px;
+  }
+
+  .home-quick-links {
+    gap: 12px;
+    padding: 2px 0 10px;
+  }
+
+  .home-quick-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .home-quick-card strong {
+    font-size: 1rem;
+  }
+
+  .home-quick-card small {
+    font-size: 0.84rem;
   }
 
   .hero-copy .eyebrow,
@@ -1068,6 +1144,10 @@ h3 {
   .mobile-bottom-nav a[aria-current="page"] {
     background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
     color: #fffaf2;
+  }
+
+  .home-mobile-bottom-nav {
+    display: grid;
   }
 
   .footer-brand {
