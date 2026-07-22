@@ -30,6 +30,7 @@ const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
 const nextPrayerName = document.getElementById("next-prayer-name");
 const nextPrayerTime = document.getElementById("next-prayer-time");
+const nextPrayerCountdown = document.getElementById("next-prayer-countdown");
 const prayerStatus = document.getElementById("prayer-status");
 const lastUpdated = document.getElementById("last-updated");
 const malawiTime = document.getElementById("malawi-time");
@@ -65,6 +66,33 @@ function updateMalawiClock() {
   if (malawiTime) {
     malawiTime.textContent = getMalawiDateParts().timeDisplay;
   }
+}
+
+function getMinutesFromTimeString(timeValue) {
+  const [hours, minutes] = String(timeValue || "")
+    .split(":")
+    .map((part) => Number.parseInt(part, 10));
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return null;
+  }
+
+  return hours * 60 + minutes;
+}
+
+function formatCountdown(totalMinutes) {
+  if (totalMinutes <= 0) {
+    return "Starting now";
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m remaining`;
+  }
+
+  return `${minutes}m remaining`;
 }
 
 function getChecklistState() {
@@ -114,8 +142,29 @@ function renderPrayerTimes() {
 
   const { timeKey } = getMalawiDateParts();
   const checklist = getChecklistState();
+  const currentMinutes = getMinutesFromTimeString(timeKey) ?? 0;
+  const prayerWindows = latestPrayerTimes.map((prayer, index) => {
+    const startMinutes = getMinutesFromTimeString(prayer.athan) ?? 0;
+    const nextStart =
+      index < latestPrayerTimes.length - 1
+        ? getMinutesFromTimeString(latestPrayerTimes[index + 1].athan) ?? startMinutes
+        : 24 * 60;
+
+    return {
+      ...prayer,
+      startMinutes,
+      nextStart,
+    };
+  });
+
   const nextPrayer =
-    latestPrayerTimes.find((prayer) => prayer.athan >= timeKey) ?? latestPrayerTimes[0];
+    prayerWindows.find((prayer) => prayer.startMinutes >= currentMinutes) ?? prayerWindows[0];
+  const currentPrayer =
+    prayerWindows.find(
+      (prayer) =>
+        currentMinutes >= prayer.startMinutes &&
+        currentMinutes < prayer.nextStart,
+    ) ?? null;
 
   if (nextPrayerName) {
     nextPrayerName.textContent = nextPrayer?.label ?? "Prayer times";
@@ -125,17 +174,25 @@ function renderPrayerTimes() {
     nextPrayerTime.textContent = nextPrayer?.athan ?? "--:--";
   }
 
-  prayerTimeList.innerHTML = latestPrayerTimes
+  if (nextPrayerCountdown) {
+    const nextPrayerMinutes =
+      nextPrayer && nextPrayer.startMinutes < currentMinutes
+        ? nextPrayer.startMinutes + 24 * 60
+        : nextPrayer?.startMinutes ?? currentMinutes;
+    nextPrayerCountdown.textContent = formatCountdown(nextPrayerMinutes - currentMinutes);
+  }
+
+  prayerTimeList.innerHTML = prayerWindows
     .map(
       (prayer) => `
-        <div class="prayer-time-row${nextPrayer?.label === prayer.label ? " is-next" : ""}">
+        <div class="prayer-time-row${currentPrayer?.label === prayer.label ? " is-current" : ""}${nextPrayer?.label === prayer.label ? " is-next" : ""}${checklist.checked?.[prayer.label] ? " is-completed" : ""}">
           <label class="prayer-check" aria-label="Mark ${prayer.label} as completed">
             <input type="checkbox" data-prayer-check="${prayer.label}" ${checklist.checked?.[prayer.label] ? "checked" : ""} />
             <span></span>
           </label>
-          <span>${prayer.label}</span>
-          <strong>${prayer.athan}</strong>
-          <strong>${prayer.salah}</strong>
+          <span class="prayer-name">${prayer.label}</span>
+          <strong class="prayer-time-value">${prayer.athan}</strong>
+          <strong class="prayer-time-value">${prayer.salah}</strong>
         </div>
       `,
     )
@@ -146,6 +203,7 @@ function renderPrayerTimes() {
       const current = getChecklistState();
       current.checked[event.target.dataset.prayerCheck] = event.target.checked;
       saveChecklistState(current.checked);
+      renderPrayerTimes();
     });
   });
 }
@@ -354,6 +412,9 @@ window.addEventListener("nooriva:installed", () => {
 setInterval(() => {
   updateMalawiClock();
   resetChecklistIfNeeded();
+  if (latestPrayerTimes.length > 0) {
+    renderPrayerTimes();
+  }
 }, 1000);
 setInterval(maybeSendPrayerNotification, 15000);
 setInterval(loadPrayerTimes, 300000);

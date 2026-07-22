@@ -478,6 +478,12 @@ h3 {
   font-weight: 800;
 }
 
+.next-prayer-countdown {
+  color: var(--green-accent);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .prayer-table-section {
   padding: 4px 0 0;
 }
@@ -624,6 +630,30 @@ h3 {
 .prayer-time-row.is-next strong,
 .prayer-time-row.is-next span {
   color: var(--green-accent);
+}
+
+.prayer-time-row.is-current {
+  background: linear-gradient(90deg, rgba(37, 68, 60, 0.13), rgba(255, 255, 255, 0.15));
+  box-shadow: inset 3px 0 0 #25443c;
+}
+
+.prayer-time-row.is-current span,
+.prayer-time-row.is-current strong {
+  color: var(--text-strong);
+}
+
+.prayer-time-row.is-current .prayer-name {
+  font-weight: 800;
+}
+
+.prayer-time-row.is-completed {
+  opacity: 0.72;
+}
+
+.prayer-time-row.is-completed .prayer-name,
+.prayer-time-row.is-completed .prayer-time-value {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
 }
 
 .prayer-table-head-jumuah,
@@ -967,6 +997,10 @@ h3 {
 
   .next-prayer-time {
     font-size: 0.9rem;
+  }
+
+  .next-prayer-countdown {
+    font-size: 0.82rem;
   }
 
   .timing-row {
