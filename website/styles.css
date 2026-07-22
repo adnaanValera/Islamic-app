@@ -806,6 +806,18 @@ h3 {
   box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.3);
 }
 
+.qibla-north-mark {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
 .qibla-ring,
 .qibla-direction-arrow,
 .qibla-phone-arrow,
@@ -876,6 +888,7 @@ h3 {
 
 .qibla-angle {
   margin: 0;
+  max-width: 24ch;
   color: var(--text-strong);
   font-size: 0.96rem;
   font-weight: 700;

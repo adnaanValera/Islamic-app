@@ -44,7 +44,7 @@
         <section class="prayer-hero">
           <div class="prayer-hero-copy">
             <p class="eyebrow">Qibla direction</p>
-            <h1>Face the Kaaba with a simple live compass.</h1>
+            <h1>Face the Kaaba with a calm, clear live compass.</h1>
             <div class="hero-actions qibla-actions" id="qibla-actions">
               <button class="button button-primary" id="enable-qibla" type="button">
                 Enable qibla
@@ -58,9 +58,10 @@
 
           <div class="prayer-table-card prayer-table-card-hero qibla-hero-card">
             <div class="qibla-compass-shell">
-              <div class="qibla-target-label">Kaaba</div>
+              <div class="qibla-target-label">Kaaba direction</div>
               <div class="qibla-compass">
                 <div class="qibla-ring"></div>
+                <div class="qibla-north-mark">N</div>
                 <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
                 <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
                 <div class="qibla-center-dot"></div>
@@ -74,15 +75,19 @@
           <div class="prayer-section-meta">
             <div class="prayer-meta-pill">
               <span>Your heading</span>
-              <strong id="device-heading">--°</strong>
+              <strong id="device-heading">--&deg;</strong>
             </div>
             <div class="prayer-meta-pill">
               <span>Qibla bearing</span>
-              <strong id="qibla-bearing">--°</strong>
+              <strong id="qibla-bearing">--&deg;</strong>
             </div>
             <div class="prayer-meta-pill">
               <span>Alignment</span>
               <strong id="qibla-alignment">Waiting...</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Accuracy guide</span>
+              <strong id="qibla-accuracy">Needs calibration</strong>
             </div>
           </div>
         </section>
@@ -102,7 +107,12 @@
             <article class="feature-card">
               <p>03</p>
               <h3>Best accuracy</h3>
-              <span>Hold the phone flat and move away from large metal objects if the compass feels off.</span>
+              <span>Hold the phone flat, keep away from metal, and make a gentle figure-eight motion if the compass feels off.</span>
+            </article>
+            <article class="feature-card">
+              <p>04</p>
+              <h3>What the arrows mean</h3>
+              <span>The gold arrow shows the Qibla. The dark arrow follows your phone heading so you can line them up.</span>
             </article>
           </div>
         </section>

@@ -6,8 +6,10 @@ const qiblaAngle = document.getElementById("qibla-angle");
 const deviceHeading = document.getElementById("device-heading");
 const qiblaBearing = document.getElementById("qibla-bearing");
 const qiblaAlignment = document.getElementById("qibla-alignment");
+const qiblaAccuracy = document.getElementById("qibla-accuracy");
 
 let currentBearing = null;
+const degreeSymbol = "\u00B0";
 
 function degreesToCardinal(degrees) {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
@@ -30,6 +32,12 @@ function calculateQiblaBearing(latitude, longitude) {
   return (bearing + 360) % 360;
 }
 
+function setAccuracyLabel(label) {
+  if (qiblaAccuracy) {
+    qiblaAccuracy.textContent = label;
+  }
+}
+
 function updateAlignment(heading) {
   if (currentBearing === null) {
     return;
@@ -40,19 +48,27 @@ function updateAlignment(heading) {
 
   qiblaPhoneArrow.style.transform = `rotate(${heading}deg)`;
   qiblaDirectionArrow.style.transform = `rotate(${currentBearing}deg)`;
-  deviceHeading.textContent = `${Math.round(heading)}° ${degreesToCardinal(heading)}`;
+  deviceHeading.textContent = `${Math.round(heading)}${degreeSymbol} ${degreesToCardinal(heading)}`;
 
-  if (absoluteDiff <= 10) {
+  if (absoluteDiff <= 8) {
     qiblaAlignment.textContent = "Aligned";
     qiblaAngle.textContent = "You are facing the Qibla";
+    setAccuracyLabel("Very accurate");
     return;
   }
 
-  qiblaAlignment.textContent = absoluteDiff <= 25 ? "Close" : "Turn";
+  if (absoluteDiff <= 20) {
+    qiblaAlignment.textContent = "Close";
+    setAccuracyLabel("Good");
+  } else {
+    qiblaAlignment.textContent = "Turn";
+    setAccuracyLabel("Re-align");
+  }
+
   qiblaAngle.textContent =
     diff > 0
-      ? `Turn ${Math.round(absoluteDiff)}° clockwise`
-      : `Turn ${Math.round(absoluteDiff)}° anti-clockwise`;
+      ? `Turn ${Math.round(absoluteDiff)}${degreeSymbol} clockwise`
+      : `Turn ${Math.round(absoluteDiff)}${degreeSymbol} anti-clockwise`;
 }
 
 function startCompass() {
@@ -74,18 +90,24 @@ function startCompass() {
       .then((permission) => {
         if (permission !== "granted") {
           qiblaStatus.textContent = "Motion permission was not granted.";
+          qiblaAlignment.textContent = "Limited";
+          setAccuracyLabel("Limited");
           return;
         }
 
+        setAccuracyLabel("Live compass");
         window.addEventListener("deviceorientation", handleOrientation, true);
       })
       .catch(() => {
         qiblaStatus.textContent = "Unable to access motion sensors.";
+        qiblaAlignment.textContent = "Unavailable";
+        setAccuracyLabel("Unavailable");
       });
 
     return;
   }
 
+  setAccuracyLabel("Live compass");
   window.addEventListener("deviceorientationabsolute", handleOrientation, true);
   window.addEventListener("deviceorientation", handleOrientation, true);
 }
@@ -93,10 +115,14 @@ function startCompass() {
 function startQibla() {
   if (!navigator.geolocation) {
     qiblaStatus.textContent = "Geolocation is not supported on this device.";
+    qiblaAlignment.textContent = "Unavailable";
+    setAccuracyLabel("Unavailable");
     return;
   }
 
   qiblaStatus.textContent = "Getting your location...";
+  qiblaAlignment.textContent = "Checking";
+  setAccuracyLabel("Checking");
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -105,12 +131,16 @@ function startQibla() {
         position.coords.longitude,
       );
 
-      qiblaBearing.textContent = `${Math.round(currentBearing)}° ${degreesToCardinal(currentBearing)}`;
-      qiblaStatus.textContent = "Move your phone gently to align with the Qibla.";
+      qiblaBearing.textContent = `${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`;
+      qiblaStatus.textContent =
+        "Move your phone gently and keep it away from metal objects for the best result.";
+      setAccuracyLabel("Compass starting");
       startCompass();
     },
     () => {
       qiblaStatus.textContent = "Location permission is needed for Qibla direction.";
+      qiblaAlignment.textContent = "Unavailable";
+      setAccuracyLabel("Unavailable");
     },
     {
       enableHighAccuracy: true,
