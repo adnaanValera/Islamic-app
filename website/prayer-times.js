@@ -28,9 +28,11 @@ let latestPrayerTimes = [];
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
+const nextPrayerLabel = document.getElementById("next-prayer-label");
 const nextPrayerName = document.getElementById("next-prayer-name");
 const nextPrayerTime = document.getElementById("next-prayer-time");
 const nextPrayerCountdown = document.getElementById("next-prayer-countdown");
+const nextPrayerProgressFill = document.getElementById("next-prayer-progress-fill");
 const prayerStatus = document.getElementById("prayer-status");
 const lastUpdated = document.getElementById("last-updated");
 const malawiTime = document.getElementById("malawi-time");
@@ -93,6 +95,25 @@ function formatCountdown(totalMinutes) {
   }
 
   return `${minutes}m remaining`;
+}
+
+function formatFriendlyCountdown(totalMinutes, prayerLabel) {
+  if (totalMinutes <= 0) {
+    return `${prayerLabel} is starting now`;
+  }
+
+  if (totalMinutes < 60) {
+    return `${totalMinutes} minute${totalMinutes === 1 ? "" : "s"} until ${prayerLabel}`;
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (minutes === 0) {
+    return `${hours} hour${hours === 1 ? "" : "s"} until ${prayerLabel}`;
+  }
+
+  return `${hours}h ${minutes}m until ${prayerLabel}`;
 }
 
 function getChecklistState() {
@@ -163,23 +184,45 @@ function renderPrayerTimes() {
     prayerWindows.find(
       (prayer) =>
         currentMinutes >= prayer.startMinutes &&
-        currentMinutes < prayer.nextStart,
+      currentMinutes < prayer.nextStart,
     ) ?? null;
+  const nextPrayerMinutes =
+    nextPrayer && nextPrayer.startMinutes < currentMinutes
+      ? nextPrayer.startMinutes + 24 * 60
+      : nextPrayer?.startMinutes ?? currentMinutes;
+  const minutesUntilNext = nextPrayerMinutes - currentMinutes;
 
   if (nextPrayerName) {
-    nextPrayerName.textContent = nextPrayer?.label ?? "Prayer times";
+    nextPrayerName.textContent = currentPrayer?.label ?? nextPrayer?.label ?? "Prayer times";
   }
 
   if (nextPrayerTime) {
-    nextPrayerTime.textContent = nextPrayer?.athan ?? "--:--";
+    nextPrayerTime.textContent = currentPrayer?.athan ?? nextPrayer?.athan ?? "--:--";
   }
 
   if (nextPrayerCountdown) {
-    const nextPrayerMinutes =
-      nextPrayer && nextPrayer.startMinutes < currentMinutes
-        ? nextPrayer.startMinutes + 24 * 60
-        : nextPrayer?.startMinutes ?? currentMinutes;
-    nextPrayerCountdown.textContent = formatCountdown(nextPrayerMinutes - currentMinutes);
+    nextPrayerCountdown.textContent = currentPrayer
+      ? `${currentPrayer.label} is now active`
+      : formatFriendlyCountdown(minutesUntilNext, nextPrayer?.label ?? "the next prayer");
+  }
+
+  if (nextPrayerLabel) {
+    nextPrayerLabel.textContent = currentPrayer ? "Current prayer" : "Next prayer";
+  }
+
+  if (nextPrayerProgressFill) {
+    if (currentPrayer) {
+      const windowLength = Math.max(currentPrayer.nextStart - currentPrayer.startMinutes, 1);
+      const elapsed = Math.min(
+        Math.max(currentMinutes - currentPrayer.startMinutes, 0),
+        windowLength,
+      );
+      const progress = Math.max(6, Math.min((elapsed / windowLength) * 100, 100));
+      nextPrayerProgressFill.style.width = `${progress}%`;
+    } else {
+      const capped = nextPrayer ? Math.max(0, Math.min(100 - minutesUntilNext, 24)) : 0;
+      nextPrayerProgressFill.style.width = `${capped}%`;
+    }
   }
 
   prayerTimeList.innerHTML = prayerWindows

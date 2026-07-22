@@ -84,8 +84,8 @@
     window.dispatchEvent(new CustomEvent("nooriva:installed"));
   });
 
-  if (isStandaloneApp() && window.location.pathname.endsWith("/index.html")) {
-    window.location.replace("./prayer.html");
+  if (isStandaloneApp()) {
+    document.body.classList.add("standalone-app");
   }
 
   const homeDownloadButton = document.getElementById("home-download-app");
