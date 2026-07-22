@@ -618,6 +618,7 @@ h3 {
 @media (max-width: 720px) {
   .page-shell {
     width: min(100% - 20px, 1180px);
+    padding: 12px 0 24px;
   }
 
   .site-header,
@@ -633,15 +634,73 @@ h3 {
   }
 
   .brand-logo {
-    width: 148px;
+    width: 138px;
   }
 
   .hero-logo {
-    width: min(210px, 72%);
+    width: min(190px, 70%);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    max-width: 9ch;
+  }
+
+  h2 {
+    font-size: clamp(1.55rem, 8vw, 2.2rem);
+    max-width: none;
+  }
+
+  .hero-section,
+  .prayer-page {
+    gap: 18px;
+  }
+
+  .hero-section,
+  .prayer-hero,
+  .features-section,
+  .cta-section,
+  .prayer-table-section {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-actions,
+  .cta-form {
+    gap: 10px;
+  }
+
+  .hero-actions .button,
+  .cta-form .button,
+  .prayer-hero .button,
+  .hero-actions a.button {
+    width: 100%;
+  }
+
+  .hero-meta {
+    gap: 8px;
+  }
+
+  .hero-meta span {
+    padding: 7px 10px;
+    font-size: 0.72rem;
+  }
+
+  .product-card,
+  .feature-card,
+  .cta-card,
+  .prayer-table-card {
+    border-radius: 18px;
+  }
+
+  .product-card,
+  .feature-card,
+  .cta-card {
+    padding: 16px;
   }
 
   .cta-form,
@@ -649,22 +708,160 @@ h3 {
     width: 100%;
   }
 
+  .prayer-hero-copy .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
   .prayer-table-head,
   .prayer-time-row {
     grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .prayer-table-head {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 0.72rem;
   }
 
   .prayer-table-head-jumuah,
   .jumuah-time-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .timing-row {
     grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .prayer-time-row,
+  .jumuah-time-row,
+  .timing-row {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .prayer-time-row span,
+  .timing-row span {
+    font-size: 0.94rem;
+  }
+
+  .prayer-time-row strong,
+  .jumuah-time-row strong,
+  .timing-row strong {
+    font-size: 0.96rem;
+    min-width: 48px;
+  }
+
+  .prayer-meta-pill {
+    min-width: 0;
+    padding: 11px 12px;
+    border-radius: 14px;
+  }
+
+  .prayer-meta-pill strong {
+    font-size: 0.92rem;
+  }
+
+  .section-heading {
+    margin-bottom: 14px;
   }
 
   .prayer-section-meta {
     display: grid;
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    width: calc(100% - 16px);
+    padding: 10px 0 20px;
+  }
+
+  .site-header {
+    padding: 4px 0 12px;
+  }
+
+  .site-nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+
+  .site-nav a {
+    text-align: center;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.52);
+  }
+
+  .hero-section,
+  .prayer-page,
+  .prayer-hero {
+    gap: 14px;
+  }
+
+  .hero-copy .eyebrow,
+  .prayer-hero-copy .eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .hero-text,
+  .install-status,
+  .status-line {
+    font-size: 0.9rem;
+  }
+
+  .button {
+    min-height: 42px;
+    padding: 0 14px;
+    font-size: 0.92rem;
+  }
+
+  .prayer-table-head,
+  .prayer-time-row {
+    grid-template-columns: 1.1fr 0.9fr 0.9fr;
+  }
+
+  .prayer-table-head,
+  .prayer-table-head-jumuah {
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+  }
+
+  .prayer-time-row span,
+  .timing-row span {
+    font-size: 0.9rem;
+  }
+
+  .prayer-time-row strong,
+  .jumuah-time-row strong,
+  .timing-row strong {
+    font-size: 0.92rem;
+    min-width: 42px;
+  }
+
+  .timing-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .footer-brand {
+    gap: 10px;
+  }
+
+  .footer-logo {
+    width: 94px;
   }
 }
