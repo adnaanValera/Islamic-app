@@ -10,13 +10,14 @@
 
   async function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) {
-      return;
+      return null;
     }
 
     try {
-      await navigator.serviceWorker.register("./sw.js");
+      const registration = await navigator.serviceWorker.register("./sw.js");
+      return registration;
     } catch (error) {
-      // Ignore registration failures for now.
+      return null;
     }
   }
 

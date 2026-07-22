@@ -775,6 +775,11 @@ h3 {
   display: none;
 }
 
+.mobile-bottom-nav-toggle,
+.mobile-bottom-nav-links {
+  display: none;
+}
+
 .qibla-hero-card {
   display: grid;
   place-items: center;
@@ -1178,6 +1183,13 @@ h3 {
     margin-bottom: 8px;
   }
 
+  .prayer-hero-title,
+  .prayer-hero-copy h1,
+  .prayer-section-heading h2 {
+    max-width: none;
+    text-wrap: balance;
+  }
+
   .hero-text,
   .install-status,
   .status-line {
@@ -1252,7 +1264,7 @@ h3 {
     bottom: 8px;
     z-index: 40;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 8px;
     padding: 8px;
     border: 1px solid var(--line);
@@ -1260,6 +1272,51 @@ h3 {
     background: rgba(252, 248, 241, 0.92);
     backdrop-filter: blur(16px);
     box-shadow: 0 16px 30px rgba(79, 66, 39, 0.12);
+  }
+
+  .mobile-bottom-nav-toggle {
+    width: 100%;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 16px;
+    border: 1px solid rgba(191, 149, 77, 0.22);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.65);
+    color: var(--text-strong);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  .mobile-bottom-nav-toggle-label {
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .mobile-bottom-nav-toggle-arrow {
+    width: 11px;
+    height: 11px;
+    border-right: 2px solid var(--gold-soft);
+    border-bottom: 2px solid var(--gold-soft);
+    transform: rotate(45deg) translateY(-1px);
+    transition: transform 180ms ease;
+  }
+
+  .mobile-bottom-nav[data-expanded="true"] .mobile-bottom-nav-toggle-arrow {
+    transform: rotate(-135deg) translateY(-1px);
+  }
+
+  .mobile-bottom-nav-links {
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .mobile-bottom-nav[data-expanded="true"] .mobile-bottom-nav-links {
+    display: grid;
   }
 
   .mobile-bottom-nav a {
@@ -1271,6 +1328,9 @@ h3 {
     color: var(--muted);
     font-size: 0.86rem;
     font-weight: 700;
+    padding: 0 10px;
+    border: 1px solid rgba(191, 149, 77, 0.16);
+    background: rgba(255, 255, 255, 0.5);
   }
 
   .mobile-bottom-nav a[aria-current="page"] {

@@ -24,6 +24,7 @@ const startTimings = [
 ];
 
 let latestPrayerTimes = [];
+let nextPrayerNotificationTimeout = null;
 
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
@@ -289,12 +290,14 @@ function updateNotificationStatus() {
 
   if (!("Notification" in window)) {
     notificationButton.disabled = true;
+    notificationButton.textContent = "Notifications unavailable";
     return;
   }
 
   if (Notification.permission === "granted") {
     notificationButton.style.display = "none";
     updateActionVisibility();
+    scheduleNextPrayerNotification();
     return;
   }
 
@@ -314,6 +317,10 @@ function updateActionVisibility() {
     return;
   }
 
+  if (downloadAppButton && window.noorivaInstall?.isStandaloneApp?.()) {
+    downloadAppButton.style.display = "none";
+  }
+
   const visibleButtons = prayerActions.querySelectorAll(
     ".button:not([style*='display: none'])",
   );
@@ -327,7 +334,91 @@ function updateActionVisibility() {
 }
 
 async function registerServiceWorker() {
-  await window.noorivaInstall?.registerServiceWorker?.();
+  return window.noorivaInstall?.registerServiceWorker?.();
+}
+
+async function showPrayerNotification(prayer) {
+  const title = `${prayer.label} time`;
+  const body = `It is now time for ${prayer.label} in Malawi.`;
+  const icon = "./assets/nooriva-logo-transparent.png";
+  const badge = "./assets/nooriva-logo-transparent.png";
+  const tag = `prayer-${prayer.label.toLowerCase()}`;
+
+  if ("serviceWorker" in navigator) {
+    const registration = await navigator.serviceWorker.ready.catch(() => null);
+
+    if (registration) {
+      await registration.showNotification(title, {
+        body,
+        icon,
+        badge,
+        tag,
+        renotify: true,
+      });
+      return true;
+    }
+  }
+
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification(title, { body, icon, badge, tag });
+    return true;
+  }
+
+  return false;
+}
+
+function clearScheduledPrayerNotification() {
+  if (nextPrayerNotificationTimeout) {
+    window.clearTimeout(nextPrayerNotificationTimeout);
+    nextPrayerNotificationTimeout = null;
+  }
+}
+
+function getNextUpcomingPrayer() {
+  if (latestPrayerTimes.length === 0) {
+    return null;
+  }
+
+  const { dateKey, timeKey } = getMalawiDateParts();
+  const currentMinutes = getMinutesFromTimeString(timeKey) ?? 0;
+  const prayerWindows = latestPrayerTimes.map((prayer) => ({
+    ...prayer,
+    startMinutes: getMinutesFromTimeString(prayer.athan) ?? 0,
+  }));
+
+  const nextPrayer =
+    prayerWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? prayerWindows[0];
+  const nextPrayerMinutes =
+    nextPrayer.startMinutes > currentMinutes
+      ? nextPrayer.startMinutes
+      : nextPrayer.startMinutes + 24 * 60;
+
+  return {
+    prayer: nextPrayer,
+    waitMs: Math.max((nextPrayerMinutes - currentMinutes) * 60 * 1000, 0),
+    dateKey,
+  };
+}
+
+function scheduleNextPrayerNotification() {
+  clearScheduledPrayerNotification();
+
+  if (!("Notification" in window) || Notification.permission !== "granted") {
+    return;
+  }
+
+  const upcoming = getNextUpcomingPrayer();
+
+  if (!upcoming) {
+    return;
+  }
+
+  const bufferedDelay = Math.min(upcoming.waitMs + 1500, 2147483647);
+
+  nextPrayerNotificationTimeout = window.setTimeout(async () => {
+    await maybeSendPrayerNotification();
+    scheduleNextPrayerNotification();
+  }, bufferedDelay);
 }
 
 async function loadPrayerTimes() {
@@ -372,31 +463,30 @@ async function loadPrayerTimes() {
     }
 
     prayerStatus.textContent = "Prayer times updated.";
+    scheduleNextPrayerNotification();
   } catch (error) {
     prayerStatus.textContent = "We couldn't refresh the prayer times just now.";
   }
 }
 
-function maybeSendPrayerNotification() {
+async function maybeSendPrayerNotification() {
   if (!("Notification" in window) || Notification.permission !== "granted") {
     return;
   }
 
   const { dateKey, timeKey } = getMalawiDateParts();
 
-  latestPrayerTimes.forEach((prayer) => {
+  for (const prayer of latestPrayerTimes) {
     const storageKey = `nooriva-notified-${dateKey}-${prayer.label.toLowerCase()}`;
 
     if (prayer.athan === timeKey && !localStorage.getItem(storageKey)) {
-      new Notification(`${prayer.label} time`, {
-        body: `It is now time for ${prayer.label} in Malawi.`,
-        icon: "./assets/nooriva-logo-transparent.png",
-        badge: "./assets/nooriva-logo-transparent.png",
-      });
+      const shown = await showPrayerNotification(prayer);
 
-      localStorage.setItem(storageKey, "true");
+      if (shown) {
+        localStorage.setItem(storageKey, "true");
+      }
     }
-  });
+  }
 }
 
 if (refreshButton) {
@@ -418,7 +508,9 @@ if (notificationButton) {
     updateActionVisibility();
 
     if (permission === "granted") {
-      maybeSendPrayerNotification();
+      prayerStatus.textContent = "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
+      await maybeSendPrayerNotification();
+      scheduleNextPrayerNotification();
     }
   });
 }
@@ -457,6 +549,14 @@ window.addEventListener("nooriva:installed", () => {
   }
 
   updateActionVisibility();
+  scheduleNextPrayerNotification();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    maybeSendPrayerNotification();
+    scheduleNextPrayerNotification();
+  }
 });
 
 setInterval(() => {
@@ -466,5 +566,7 @@ setInterval(() => {
     renderPrayerTimes();
   }
 }, 1000);
-setInterval(maybeSendPrayerNotification, 15000);
+setInterval(() => {
+  maybeSendPrayerNotification();
+}, 15000);
 setInterval(loadPrayerTimes, 300000);
