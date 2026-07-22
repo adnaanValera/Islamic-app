@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nooriva | Prayer Times</title>
+    <meta
+      name="description"
+      content="Live prayer times for Nooriva, updated from Limbe Jaame Masjid."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-prayer">
+      <header class="site-header">
+        <div class="brand-lockup">
+          <a href="./index.html" aria-label="Back to Nooriva home">
+            <img
+              class="brand-logo"
+              src="./assets/nooriva-logo-transparent.png"
+              alt="Nooriva logo"
+            />
+          </a>
+        </div>
+        <nav class="site-nav">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html" aria-current="page">Prayer</a>
+          <a href="./index.html#contact">Contact Us</a>
+        </nav>
+      </header>
+
+      <main class="prayer-page">
+        <section class="prayer-hero">
+          <div class="prayer-hero-copy">
+            <p class="eyebrow">Live prayer timings</p>
+            <h1>Daily Adhan times, refreshed from Limbe Jaame Masjid.</h1>
+            <p class="hero-text">
+              Nooriva checks the live masjid board and keeps this page aligned
+              with the latest published prayer times for Limbe, Malawi.
+            </p>
+            <div class="hero-actions">
+              <button class="button button-primary" id="enable-notifications" type="button">
+                Enable notifications
+              </button>
+              <button class="button button-secondary" id="refresh-prayers" type="button">
+                Refresh times
+              </button>
+            </div>
+            <div class="status-stack">
+              <p class="status-line" id="prayer-status">Loading live prayer times...</p>
+              <p class="status-line status-line-soft" id="notification-status">
+                Notifications are off.
+              </p>
+            </div>
+          </div>
+
+          <div class="prayer-summary-card">
+            <p class="card-label">Prayer board</p>
+            <div class="summary-row">
+              <span>Location</span>
+              <strong id="board-location">Limbe, Malawi</strong>
+            </div>
+            <div class="summary-row">
+              <span>Source</span>
+              <strong>MasjidBoard Live</strong>
+            </div>
+            <div class="summary-row">
+              <span>Last updated</span>
+              <strong id="last-updated">Checking...</strong>
+            </div>
+            <div class="summary-row">
+              <span>Current Malawi time</span>
+              <strong id="malawi-time">--:--</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="prayer-table-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Prayer timings</p>
+              <h2>Today’s Adhan times</h2>
+            </div>
+          </div>
+
+          <div class="prayer-table-card">
+            <div class="prayer-table-head">
+              <span>Prayer</span>
+              <span>Adhan</span>
+            </div>
+
+            <div class="prayer-time-list" id="prayer-time-list">
+              <div class="prayer-time-row">
+                <span>Fajr</span>
+                <strong>--:--</strong>
+              </div>
+              <div class="prayer-time-row">
+                <span>Zuhr</span>
+                <strong>--:--</strong>
+              </div>
+              <div class="prayer-time-row">
+                <span>Asr</span>
+                <strong>--:--</strong>
+              </div>
+              <div class="prayer-time-row">
+                <span>Maghrib</span>
+                <strong>--:--</strong>
+              </div>
+              <div class="prayer-time-row">
+                <span>Esha</span>
+                <strong>--:--</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./prayer-times.js"></script>
+  </body>
+</html>

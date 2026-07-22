@@ -286,6 +286,10 @@ h3 {
   color: var(--text-strong);
 }
 
+.card-grid strong a {
+  color: inherit;
+}
+
 .features-section,
 .cta-section {
   padding: 22px 0;
@@ -320,6 +324,12 @@ h3 {
   padding: 18px;
 }
 
+.feature-card-interactive {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .feature-card p {
   margin: 0 0 12px;
   color: var(--gold-soft);
@@ -328,6 +338,16 @@ h3 {
 
 .feature-card h3 {
   margin-bottom: 8px;
+}
+
+.feature-link {
+  margin-top: 16px;
+  font-weight: 700;
+  color: var(--green-accent);
+}
+
+.feature-link:hover {
+  color: var(--gold-soft);
 }
 
 .cta-card {
@@ -378,11 +398,143 @@ h3 {
   opacity: 0.98;
 }
 
+.page-shell-prayer {
+  padding-bottom: 40px;
+}
+
+.prayer-page {
+  display: grid;
+  gap: 24px;
+}
+
+.prayer-hero {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 22px;
+  align-items: stretch;
+  padding: 18px 0 8px;
+}
+
+.status-stack {
+  margin-top: 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.status-line {
+  margin: 0;
+  color: var(--green-accent);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.status-line-soft {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.prayer-summary-card,
+.prayer-table-card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
+  box-shadow: var(--shadow);
+}
+
+.prayer-summary-card {
+  border-radius: 22px;
+  padding: 22px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.summary-row:last-child {
+  border-bottom: 0;
+}
+
+.summary-row span {
+  color: var(--muted);
+}
+
+.summary-row strong {
+  color: var(--text-strong);
+  text-align: right;
+}
+
+.prayer-table-section {
+  padding: 4px 0 0;
+}
+
+.prayer-table-card {
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.prayer-table-head,
+.prayer-time-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.prayer-table-head {
+  padding: 18px 22px;
+  background: rgba(37, 68, 60, 0.08);
+  color: var(--green-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.prayer-time-list {
+  padding: 8px 0;
+}
+
+.prayer-time-row {
+  padding: 18px 22px;
+  border-top: 1px solid rgba(191, 149, 77, 0.14);
+}
+
+.prayer-time-row:first-child {
+  border-top: 0;
+}
+
+.prayer-time-row span {
+  font-size: 1rem;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.prayer-time-row strong {
+  font-size: 1.05rem;
+  color: var(--gold-soft);
+}
+
+.prayer-time-row.is-next {
+  background: linear-gradient(90deg, rgba(197, 150, 78, 0.12), rgba(255, 255, 255, 0));
+}
+
+.prayer-time-row.is-next strong,
+.prayer-time-row.is-next span {
+  color: var(--green-accent);
+}
+
 @media (max-width: 960px) {
   .hero-section,
   .feature-grid,
   .cta-card,
-  .section-heading-inline {
+  .section-heading-inline,
+  .prayer-hero {
     grid-template-columns: 1fr;
   }
 
@@ -423,5 +575,11 @@ h3 {
   .cta-form,
   .cta-form input {
     width: 100%;
+  }
+
+  .summary-row,
+  .prayer-table-head,
+  .prayer-time-row {
+    grid-template-columns: 1fr auto;
   }
 }
