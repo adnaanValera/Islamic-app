@@ -44,25 +44,31 @@
     const homeActions = document.getElementById("home-install-actions");
     const downloadButton = document.getElementById("home-download-app");
     const installStatus = document.getElementById("home-install-status");
+    const settingsDownloadButton = document.getElementById("settings-download-app");
+    const settingsInstallStatus = document.getElementById("settings-install-status");
     const notificationsEnabled =
       "Notification" in window && Notification.permission === "granted";
 
-    if (!homeActions) {
-      return;
-    }
-
-    if (isStandaloneApp() && notificationsEnabled) {
-      homeActions.classList.add("prayer-actions-hidden");
-      if (installStatus) {
-        installStatus.textContent = "";
+    if (homeActions) {
+      if (isStandaloneApp() && notificationsEnabled) {
+        homeActions.classList.add("prayer-actions-hidden");
+        if (installStatus) {
+          installStatus.textContent = "";
+        }
+      } else {
+        homeActions.classList.remove("prayer-actions-hidden");
       }
-      return;
+
+      if (downloadButton && isStandaloneApp()) {
+        downloadButton.style.display = "none";
+      }
     }
 
-    homeActions.classList.remove("prayer-actions-hidden");
-
-    if (downloadButton && isStandaloneApp()) {
-      downloadButton.style.display = "none";
+    if (settingsDownloadButton && isStandaloneApp()) {
+      settingsDownloadButton.style.display = "none";
+      if (settingsInstallStatus) {
+        settingsInstallStatus.textContent = "";
+      }
     }
   }
 

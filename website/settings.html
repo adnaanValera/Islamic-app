@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nooriva | Settings & Help</title>
+    <meta
+      name="description"
+      content="Settings, install guidance, notifications and support for Nooriva."
+    />
+    <meta name="theme-color" content="#f8f3ea" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-prayer">
+      <header class="site-header home-mobile-header">
+        <div class="brand-lockup">
+          <a href="./index.html" aria-label="Back to Nooriva home">
+            <img
+              class="brand-logo"
+              src="./assets/nooriva-logo-transparent.png"
+              alt="Nooriva logo"
+            />
+          </a>
+        </div>
+        <nav class="site-nav">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./settings.html" aria-current="page">Help</a>
+        </nav>
+      </header>
+
+      <main class="prayer-page">
+        <section class="prayer-hero">
+          <div class="prayer-hero-copy">
+            <p class="eyebrow">Settings & help</p>
+            <h1>Everything you need to use Nooriva smoothly.</h1>
+            <p class="hero-text">
+              Install guidance, notification help, and quick access to the main prayer screen.
+            </p>
+            <div class="hero-actions" id="settings-install-actions">
+              <button class="button button-primary" id="settings-download-app" type="button">
+                Download app
+              </button>
+              <a class="button button-secondary" href="./prayer.html">Open prayer</a>
+            </div>
+            <p class="install-status" id="settings-install-status"></p>
+          </div>
+
+          <div class="prayer-table-card prayer-table-card-hero">
+            <div class="next-prayer-banner">
+              <span class="next-prayer-label">Quick help</span>
+              <strong class="next-prayer-name">Use Nooriva like an app</strong>
+              <span class="next-prayer-countdown">
+                Install it, enable notifications, and keep Prayer Timings one tap away.
+              </span>
+            </div>
+            <div class="timings-list">
+              <div class="timing-row">
+                <span>Install app</span>
+                <strong>Home screen</strong>
+              </div>
+              <div class="timing-row">
+                <span>Prayer notifications</span>
+                <strong>Browser permission</strong>
+              </div>
+              <div class="timing-row">
+                <span>Main screen</span>
+                <strong>Prayer Timings</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="features-section settings-grid-section">
+          <div class="feature-grid settings-grid">
+            <article class="feature-card">
+              <p>01</p>
+              <h3>Install Nooriva</h3>
+              <span>Tap Download app. If your browser does not show the prompt, use its install or add-to-home-screen option.</span>
+            </article>
+            <article class="feature-card">
+              <p>02</p>
+              <h3>Enable notifications</h3>
+              <span>Open the Prayer page and allow notifications when asked so Nooriva can alert you at prayer time.</span>
+            </article>
+            <article class="feature-card">
+              <p>03</p>
+              <h3>Prayer checkboxes</h3>
+              <span>Mark prayers as completed from the Prayer page. They reset automatically each day at midnight in Malawi time.</span>
+            </article>
+            <article class="feature-card">
+              <p>04</p>
+              <h3>Need support?</h3>
+              <span>Use the contact section on Home for updates, questions, or early collaboration requests.</span>
+            </article>
+          </div>
+        </section>
+
+        <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./settings.html" aria-current="page">Help</a>
+        </nav>
+      </main>
+    </div>
+
+    <script src="./install-app.js"></script>
+    <script src="./settings.js"></script>
+  </body>
+</html>
