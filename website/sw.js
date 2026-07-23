@@ -1,4 +1,4 @@
-const STATIC_CACHE = "nooriva-static-v15";
+const STATIC_CACHE = "nooriva-static-v16";
 const CORE_ASSETS = [
   "/",
   "/index.html",

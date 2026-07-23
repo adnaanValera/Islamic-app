@@ -143,6 +143,11 @@ function getCurrentSurahFromPageData(pageData) {
   return pageAyahs[0]?.surah ?? surahs[0] ?? null;
 }
 
+function shouldShowBasmala(pageData) {
+  const surah = getCurrentSurahFromPageData(pageData);
+  return Number(surah?.number) !== 9;
+}
+
 function renderHeader() {
   const surah = getCurrentSurahFromPageData(currentPageData);
   if (!surah) return;
@@ -155,8 +160,6 @@ function renderHeader() {
   if (lastReadBadge) lastReadBadge.textContent = "";
   if (readingCopy) readingCopy.textContent = "";
 
-  if (basmalaTextNode) basmalaTextNode.textContent = basmalaText;
-  if (basmalaCard) basmalaCard.style.display = Number(surah.number) === 9 ? "none" : "grid";
   if (previousSurahButton) previousSurahButton.disabled = activeIndex <= 0 || isNavigating;
   if (nextSurahButton) nextSurahButton.disabled = activeIndex === -1 || activeIndex >= surahs.length - 1 || isNavigating;
 }
@@ -204,10 +207,20 @@ function renderViewButtons() {
 
 function buildArabicPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
+  const basmalaMarkup = shouldShowBasmala(pageData)
+    ? `
+      <div class="quran-page-basmala">
+        <p class="quran-basmala-label">Bismillah</p>
+        <p class="quran-basmala-text" dir="rtl" lang="ar">${basmalaText}</p>
+      </div>
+    `
+    : "";
+
   return `
     <article class="quran-reading-page quran-reading-page-premium quran-reading-page-paged">
       <div class="quran-reading-page-ornament quran-reading-page-ornament-top" aria-hidden="true"></div>
       <div class="quran-reading-page-topline"><span>Page ${pageData?.number ?? currentPageNumber}</span></div>
+      ${basmalaMarkup}
       <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
         ${ayahs.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
       </p>
