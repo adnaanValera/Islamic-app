@@ -15,6 +15,36 @@
 
     try {
       const registration = await navigator.serviceWorker.register("./sw.js");
+      registration.update().catch(() => undefined);
+
+      if (registration.waiting) {
+        registration.waiting.postMessage({ type: "SKIP_WAITING" });
+      }
+
+      registration.addEventListener("updatefound", () => {
+        const installingWorker = registration.installing;
+
+        if (!installingWorker) {
+          return;
+        }
+
+        installingWorker.addEventListener("statechange", () => {
+          if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
+            registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+          }
+        });
+      });
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) {
+          return;
+        }
+
+        refreshing = true;
+        window.location.reload();
+      });
+
       return registration;
     } catch (error) {
       return null;

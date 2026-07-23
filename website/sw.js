@@ -1,41 +1,60 @@
+const STATIC_CACHE = "nooriva-static-v4";
+const CORE_ASSETS = [
+  "/",
+  "/index.html",
+  "/prayer.html",
+  "/qibla.html",
+  "/quran.html",
+  "/tasbeeh.html",
+  "/account.html",
+  "/settings.html",
+  "/styles.css",
+  "/install-app.js",
+  "/mobile-nav.js",
+  "/prayer-times.js",
+  "/qibla.js",
+  "/quran.js",
+  "/tasbeeh.js",
+  "/account.js",
+  "/settings.js",
+  "/manifest.webmanifest",
+  "/assets/favicon-32.png",
+  "/assets/apple-touch-icon.png",
+  "/assets/icon-192.png",
+  "/assets/icon-512.png",
+  "/assets/nooriva-app-icon.png",
+  "/assets/nooriva-logo-transparent.png",
+];
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
-      .open("nooriva-static-v2")
-      .then((cache) =>
-        cache.addAll([
-          "/",
-          "/index.html",
-          "/prayer.html",
-          "/qibla.html",
-          "/quran.html",
-          "/tasbeeh.html",
-          "/settings.html",
-          "/styles.css",
-          "/install-app.js",
-          "/mobile-nav.js",
-          "/prayer-times.js",
-          "/qibla.js",
-          "/quran.js",
-          "/tasbeeh.js",
-          "/settings.js",
-          "/manifest.webmanifest",
-          "/assets/favicon-32.png",
-          "/assets/apple-touch-icon.png",
-          "/assets/icon-192.png",
-          "/assets/icon-512.png",
-          "/assets/nooriva-app-icon.png",
-          "/assets/nooriva-logo-transparent.png",
-        ]),
-      )
+      .open(STATIC_CACHE)
+      .then((cache) => cache.addAll(CORE_ASSETS))
       .then(() => self.skipWaiting()),
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((key) => key !== STATIC_CACHE).map((key) => caches.delete(key))),
+      )
+      .then(() => self.clients.claim()),
   );
 });
 
 self.addEventListener("message", (event) => {
   const payload = event.data;
 
-  if (!payload || payload.type !== "SHOW_PRAYER_NOTIFICATION") {
+  if (payload?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+    return;
+  }
+
+  if (payload?.type !== "SHOW_PRAYER_NOTIFICATION") {
     return;
   }
 
@@ -90,16 +109,47 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((key) => key !== "nooriva-static-v2").map((key) => caches.delete(key))),
-      )
-      .then(() => self.clients.claim()),
-  );
-});
+async function networkFirst(request) {
+  const cache = await caches.open(STATIC_CACHE);
+
+  try {
+    const fresh = await fetch(request, { cache: "no-store" });
+
+    if (fresh && fresh.status === 200) {
+      cache.put(request, fresh.clone());
+    }
+
+    return fresh;
+  } catch (error) {
+    const cached = await cache.match(request);
+    if (cached) {
+      return cached;
+    }
+
+    if (request.mode === "navigate") {
+      return cache.match("/index.html");
+    }
+
+    throw error;
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(request);
+
+  const networkPromise = fetch(request)
+    .then((response) => {
+      if (response && response.status === 200) {
+        cache.put(request, response.clone());
+      }
+
+      return response;
+    })
+    .catch(() => cached);
+
+  return cached || networkPromise;
+}
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") {
@@ -108,32 +158,25 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(event.request.url);
 
-  if (url.pathname.startsWith("/api/")) {
-    event.respondWith(
-      fetch(event.request).catch(async () => {
-        const cache = await caches.open("nooriva-static-v2");
-        return cache.match("/prayer.html") || Response.error();
-      }),
-    );
+  if (url.origin !== self.location.origin) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
 
-      return fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && url.origin === self.location.origin) {
-            const responseClone = networkResponse.clone();
-            caches.open("nooriva-static-v2").then((cache) => cache.put(event.request, responseClone));
-          }
+  const isDocumentRequest =
+    event.request.mode === "navigate" ||
+    event.request.destination === "document" ||
+    url.pathname.endsWith(".html") ||
+    url.pathname === "/";
 
-          return networkResponse;
-        })
-        .catch(() => caches.match("/index.html"));
-    }),
-  );
+  if (isDocumentRequest) {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(event.request));
 });
