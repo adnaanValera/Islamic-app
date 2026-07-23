@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nooriva | Quran</title>
+    <meta
+      name="description"
+      content="Read and return to selected Quran surahs in Nooriva with saved bookmarks and a calm reading view."
+    />
+    <meta name="theme-color" content="#f8f3ea" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-prayer">
+      <header class="site-header prayer-mobile-header">
+        <div class="brand-lockup">
+          <a href="./index.html" aria-label="Back to Nooriva home">
+            <img class="brand-logo" src="./assets/nooriva-logo-transparent.png" alt="Nooriva logo" />
+          </a>
+        </div>
+        <nav class="site-nav">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html">Qibla</a>
+          <a href="./quran.html" aria-current="page">Quran</a>
+          <a href="./tasbeeh.html">Tasbeeh</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </header>
+
+      <main class="prayer-page">
+        <section class="prayer-hero">
+          <div class="prayer-hero-copy">
+            <p class="eyebrow">Quran</p>
+            <h1 class="prayer-hero-title">Calm reading space.</h1>
+            <p class="hero-text prayer-hero-text">
+              Start with a focused set of beloved surahs, save bookmarks, and return where you left off.
+            </p>
+            <div class="hero-actions">
+              <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
+              <button class="button button-secondary" id="quran-clear-search" type="button">Clear</button>
+            </div>
+            <div class="status-stack">
+              <p class="status-line" id="quran-status">Selected reading list loaded.</p>
+              <p class="status-line status-line-soft" id="quran-bookmark-copy">
+                Bookmarks are saved on this device.
+              </p>
+            </div>
+          </div>
+
+          <div class="prayer-table-card prayer-table-card-hero quran-hero-card">
+            <div class="quran-hero-shell">
+              <div class="tasbeeh-counter-topline">
+                <span class="next-prayer-label">Today’s return</span>
+                <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
+              </div>
+              <div class="quran-reader-card">
+                <strong class="quran-reader-title" id="quran-selected-title">Al-Fatihah</strong>
+                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • مكة</span>
+                <p class="quran-reader-arabic" id="quran-selected-arabic">
+                  بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                </p>
+                <p class="quran-reader-translation" id="quran-selected-translation">
+                  In the name of Allah, the Entirely Merciful, the Especially Merciful.
+                </p>
+              </div>
+              <div class="tasbeeh-actions-grid">
+                <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
+                <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="prayer-table-section prayer-meta-section">
+          <div class="prayer-section-meta">
+            <div class="prayer-meta-pill">
+              <span>Current surah</span>
+              <strong id="quran-current-surah">Al-Fatihah</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Bookmarked</span>
+              <strong id="quran-bookmarked-surah">None yet</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Saved list</span>
+              <strong id="quran-saved-count">0</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Reading mode</span>
+              <strong>Local reading</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="prayer-table-section">
+          <div class="section-heading prayer-section-heading">
+            <div>
+              <p class="eyebrow">Reading list</p>
+              <h2>Selected surahs</h2>
+            </div>
+          </div>
+
+          <div class="quran-surah-grid" id="quran-surah-grid"></div>
+        </section>
+
+        <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html">Qibla</a>
+          <a href="./quran.html" aria-current="page">Quran</a>
+          <a href="./tasbeeh.html">Tasbeeh</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </main>
+    </div>
+
+    <script src="./install-app.js"></script>
+    <script src="./mobile-nav.js"></script>
+    <script src="./quran.js"></script>
+  </body>
+</html>

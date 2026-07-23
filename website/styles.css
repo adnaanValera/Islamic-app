@@ -1282,6 +1282,113 @@ h3 {
   border-color: #bc8740;
 }
 
+.quran-search-input {
+  min-width: min(280px, 100%);
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text);
+  font: inherit;
+}
+
+.quran-hero-card {
+  padding: 22px;
+}
+
+.quran-hero-shell {
+  width: 100%;
+  display: grid;
+  gap: 14px;
+}
+
+.quran-reader-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(191, 149, 77, 0.16);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.quran-reader-title {
+  color: var(--text-strong);
+  font-size: 1.22rem;
+}
+
+.quran-reader-subtitle {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.quran-reader-arabic {
+  margin: 4px 0 0;
+  color: var(--text-strong);
+  font-size: 1.8rem;
+  line-height: 1.7;
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.quran-reader-translation {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.quran-surah-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.quran-surah-card {
+  text-align: left;
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
+  box-shadow: var(--shadow-soft);
+  color: var(--text);
+  font: inherit;
+}
+
+.quran-surah-card strong {
+  color: var(--text-strong);
+  font-size: 1rem;
+}
+
+.quran-surah-card small,
+.quran-surah-meta,
+.quran-surah-number {
+  color: var(--muted);
+}
+
+.quran-surah-number {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quran-surah-meta {
+  font-size: 0.84rem;
+}
+
+.quran-surah-card.is-active {
+  border-color: rgba(191, 149, 77, 0.36);
+  box-shadow: var(--shadow);
+}
+
+.quran-surah-card.is-saved strong::after {
+  content: " • Saved";
+  color: var(--gold-soft);
+  font-size: 0.84rem;
+}
+
 .qibla-guidance-card strong {
   color: var(--text-strong);
   font-size: 0.94rem;
