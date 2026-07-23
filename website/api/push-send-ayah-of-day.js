@@ -1,9 +1,7 @@
-import { fetchPrayerBoard, getMalawiTimeParts, getPrayerTimesFromPayload } from "./_lib/prayer-data.js";
+import { fetchAyahOfTheDay } from "./_lib/ayah-of-day.js";
+import { getMalawiTimeParts } from "./_lib/prayer-data.js";
 import { loadSubscriptions, removeSubscription } from "./_lib/push-store.js";
 import { isPushConfigured, sendPushNotification } from "./_lib/web-push.js";
-
-const prayerReminderBody =
-  "The Messenger of Allah (ﷺ) said: ‘The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.’";
 
 function isAuthorized(request) {
   const expected = process.env.CRON_SECRET;
@@ -34,42 +32,37 @@ export default async function handler(request, response) {
     return;
   }
 
-  const payload = await fetchPrayerBoard();
-  const prayers = getPrayerTimesFromPayload(payload);
   const { dateKey, timeKey } = getMalawiTimeParts();
-  const duePrayers = prayers.filter((prayer) => prayer.athan === timeKey);
 
-  if (duePrayers.length === 0) {
+  if (timeKey !== "11:00") {
     response.status(200).json({
       ok: true,
       sent: 0,
-      due: [],
-      message: `No prayer reminders due at ${timeKey} on ${dateKey}.`,
+      message: `No ayah notification due at ${timeKey} on ${dateKey}.`,
     });
     return;
   }
 
+  const ayah = await fetchAyahOfTheDay();
   const subscriptions = await loadSubscriptions();
-  let sent = 0;
   const removed = [];
+  let sent = 0;
 
-  for (const prayer of duePrayers) {
-    for (const subscription of subscriptions) {
-      try {
-        await sendPushNotification(subscription, {
-          title: `${prayer.label} time`,
-          body: prayerReminderBody,
-          prayer: prayer.label,
-          time: prayer.athan,
-          url: "/prayer.html",
-        });
-        sent += 1;
-      } catch (error) {
-        const statusCode = error?.statusCode ?? error?.status ?? 0;
+  for (const subscription of subscriptions) {
+    try {
+      await sendPushNotification(subscription, {
+        title: "Ayah of the day",
+        body: `${ayah.surahName} ${ayah.ayahInSurah}: ${ayah.english}`,
+        arabic: ayah.arabic,
+        reference: `${ayah.surahName} ${ayah.ayahInSurah}`,
+        url: "/index.html",
+      });
+      sent += 1;
+    } catch (error) {
+      const statusCode = error?.statusCode ?? error?.status ?? 0;
 
-        if (statusCode === 404 || statusCode === 410) {
-          removed.push(subscription.endpoint);
-        }
+      if (statusCode === 404 || statusCode === 410) {
+        removed.push(subscription.endpoint);
       }
     }
   }
@@ -82,8 +75,8 @@ export default async function handler(request, response) {
     ok: true,
     sent,
     removed: removed.length,
-    due: duePrayers.map((prayer) => prayer.label),
-    timeKey,
     dateKey,
+    timeKey,
+    reference: `${ayah.surahName} ${ayah.ayahInSurah}`,
   });
 }

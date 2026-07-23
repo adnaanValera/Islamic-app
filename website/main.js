@@ -7,6 +7,7 @@ const mainPrayerLabel = document.getElementById("main-prayer-label");
 const mainPrayerName = document.getElementById("main-prayer-name");
 const mainPrayerTime = document.getElementById("main-prayer-time");
 const mainPrayerCountdown = document.getElementById("main-prayer-countdown");
+const mainNextSalah = document.getElementById("main-next-salah");
 const mainPrayerProgress = document.getElementById("main-prayer-progress");
 const mainQiblaArrow = document.getElementById("main-qibla-arrow");
 const mainQiblaPhone = document.getElementById("main-qibla-phone");
@@ -118,6 +119,14 @@ function renderMainPrayer() {
       : formatMainCountdown(minutesUntilNext, nextPrayer?.label ?? "Prayer");
   }
 
+  if (mainNextSalah) {
+    const nextSalahMinutes = nextPrayer && nextPrayer.startMinutes <= currentMinutes
+      ? nextPrayer.startMinutes + 24 * 60
+      : nextPrayer?.startMinutes ?? currentMinutes;
+    const minutesUntilNextSalah = nextSalahMinutes - currentMinutes;
+    mainNextSalah.textContent = `Next salah: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`;
+  }
+
   if (mainPrayerProgress) {
     if (currentPrayer) {
       const windowLength = Math.max(currentPrayer.endMinutes - currentPrayer.startMinutes, 1);
@@ -146,6 +155,7 @@ async function loadMainPrayer() {
   } catch {
     if (mainPrayerName) mainPrayerName.textContent = "Prayer unavailable";
     if (mainPrayerCountdown) mainPrayerCountdown.textContent = "Please try again later";
+    if (mainNextSalah) mainNextSalah.textContent = "Next salah unavailable";
   }
 }
 

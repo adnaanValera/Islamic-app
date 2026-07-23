@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/push-send-ayah-of-day",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

@@ -4059,6 +4059,12 @@ h3 {
   gap: 8px;
 }
 
+.main-next-salah {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
 .main-qibla-mini {
   display: grid;
   justify-items: center;
