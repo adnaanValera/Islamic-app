@@ -181,9 +181,32 @@ async function loadMainAyah() {
     if (mainAyahReference) {
       mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
+    fitAyahCardText();
   } catch {
     if (mainAyahEnglish) mainAyahEnglish.textContent = "Ayah unavailable right now.";
   }
+}
+
+function fitElementText(element, { min, max, step = 1, lineHeight }) {
+  if (!element) {
+    return;
+  }
+
+  let size = max;
+  element.style.fontSize = `${size}px`;
+  if (lineHeight) {
+    element.style.lineHeight = String(lineHeight);
+  }
+
+  while (size > min && element.scrollHeight > element.clientHeight) {
+    size -= step;
+    element.style.fontSize = `${size}px`;
+  }
+}
+
+function fitAyahCardText() {
+  fitElementText(mainAyahArabic, { min: 18, max: 34, step: 1, lineHeight: 1.9 });
+  fitElementText(mainAyahEnglish, { min: 12, max: 18, step: 0.5, lineHeight: 1.65 });
 }
 
 function sanitizeFileNamePart(value) {
@@ -218,6 +241,26 @@ function drawCenteredLines(context, lines, x, startY, lineHeight) {
   });
 }
 
+function getBestCanvasTextLayout(context, text, options) {
+  const { maxFontSize, minFontSize, width, maxHeight, lineHeightRatio } = options;
+
+  for (let size = maxFontSize; size >= minFontSize; size -= 1) {
+    context.font = `${options.weight} ${size}px ${options.family}`;
+    const lines = wrapCanvasText(context, text, width);
+    const lineHeight = size * lineHeightRatio;
+    const totalHeight = lines.length * lineHeight;
+
+    if (totalHeight <= maxHeight) {
+      return { size, lines, lineHeight, totalHeight };
+    }
+  }
+
+  context.font = `${options.weight} ${minFontSize}px ${options.family}`;
+  const lines = wrapCanvasText(context, text, width);
+  const lineHeight = minFontSize * lineHeightRatio;
+  return { size: minFontSize, lines, lineHeight, totalHeight: lines.length * lineHeight };
+}
+
 function downloadAyahCard() {
   if (!currentAyahOfDay) {
     return;
@@ -238,14 +281,30 @@ function downloadAyahCard() {
     context.textAlign = "center";
     context.fillStyle = "#13221c";
 
-    context.font = "600 58px 'Noto Naskh Arabic', serif";
-    const arabicLines = wrapCanvasText(context, currentAyahOfDay.arabic, 760);
-    drawCenteredLines(context, arabicLines, canvas.width / 2, 395, 82);
+    const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
+      maxFontSize: 66,
+      minFontSize: 34,
+      width: 780,
+      maxHeight: 250,
+      lineHeightRatio: 1.42,
+      weight: "600",
+      family: "'Noto Naskh Arabic', serif",
+    });
+    context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
+    drawCenteredLines(context, arabicLayout.lines, canvas.width / 2, 370, arabicLayout.lineHeight);
 
-    context.font = "500 27px Manrope, sans-serif";
     context.fillStyle = "#2b352f";
-    const englishLines = wrapCanvasText(context, currentAyahOfDay.english, 660);
-    drawCenteredLines(context, englishLines, canvas.width / 2, 700, 41);
+    const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
+      maxFontSize: 30,
+      minFontSize: 20,
+      width: 670,
+      maxHeight: 120,
+      lineHeightRatio: 1.48,
+      weight: "500",
+      family: "Manrope, sans-serif",
+    });
+    context.font = `500 ${englishLayout.size}px Manrope, sans-serif`;
+    drawCenteredLines(context, englishLayout.lines, canvas.width / 2, 660, englishLayout.lineHeight);
 
     context.font = "700 23px Manrope, sans-serif";
     context.fillStyle = "#8e7440";
@@ -371,6 +430,7 @@ function loadMainQibla() {
 }
 
 mainAyahDownload?.addEventListener("click", downloadAyahCard);
+window.addEventListener("resize", fitAyahCardText);
 
 loadMainPrayer();
 loadMainAyah();
