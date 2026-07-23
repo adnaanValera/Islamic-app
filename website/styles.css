@@ -3203,13 +3203,6 @@ h3 {
   color: var(--muted);
 }
 
-.quran-page-basmala {
-  display: grid;
-  gap: 6px;
-  justify-items: center;
-  margin: 10px 0 14px;
-}
-
 .quran-reading-page-surah-name {
   text-align: center;
   color: var(--text-strong);
