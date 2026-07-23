@@ -13,6 +13,8 @@ const continueSurah = document.getElementById("quran-continue-surah");
 const toggleBookmarkButton = document.getElementById("quran-toggle-bookmark");
 const openBookmarkButton = document.getElementById("quran-open-bookmark");
 const openContinueButton = document.getElementById("quran-open-continue");
+const previousSurahButton = document.getElementById("quran-prev-surah");
+const nextSurahButton = document.getElementById("quran-next-surah");
 const languageButtons = Array.from(document.querySelectorAll("[data-quran-view]"));
 
 let surahs = [];
@@ -75,7 +77,10 @@ function sanitizeArabicText(text) {
 
 async function fetchSurahList() {
   const response = await fetch(`${quranApiBaseUrl}/surah`, { cache: "force-cache" });
-  if (!response.ok) throw new Error("Unable to load Quran surahs.");
+  if (!response.ok) {
+    throw new Error("Unable to load Quran surahs.");
+  }
+
   const payload = await response.json();
   return payload?.data ?? [];
 }
@@ -84,9 +89,14 @@ async function fetchSurahDetails(surahNumber) {
   const response = await fetch(`${quranApiBaseUrl}/surah/${surahNumber}/editions/quran-uthmani,en.sahih`, {
     cache: "force-cache",
   });
-  if (!response.ok) throw new Error("Unable to load the selected surah.");
+
+  if (!response.ok) {
+    throw new Error("Unable to load the selected surah.");
+  }
+
   const payload = await response.json();
   const editions = payload?.data ?? [];
+
   return {
     arabicEdition: editions.find((edition) => edition?.edition?.identifier === "quran-uthmani"),
     translationEdition: editions.find((edition) => edition?.edition?.identifier === "en.sahih"),
@@ -95,7 +105,13 @@ async function fetchSurahDetails(surahNumber) {
 
 function renderHeader() {
   const surah = getSelectedSurah();
-  if (!surah) return;
+  if (!surah) {
+    return;
+  }
+
+  const activeIndex = surahs.findIndex((item) => String(item.number) === String(surah.number));
+  const hasPrevious = activeIndex > 0;
+  const hasNext = activeIndex !== -1 && activeIndex < surahs.length - 1;
 
   selectedTitle.textContent = surah.englishName;
   selectedSubtitle.textContent = `${surah.englishNameTranslation} • ${surah.revelationType}`;
@@ -108,12 +124,23 @@ function renderHeader() {
       : "Your place is saved on this device.";
   toggleBookmarkButton.textContent =
     quranState.bookmarkKey === String(surah.number) ? "Bookmarked" : "Save bookmark";
+
+  if (previousSurahButton) {
+    previousSurahButton.disabled = !hasPrevious;
+  }
+
+  if (nextSurahButton) {
+    nextSurahButton.disabled = !hasNext;
+  }
 }
 
 function renderSurahGrid() {
   const term = quranState.search.trim().toLowerCase();
   const filtered = surahs.filter((surah) => {
-    if (!term) return true;
+    if (!term) {
+      return true;
+    }
+
     return (
       surah.englishName.toLowerCase().includes(term) ||
       surah.englishNameTranslation.toLowerCase().includes(term) ||
@@ -124,6 +151,7 @@ function renderSurahGrid() {
   surahGrid.innerHTML = filtered
     .map((surah) => {
       const active = String(surah.number) === quranState.selectedKey ? " is-active" : "";
+
       return `
         <button class="quran-surah-card${active}" data-surah-key="${surah.number}" type="button">
           <span class="quran-surah-number">${surah.number}</span>
@@ -137,11 +165,7 @@ function renderSurahGrid() {
 
   surahGrid.querySelectorAll("[data-surah-key]").forEach((button) => {
     button.addEventListener("click", async () => {
-      quranState.selectedKey = String(button.dataset.surahKey);
-      selectedSurahDetails = null;
-      quranStatus.textContent = "Opening surah...";
-      render();
-      await loadSelectedSurahDetails();
+      await openSurahByKey(button.dataset.surahKey, "Opening surah...");
       document.querySelector(".quran-surah-dropdown")?.removeAttribute("open");
     });
   });
@@ -178,7 +202,8 @@ function buildArabicPages(arabicAyahs) {
 
 function buildEnglishAyahs(arabicAyahs, translationAyahs) {
   return arabicAyahs
-    .map((ayah, index) => `
+    .map(
+      (ayah, index) => `
       <article class="quran-ayah-card" data-ayah-number="${ayah.numberInSurah}">
         <div class="quran-ayah-topline">
           <span>Ayah ${ayah.numberInSurah}</span>
@@ -186,7 +211,8 @@ function buildEnglishAyahs(arabicAyahs, translationAyahs) {
         </div>
         <p class="quran-ayah-translation">${translationAyahs[index]?.text ?? ""}</p>
       </article>
-    `)
+    `,
+    )
     .join("");
 }
 
@@ -276,7 +302,10 @@ function renderReading() {
 }
 
 function render() {
-  if (searchInput) searchInput.value = quranState.search;
+  if (searchInput) {
+    searchInput.value = quranState.search;
+  }
+
   renderHeader();
   renderViewButtons();
   renderSurahGrid();
@@ -286,7 +315,9 @@ function render() {
 
 async function loadSelectedSurahDetails() {
   const surah = getSelectedSurah();
-  if (!surah) return;
+  if (!surah) {
+    return;
+  }
 
   try {
     selectedSurahDetails = await fetchSurahDetails(surah.number);
@@ -297,9 +328,20 @@ async function loadSelectedSurahDetails() {
   }
 }
 
+async function openSurahByKey(surahKey, statusMessage = "Opening surah...") {
+  quranState.selectedKey = String(surahKey);
+  selectedSurahDetails = null;
+  quranStatus.textContent = statusMessage;
+  render();
+  await loadSelectedSurahDetails();
+}
+
 function toggleBookmark() {
   const surah = getSelectedSurah();
-  if (!surah) return;
+  if (!surah) {
+    return;
+  }
+
   quranState.bookmarkKey = String(surah.number);
   quranStatus.textContent = `${surah.englishName} saved.`;
   render();
@@ -310,11 +352,8 @@ async function openBookmark() {
     quranStatus.textContent = "No bookmark saved yet.";
     return;
   }
-  quranState.selectedKey = quranState.bookmarkKey;
-  selectedSurahDetails = null;
-  quranStatus.textContent = "Opening bookmark...";
-  render();
-  await loadSelectedSurahDetails();
+
+  await openSurahByKey(quranState.bookmarkKey, "Opening bookmark...");
 }
 
 async function openContinueReading() {
@@ -322,13 +361,27 @@ async function openContinueReading() {
     quranStatus.textContent = "No continue reading position saved yet.";
     return;
   }
-  quranState.selectedKey = quranState.continueReading.surahKey;
-  selectedSurahDetails = null;
-  quranStatus.textContent = "Opening continue reading...";
-  render();
-  await loadSelectedSurahDetails();
+
+  await openSurahByKey(quranState.continueReading.surahKey, "Opening continue reading...");
+
   const target = document.querySelector(`[data-ayah-number="${quranState.continueReading.ayahNumber}"]`);
   target?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function stepSurah(direction) {
+  const currentIndex = surahs.findIndex((surah) => String(surah.number) === quranState.selectedKey);
+  if (currentIndex === -1) {
+    return;
+  }
+
+  const nextIndex = currentIndex + direction;
+  const nextSurah = surahs[nextIndex];
+  if (!nextSurah) {
+    return;
+  }
+
+  await openSurahByKey(nextSurah.number, `Opening ${nextSurah.englishName}...`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 searchInput?.addEventListener("input", (event) => {
@@ -342,6 +395,14 @@ languageButtons.forEach((button) => {
     quranState.view = button.dataset.quranView;
     render();
   });
+});
+
+previousSurahButton?.addEventListener("click", async () => {
+  await stepSurah(-1);
+});
+
+nextSurahButton?.addEventListener("click", async () => {
+  await stepSurah(1);
 });
 
 toggleBookmarkButton?.addEventListener("click", toggleBookmark);

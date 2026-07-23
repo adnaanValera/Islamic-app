@@ -42,27 +42,35 @@
       <main class="prayer-page">
         <section class="prayer-table-card prayer-table-card-hero quran-reader-shell">
           <div class="quran-reader-toolbar">
-            <div class="quran-language-toggle" id="quran-language-toggle">
-              <button class="quran-language-button is-active" data-quran-view="both" type="button">Both</button>
-              <button class="quran-language-button" data-quran-view="arabic" type="button">Arabic</button>
-              <button class="quran-language-button" data-quran-view="english" type="button">English</button>
+            <div class="quran-reader-toolbar-top">
+              <div class="quran-language-toggle" id="quran-language-toggle">
+                <button class="quran-language-button is-active" data-quran-view="both" type="button">Both</button>
+                <button class="quran-language-button" data-quran-view="arabic" type="button">Arabic</button>
+                <button class="quran-language-button" data-quran-view="english" type="button">English</button>
+              </div>
+
+              <div class="quran-reader-nav">
+                <button class="quran-nav-button" id="quran-prev-surah" type="button">Previous</button>
+                <button class="quran-nav-button" id="quran-next-surah" type="button">Next</button>
+              </div>
             </div>
 
-            <div class="quran-toolbar-search">
-              <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
-            </div>
+            <div class="quran-reader-toolbar-bottom">
+              <div class="quran-toolbar-search">
+                <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
+              </div>
 
-            <details class="quran-surah-dropdown">
-              <summary>
-                <span>Surah</span>
-                <strong id="quran-current-surah">Al-Fatihah</strong>
-              </summary>
-              <div class="quran-surah-dropdown-list" id="quran-surah-grid"></div>
-            </details>
+              <details class="quran-surah-dropdown">
+                <summary>
+                  <span>Surah</span>
+                  <strong id="quran-current-surah">Al-Fatihah</strong>
+                </summary>
+                <div class="quran-surah-dropdown-list" id="quran-surah-grid"></div>
+              </details>
+            </div>
           </div>
 
           <div class="quran-reader-header">
-            <p class="eyebrow">Quran</p>
             <h1 class="prayer-hero-title" id="quran-selected-title">Al-Fatihah</h1>
             <p class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</p>
             <div class="quran-reader-meta-row">
