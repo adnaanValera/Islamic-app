@@ -3186,6 +3186,22 @@ h3 {
   padding: 8px 8px 2px;
 }
 
+.quran-reader-header-minimal {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.quran-reader-header-minimal .status-stack {
+  gap: 0;
+}
+
+.quran-reader-header-minimal .status-line {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .quran-reader-header-premium .prayer-hero-title {
   max-width: none;
   font-size: clamp(2rem, 5vw, 3rem);
