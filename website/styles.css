@@ -3073,3 +3073,75 @@ h3 {
   font-weight: 800;
 }
 
+.prayer-hero-tasbeeh-simple {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.tasbeeh-hero-card-simple,
+.account-hero-card-simple {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.tasbeeh-counter-shell {
+  gap: 12px;
+}
+
+.tasbeeh-counter-button {
+  width: min(100%, 280px);
+}
+
+.tasbeeh-targets-simple,
+.tasbeeh-meta-simple {
+  justify-content: center;
+}
+
+.tasbeeh-meta-simple {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.account-page-simple {
+  padding-top: 10px;
+}
+
+.account-hero-card-simple .quran-hero-shell {
+  gap: 16px;
+}
+
+.account-hero-card-simple .status-line {
+  text-align: center;
+  margin: 0;
+}
+
+.account-hero-card-simple .account-signed-in-card {
+  justify-items: center;
+}
+
+.account-hero-card-simple .account-switch,
+.account-hero-card-simple .tasbeeh-actions-grid {
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .tasbeeh-counter-button {
+    width: min(100%, 248px);
+  }
+
+  .tasbeeh-meta-simple {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .quran-basmala-card {
+    padding: 14px 12px;
+  }
+
+  .quran-basmala-text {
+    font-size: 1.7rem;
+    line-height: 1.8;
+  }
+}
+

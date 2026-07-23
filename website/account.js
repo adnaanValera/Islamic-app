@@ -4,11 +4,6 @@ const signinUrl = "/api/account-signin";
 const syncStatusUrl = "/api/sync-status";
 
 const statusLine = document.getElementById("account-status");
-const sessionCopy = document.getElementById("account-session-copy");
-const modeBadge = document.getElementById("account-mode-badge");
-const sessionState = document.getElementById("account-session-state");
-const userName = document.getElementById("account-user-name");
-const syncState = document.getElementById("account-sync-state");
 const registerFullName = document.getElementById("register-full-name");
 const registerPassword = document.getElementById("register-password");
 const signinFullName = document.getElementById("signin-full-name");
@@ -43,17 +38,7 @@ function clearSession() {
 let session = loadSession();
 
 async function updateSyncStatus() {
-  try {
-    const response = await fetch(syncStatusUrl, { cache: "no-store" });
-    const payload = await response.json();
-    if (syncState) {
-      syncState.textContent = payload?.syncMode === "cloud-ready" ? "Cloud-ready" : "Local-only";
-    }
-  } catch (error) {
-    if (syncState) {
-      syncState.textContent = "Unknown";
-    }
-  }
+  return syncStatusUrl;
 }
 
 function setView(mode) {
@@ -71,24 +56,6 @@ function renderSession() {
     statusLine.textContent = signedIn
       ? `Signed in as ${session.user.fullName}.`
       : "No account session yet.";
-  }
-
-  if (sessionCopy) {
-    sessionCopy.textContent = signedIn
-      ? "Your Nooriva account is ready for future sync."
-      : "Local browsing works without an account.";
-  }
-
-  if (modeBadge) {
-    modeBadge.textContent = signedIn ? "Signed in" : "Guest";
-  }
-
-  if (sessionState) {
-    sessionState.textContent = signedIn ? "Active" : "Guest";
-  }
-
-  if (userName) {
-    userName.textContent = session?.user?.fullName ?? "None";
   }
 
   if (signoutButton) {
@@ -191,4 +158,3 @@ registerPassword?.addEventListener("keydown", async (event) => {
 
 setView("signin");
 renderSession();
-updateSyncStatus();
