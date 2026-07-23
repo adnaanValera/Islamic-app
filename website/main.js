@@ -238,18 +238,18 @@ function downloadAyahCard() {
     context.textAlign = "center";
     context.fillStyle = "#13221c";
 
-    context.font = "600 54px 'Noto Naskh Arabic', serif";
+    context.font = "600 58px 'Noto Naskh Arabic', serif";
     const arabicLines = wrapCanvasText(context, currentAyahOfDay.arabic, 760);
-    drawCenteredLines(context, arabicLines, canvas.width / 2, 410, 78);
+    drawCenteredLines(context, arabicLines, canvas.width / 2, 395, 82);
 
-    context.font = "500 28px Manrope, sans-serif";
+    context.font = "500 27px Manrope, sans-serif";
     context.fillStyle = "#2b352f";
-    const englishLines = wrapCanvasText(context, currentAyahOfDay.english, 700);
-    drawCenteredLines(context, englishLines, canvas.width / 2, 690, 42);
+    const englishLines = wrapCanvasText(context, currentAyahOfDay.english, 660);
+    drawCenteredLines(context, englishLines, canvas.width / 2, 700, 41);
 
-    context.font = "700 24px Manrope, sans-serif";
+    context.font = "700 23px Manrope, sans-serif";
     context.fillStyle = "#8e7440";
-    context.fillText(`${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`, canvas.width / 2, 870);
+    context.fillText(`${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`, canvas.width / 2, 878);
 
     const link = document.createElement("a");
     const fileName = `${sanitizeFileNamePart(currentAyahOfDay.surahName)}-${sanitizeFileNamePart(currentAyahOfDay.ayahInSurah)}.png`;
