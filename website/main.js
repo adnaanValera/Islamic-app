@@ -205,8 +205,26 @@ function fitElementText(element, { min, max, step = 1, lineHeight }) {
 }
 
 function fitAyahCardText() {
-  fitElementText(mainAyahArabic, { min: 18, max: 34, step: 1, lineHeight: 1.9 });
-  fitElementText(mainAyahEnglish, { min: 12, max: 18, step: 0.5, lineHeight: 1.65 });
+  const arabicLength = String(currentAyahOfDay?.arabic || "").length;
+  const englishLength = String(currentAyahOfDay?.english || "").length;
+
+  const arabicMax = arabicLength < 80 ? 42 : arabicLength < 140 ? 38 : 34;
+  const englishMax = englishLength < 110 ? 21 : englishLength < 180 ? 18 : 16;
+
+  fitElementText(mainAyahArabic, { min: 20, max: arabicMax, step: 1, lineHeight: 1.82 });
+  fitElementText(mainAyahEnglish, { min: 12, max: englishMax, step: 0.5, lineHeight: 1.62 });
+
+  const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
+  const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
+  const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
+  const gap = 16 * 2;
+  const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
+  const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
+  const topOffset = Math.max((frameHeight - contentHeight) / 2, 0);
+
+  if (mainAyahReference?.parentElement) {
+    mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
+  }
 }
 
 function sanitizeFileNamePart(value) {

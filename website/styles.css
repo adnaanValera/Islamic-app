@@ -4146,9 +4146,11 @@ h3 {
 
 .main-ayah-card-inner {
   position: absolute;
-  inset: 27% 11.5% 18% 11.5%;
-  display: grid;
-  align-content: center;
+  inset: 24.5% 11.2% 15.8% 11.2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 16px;
 }
 
@@ -4156,8 +4158,11 @@ h3 {
   margin: 0;
   color: var(--text-strong);
   font-family: "Noto Naskh Arabic", serif;
-  font-size: clamp(1.34rem, 2.15vw, 2.05rem);
-  line-height: 1.95;
+  width: 100%;
+  max-height: 53%;
+  overflow: hidden;
+  font-size: clamp(1.5rem, 2.55vw, 2.55rem);
+  line-height: 1.9;
   text-align: center;
   text-wrap: balance;
 }
@@ -4165,11 +4170,12 @@ h3 {
 .main-ayah-english {
   margin: 0;
   color: var(--text);
-  font-size: clamp(0.84rem, 1.18vw, 0.98rem);
-  line-height: 1.72;
+  width: 88%;
+  max-height: 24%;
+  overflow: hidden;
+  font-size: clamp(0.9rem, 1.28vw, 1.08rem);
+  line-height: 1.68;
   text-align: center;
-  max-width: 88%;
-  justify-self: center;
   text-wrap: balance;
 }
 
@@ -4177,6 +4183,7 @@ h3 {
   color: #8e7440;
   font-weight: 700;
   font-size: 0.82rem;
+  margin-top: auto;
 }
 
 .main-card-ayah {
@@ -4249,18 +4256,19 @@ h3 {
   }
 
   .main-ayah-arabic {
-    font-size: 1.22rem;
-    line-height: 1.8;
+    max-height: 51%;
+    line-height: 1.78;
   }
 
   .main-ayah-english {
-    font-size: 0.86rem;
+    width: 90%;
+    max-height: 24%;
     line-height: 1.6;
   }
 
   .main-ayah-card-inner {
-    inset: 25.5% 10.5% 18.5% 10.5%;
-    gap: 11px;
+    inset: 23.8% 10.2% 15.4% 10.2%;
+    gap: 10px;
   }
 
   .main-tasbeeh-button {
