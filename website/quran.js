@@ -207,6 +207,7 @@ function renderViewButtons() {
 
 function buildArabicPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
+  const surah = getCurrentSurahFromPageData(pageData);
   const basmalaMarkup = shouldShowBasmala(pageData)
     ? `
       <div class="quran-page-basmala">
@@ -219,6 +220,7 @@ function buildArabicPage(pageData) {
   return `
     <article class="quran-reading-page quran-reading-page-premium quran-reading-page-paged">
       <div class="quran-reading-page-ornament quran-reading-page-ornament-top" aria-hidden="true"></div>
+      <div class="quran-reading-page-surah-name">${surah?.englishName ?? ""}</div>
       <div class="quran-reading-page-topline"><span>Page ${pageData?.number ?? currentPageNumber}</span></div>
       ${basmalaMarkup}
       <p class="quran-reading-page-arabic" dir="rtl" lang="ar">

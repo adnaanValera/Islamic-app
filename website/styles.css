@@ -3191,7 +3191,7 @@ h3 {
   gap: 0;
   padding: 0;
   min-height: 0;
-  margin-bottom: 12px;
+  margin-bottom: 22px;
 }
 
 .quran-reader-header-minimal .status-stack {
@@ -3208,6 +3208,14 @@ h3 {
   gap: 6px;
   justify-items: center;
   margin: 10px 0 14px;
+}
+
+.quran-reading-page-surah-name {
+  text-align: center;
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .quran-reader-header-premium .prayer-hero-title {
