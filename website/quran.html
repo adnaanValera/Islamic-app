@@ -40,14 +40,37 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-hero">
-          <div class="prayer-hero-copy">
+        <section class="prayer-hero prayer-hero-quran">
+          <div class="prayer-table-card prayer-table-card-hero quran-hero-card quran-hero-card-premium">
+            <div class="quran-hero-shell">
+              <div class="tasbeeh-counter-topline">
+                <span class="next-prayer-label">Reading now</span>
+                <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
+              </div>
+              <div class="quran-reader-card quran-reader-card-premium">
+                <strong class="quran-reader-title" id="quran-selected-title">Al-Fatihah</strong>
+                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Makkah</span>
+                <p class="quran-reader-arabic" id="quran-selected-arabic">
+                  Bismillahir Rahmanir Rahim
+                </p>
+                <p class="quran-reader-translation" id="quran-selected-translation">
+                  In the name of Allah, the Entirely Merciful, the Especially Merciful.
+                </p>
+              </div>
+              <div class="tasbeeh-actions-grid quran-actions-grid">
+                <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
+                <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="prayer-hero-copy prayer-hero-copy-compact">
             <p class="eyebrow">Quran</p>
-            <h1 class="prayer-hero-title">Calm reading space.</h1>
+            <h1 class="prayer-hero-title">A calmer reading space.</h1>
             <p class="hero-text prayer-hero-text">
-              Start with a focused set of beloved surahs, save bookmarks, and return where you left off.
+              Open a surah, save your place, and keep your reading simple on mobile.
             </p>
-            <div class="hero-actions">
+            <div class="hero-actions quran-search-bar">
               <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
               <button class="button button-secondary" id="quran-clear-search" type="button">Clear</button>
             </div>
@@ -57,49 +80,19 @@
                 Bookmarks are saved on this device.
               </p>
             </div>
-          </div>
-
-          <div class="prayer-table-card prayer-table-card-hero quran-hero-card">
-            <div class="quran-hero-shell">
-              <div class="tasbeeh-counter-topline">
-                <span class="next-prayer-label">Today’s return</span>
-                <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
+            <div class="prayer-section-meta quran-meta-simple">
+              <div class="prayer-meta-pill">
+                <span>Current</span>
+                <strong id="quran-current-surah">Al-Fatihah</strong>
               </div>
-              <div class="quran-reader-card">
-                <strong class="quran-reader-title" id="quran-selected-title">Al-Fatihah</strong>
-                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • مكة</span>
-                <p class="quran-reader-arabic" id="quran-selected-arabic">
-                  بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-                </p>
-                <p class="quran-reader-translation" id="quran-selected-translation">
-                  In the name of Allah, the Entirely Merciful, the Especially Merciful.
-                </p>
+              <div class="prayer-meta-pill">
+                <span>Bookmark</span>
+                <strong id="quran-bookmarked-surah">None yet</strong>
               </div>
-              <div class="tasbeeh-actions-grid">
-                <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
-                <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
+              <div class="prayer-meta-pill">
+                <span>Saved</span>
+                <strong id="quran-saved-count">0</strong>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="prayer-table-section prayer-meta-section">
-          <div class="prayer-section-meta">
-            <div class="prayer-meta-pill">
-              <span>Current surah</span>
-              <strong id="quran-current-surah">Al-Fatihah</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Bookmarked</span>
-              <strong id="quran-bookmarked-surah">None yet</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Saved list</span>
-              <strong id="quran-saved-count">0</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Reading mode</span>
-              <strong>Local reading</strong>
             </div>
           </div>
         </section>

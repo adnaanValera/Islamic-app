@@ -16,6 +16,10 @@ const signinPassword = document.getElementById("signin-password");
 const registerButton = document.getElementById("account-register");
 const signinButton = document.getElementById("account-signin");
 const signoutButton = document.getElementById("account-signout");
+const showSigninButton = document.getElementById("account-show-signin");
+const showRegisterButton = document.getElementById("account-show-register");
+const signinCard = document.getElementById("account-signin-card");
+const registerCard = document.getElementById("account-register-card");
 
 function loadSession() {
   try {
@@ -49,6 +53,14 @@ async function updateSyncStatus() {
   }
 }
 
+function setView(mode) {
+  const signinMode = mode === "signin";
+  signinCard?.classList.toggle("is-hidden", !signinMode);
+  registerCard?.classList.toggle("is-hidden", signinMode);
+  showSigninButton?.classList.toggle("is-active", signinMode);
+  showRegisterButton?.classList.toggle("is-active", !signinMode);
+}
+
 function renderSession() {
   const signedIn = Boolean(session?.user?.fullName);
 
@@ -60,7 +72,7 @@ function renderSession() {
 
   if (sessionCopy) {
     sessionCopy.textContent = signedIn
-      ? "Your local Nooriva data can connect to cloud sync later."
+      ? "Your Nooriva account is ready for future sync."
       : "Local browsing works without an account.";
   }
 
@@ -74,6 +86,10 @@ function renderSession() {
 
   if (userName) {
     userName.textContent = session?.user?.fullName ?? "None";
+  }
+
+  if (signoutButton) {
+    signoutButton.style.display = signedIn ? "inline-flex" : "none";
   }
 }
 
@@ -104,6 +120,7 @@ registerButton?.addEventListener("click", async () => {
   try {
     await submitAuth(registerUrl, registerFullName.value, registerPassword.value);
     statusLine.textContent = "Account created and signed in.";
+    setView("signin");
   } catch (error) {
     statusLine.textContent = error.message;
   }
@@ -125,5 +142,9 @@ signoutButton?.addEventListener("click", () => {
   statusLine.textContent = "Signed out.";
 });
 
+showSigninButton?.addEventListener("click", () => setView("signin"));
+showRegisterButton?.addEventListener("click", () => setView("register"));
+
+setView("signin");
 renderSession();
 updateSyncStatus();

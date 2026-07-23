@@ -40,12 +40,12 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-hero">
-          <div class="prayer-hero-copy">
+        <section class="prayer-hero prayer-hero-account">
+          <div class="prayer-hero-copy prayer-hero-copy-compact">
             <p class="eyebrow">Account</p>
             <h1 class="prayer-hero-title">Sign in simply.</h1>
             <p class="hero-text prayer-hero-text">
-              Use your full name and password to save room for future cloud sync.
+              Use your full name and password now. Nooriva can grow into cloud sync later.
             </p>
             <div class="status-stack">
               <p class="status-line" id="account-status">No account session yet.</p>
@@ -53,52 +53,53 @@
                 Local browsing works without an account.
               </p>
             </div>
+            <div class="prayer-section-meta account-meta-simple">
+              <div class="prayer-meta-pill">
+                <span>Session</span>
+                <strong id="account-session-state">Guest</strong>
+              </div>
+              <div class="prayer-meta-pill">
+                <span>User</span>
+                <strong id="account-user-name">None</strong>
+              </div>
+              <div class="prayer-meta-pill">
+                <span>Sync</span>
+                <strong id="account-sync-state">Cloud-ready</strong>
+              </div>
+            </div>
           </div>
 
-          <div class="prayer-table-card prayer-table-card-hero quran-hero-card">
+          <div class="prayer-table-card prayer-table-card-hero quran-hero-card account-hero-card">
             <div class="quran-hero-shell">
               <div class="tasbeeh-counter-topline">
                 <span class="next-prayer-label">Account access</span>
                 <span class="qibla-mode-badge" id="account-mode-badge">Guest</span>
               </div>
-              <div class="account-form-grid">
-                <div class="account-form-card">
+              <div class="account-switch">
+                <button class="account-switch-button is-active" id="account-show-signin" type="button">Sign in</button>
+                <button class="account-switch-button" id="account-show-register" type="button">Create account</button>
+              </div>
+              <div class="account-form-stack">
+                <div class="account-form-card" id="account-signin-card">
+                  <strong class="quran-reader-title">Welcome back</strong>
+                  <div class="account-fields">
+                    <input id="signin-full-name" class="quran-search-input" type="text" placeholder="Full name" />
+                    <input id="signin-password" class="quran-search-input" type="password" placeholder="Password" />
+                    <button class="button button-primary" id="account-signin" type="button">Sign in</button>
+                  </div>
+                </div>
+                <div class="account-form-card is-hidden" id="account-register-card">
                   <strong class="quran-reader-title">Create account</strong>
                   <div class="account-fields">
                     <input id="register-full-name" class="quran-search-input" type="text" placeholder="Full name" />
                     <input id="register-password" class="quran-search-input" type="password" placeholder="Password" />
-                    <button class="button button-primary" id="account-register" type="button">Create account</button>
-                  </div>
-                </div>
-                <div class="account-form-card">
-                  <strong class="quran-reader-title">Sign in</strong>
-                  <div class="account-fields">
-                    <input id="signin-full-name" class="quran-search-input" type="text" placeholder="Full name" />
-                    <input id="signin-password" class="quran-search-input" type="password" placeholder="Password" />
-                    <button class="button button-secondary" id="account-signin" type="button">Sign in</button>
+                    <button class="button button-secondary" id="account-register" type="button">Create account</button>
                   </div>
                 </div>
               </div>
               <div class="tasbeeh-actions-grid">
                 <button class="button button-secondary" id="account-signout" type="button">Sign out</button>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="prayer-table-section prayer-meta-section">
-          <div class="prayer-section-meta">
-            <div class="prayer-meta-pill">
-              <span>Session</span>
-              <strong id="account-session-state">Guest</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>User</span>
-              <strong id="account-user-name">None</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Sync path</span>
-              <strong id="account-sync-state">Cloud-ready</strong>
             </div>
           </div>
         </section>

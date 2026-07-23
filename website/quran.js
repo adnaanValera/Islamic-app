@@ -23,18 +23,18 @@ const surahs = [
     meaning: "The Opening",
     place: "Makkah",
     ayahCount: 7,
-    arabic: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    arabic: "Bismillahir Rahmanir Rahim",
     translation: "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
   },
   {
     id: 36,
     key: "yasin",
     name: "Ya-Sin",
-    meaning: "Ya Sin",
+    meaning: "Ya-Sin",
     place: "Makkah",
     ayahCount: 83,
-    arabic: "يسٓ ۚ وَٱلْقُرْءَانِ ٱلْحَكِيمِ",
-    translation: "Ya, Sin. By the wise Quran.",
+    arabic: "Ya-Sin. Wal-Qur'an il-Hakim.",
+    translation: "Ya-Sin. By the wise Quran.",
   },
   {
     id: 55,
@@ -43,7 +43,7 @@ const surahs = [
     meaning: "The Most Merciful",
     place: "Madinah",
     ayahCount: 78,
-    arabic: "ٱلرَّحْمَٰنُ عَلَّمَ ٱلْقُرْءَانَ",
+    arabic: "Ar-Rahman. Allamal Qur'an.",
     translation: "The Most Merciful taught the Quran.",
   },
   {
@@ -53,7 +53,7 @@ const surahs = [
     meaning: "The Sovereignty",
     place: "Makkah",
     ayahCount: 30,
-    arabic: "تَبَارَكَ ٱلَّذِى بِيَدِهِ ٱلْمُلْكُ",
+    arabic: "Tabarakalladhi biyadihil mulk.",
     translation: "Blessed is He in whose hand is dominion.",
   },
   {
@@ -63,7 +63,7 @@ const surahs = [
     meaning: "Sincerity",
     place: "Makkah",
     ayahCount: 4,
-    arabic: "قُلْ هُوَ ٱللَّهُ أَحَدٌ",
+    arabic: "Qul huwa Allahu ahad.",
     translation: "Say, He is Allah, the One.",
   },
   {
@@ -73,7 +73,7 @@ const surahs = [
     meaning: "The Daybreak",
     place: "Makkah",
     ayahCount: 5,
-    arabic: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ",
+    arabic: "Qul a'udhu birabbil-falaq.",
     translation: "Say, I seek refuge in the Lord of daybreak.",
   },
   {
@@ -83,7 +83,7 @@ const surahs = [
     meaning: "Mankind",
     place: "Makkah",
     ayahCount: 6,
-    arabic: "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+    arabic: "Qul a'udhu birabbin-nas.",
     translation: "Say, I seek refuge in the Lord of mankind.",
   },
 ];

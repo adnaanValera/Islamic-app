@@ -290,6 +290,19 @@ function addCount(amount = 1) {
   activeEntry.count += amount;
   activeEntry.todayTotal += amount;
   tasbeehStatus.textContent = `${getActiveMode().label} updated.`;
+
+  if (tapButton) {
+    tapButton.classList.remove("is-tapping");
+    window.requestAnimationFrame(() => {
+      tapButton.classList.add("is-tapping");
+      window.setTimeout(() => tapButton.classList.remove("is-tapping"), 120);
+    });
+  }
+
+  if (navigator.vibrate) {
+    navigator.vibrate(12);
+  }
+
   renderTasbeeh();
 }
 

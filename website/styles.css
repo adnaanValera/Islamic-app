@@ -1312,6 +1312,34 @@ h3 {
   background: rgba(255, 255, 255, 0.7);
 }
 
+.quran-hero-card-premium {
+  background:
+    radial-gradient(circle at top right, rgba(197, 150, 78, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
+}
+
+.prayer-hero-quran,
+.prayer-hero-account {
+  align-items: center;
+}
+
+.quran-reader-card-premium {
+  min-height: 290px;
+}
+
+.quran-search-bar {
+  align-items: stretch;
+}
+
+.quran-meta-simple,
+.account-meta-simple {
+  gap: 10px;
+}
+
+.quran-actions-grid .button {
+  flex: 1 1 180px;
+}
+
 .quran-reader-title {
   color: var(--text-strong);
   font-size: 1.22rem;
@@ -1381,6 +1409,7 @@ h3 {
 .quran-surah-card.is-active {
   border-color: rgba(191, 149, 77, 0.36);
   box-shadow: var(--shadow);
+  background: linear-gradient(135deg, rgba(197, 150, 78, 0.16), rgba(255, 253, 248, 0.98));
 }
 
 .quran-surah-card.is-saved strong::after {
@@ -1398,6 +1427,68 @@ h3 {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.55;
+}
+
+.account-hero-card {
+  max-width: 480px;
+}
+
+.account-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(191, 149, 77, 0.14);
+}
+
+.account-switch-button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+}
+
+.account-switch-button.is-active {
+  background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
+  color: #fffaf2;
+}
+
+.account-form-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.account-form-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(191, 149, 77, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.account-form-card.is-hidden {
+  display: none;
+}
+
+.account-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.tasbeeh-counter-button.is-tapping {
+  transform: scale(0.985);
+}
+
+.prayer-time-list .prayer-time-row,
+.timings-list .timing-row,
+.jumuah-time-list .jumuah-time-row {
+  min-height: 58px;
 }
 
 @keyframes page-fade-in {
@@ -1451,6 +1542,10 @@ h3 {
 
   .feature-grid-dashboard {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quran-surah-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1616,6 +1711,12 @@ h3 {
     font-size: 0.94rem;
   }
 
+  .prayer-time-list .prayer-time-row,
+  .timings-list .timing-row,
+  .jumuah-time-list .jumuah-time-row {
+    min-height: 52px;
+  }
+
   .prayer-time-row strong,
   .jumuah-time-row strong,
   .timing-row strong {
@@ -1644,6 +1745,10 @@ h3 {
 
   .prayer-section-meta {
     display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .account-switch {
     grid-template-columns: 1fr;
   }
 }
@@ -1771,6 +1876,10 @@ h3 {
     width: min(100%, 280px);
   }
 
+  .quran-reader-card-premium {
+    min-height: 0;
+  }
+
   .prayer-hero-copy {
     padding-top: 0;
   }
@@ -1835,6 +1944,15 @@ h3 {
 
   .timing-row {
     grid-template-columns: 1fr auto;
+  }
+
+  .prayer-table-head,
+  .prayer-time-row,
+  .prayer-table-head-jumuah,
+  .jumuah-time-row,
+  .timing-row {
+    padding-left: 14px;
+    padding-right: 14px;
   }
 
   .mobile-bottom-nav {
