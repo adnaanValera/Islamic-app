@@ -1,4 +1,5 @@
 const quranStorageKey = "nooriva-quran-state";
+const quranApiBaseUrl = "https://api.alquran.cloud/v1";
 const surahGrid = document.getElementById("quran-surah-grid");
 const searchInput = document.getElementById("quran-search");
 const clearSearchButton = document.getElementById("quran-clear-search");
@@ -15,82 +16,12 @@ const savedCount = document.getElementById("quran-saved-count");
 const toggleBookmarkButton = document.getElementById("quran-toggle-bookmark");
 const openBookmarkButton = document.getElementById("quran-open-bookmark");
 
-const surahs = [
-  {
-    id: 1,
-    key: "fatihah",
-    name: "Al-Fatihah",
-    meaning: "The Opening",
-    place: "Makkah",
-    ayahCount: 7,
-    arabic: "Bismillahir Rahmanir Rahim",
-    translation: "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-  },
-  {
-    id: 36,
-    key: "yasin",
-    name: "Ya-Sin",
-    meaning: "Ya-Sin",
-    place: "Makkah",
-    ayahCount: 83,
-    arabic: "Ya-Sin. Wal-Qur'an il-Hakim.",
-    translation: "Ya-Sin. By the wise Quran.",
-  },
-  {
-    id: 55,
-    key: "rahman",
-    name: "Ar-Rahman",
-    meaning: "The Most Merciful",
-    place: "Madinah",
-    ayahCount: 78,
-    arabic: "Ar-Rahman. Allamal Qur'an.",
-    translation: "The Most Merciful taught the Quran.",
-  },
-  {
-    id: 67,
-    key: "mulk",
-    name: "Al-Mulk",
-    meaning: "The Sovereignty",
-    place: "Makkah",
-    ayahCount: 30,
-    arabic: "Tabarakalladhi biyadihil mulk.",
-    translation: "Blessed is He in whose hand is dominion.",
-  },
-  {
-    id: 112,
-    key: "ikhlas",
-    name: "Al-Ikhlas",
-    meaning: "Sincerity",
-    place: "Makkah",
-    ayahCount: 4,
-    arabic: "Qul huwa Allahu ahad.",
-    translation: "Say, He is Allah, the One.",
-  },
-  {
-    id: 113,
-    key: "falaq",
-    name: "Al-Falaq",
-    meaning: "The Daybreak",
-    place: "Makkah",
-    ayahCount: 5,
-    arabic: "Qul a'udhu birabbil-falaq.",
-    translation: "Say, I seek refuge in the Lord of daybreak.",
-  },
-  {
-    id: 114,
-    key: "nas",
-    name: "An-Nas",
-    meaning: "Mankind",
-    place: "Makkah",
-    ayahCount: 6,
-    arabic: "Qul a'udhu birabbin-nas.",
-    translation: "Say, I seek refuge in the Lord of mankind.",
-  },
-];
+let surahs = [];
+let selectedSurahDetails = null;
 
 function defaultState() {
   return {
-    selectedKey: surahs[0].key,
+    selectedKey: "1",
     bookmarkKey: "",
     savedKeys: [],
     search: "",
@@ -106,9 +37,9 @@ function loadState() {
 
     const parsed = JSON.parse(raw);
     return {
-      selectedKey: parsed.selectedKey || surahs[0].key,
-      bookmarkKey: parsed.bookmarkKey || "",
-      savedKeys: Array.isArray(parsed.savedKeys) ? parsed.savedKeys : [],
+      selectedKey: String(parsed.selectedKey || "1"),
+      bookmarkKey: String(parsed.bookmarkKey || ""),
+      savedKeys: Array.isArray(parsed.savedKeys) ? parsed.savedKeys.map(String) : [],
       search: parsed.search || "",
     };
   } catch (error) {
@@ -123,29 +54,94 @@ function saveState() {
 }
 
 function getSelectedSurah() {
-  return surahs.find((surah) => surah.key === quranState.selectedKey) ?? surahs[0];
+  return surahs.find((surah) => String(surah.number) === quranState.selectedKey) ?? surahs[0] ?? null;
+}
+
+function getBookmarkedSurahName() {
+  return surahs.find((item) => String(item.number) === quranState.bookmarkKey)?.englishName ?? "None yet";
+}
+
+function sanitizeArabicText(text) {
+  return String(text || "").replace(/^\uFEFF/, "").trim();
+}
+
+async function fetchSurahList() {
+  const response = await fetch(`${quranApiBaseUrl}/surah`, { cache: "force-cache" });
+
+  if (!response.ok) {
+    throw new Error("Unable to load Quran surahs.");
+  }
+
+  const payload = await response.json();
+  return payload?.data ?? [];
+}
+
+async function fetchSurahDetails(surahNumber) {
+  const response = await fetch(
+    `${quranApiBaseUrl}/surah/${surahNumber}/editions/quran-uthmani,en.sahih`,
+    { cache: "force-cache" },
+  );
+
+  if (!response.ok) {
+    throw new Error("Unable to load the selected surah.");
+  }
+
+  const payload = await response.json();
+  const editions = payload?.data ?? [];
+  const arabicEdition = editions.find((edition) => edition?.edition?.identifier === "quran-uthmani");
+  const translationEdition = editions.find((edition) => edition?.edition?.identifier === "en.sahih");
+
+  return {
+    arabicEdition,
+    translationEdition,
+  };
 }
 
 function renderSelectedSurah() {
   const surah = getSelectedSurah();
-  selectedMeta.textContent = `${surah.ayahCount} ayat`;
-  selectedTitle.textContent = surah.name;
-  selectedSubtitle.textContent = `${surah.meaning} • ${surah.place}`;
-  selectedArabic.textContent = surah.arabic;
-  selectedTranslation.textContent = surah.translation;
-  currentSurah.textContent = surah.name;
-  bookmarkedSurah.textContent =
-    surahs.find((item) => item.key === quranState.bookmarkKey)?.name ?? "None yet";
+
+  if (!surah) {
+    selectedMeta.textContent = "--";
+    selectedTitle.textContent = "Loading...";
+    selectedSubtitle.textContent = "Please wait";
+    selectedArabic.textContent = "";
+    selectedTranslation.textContent = "";
+    currentSurah.textContent = "Loading...";
+    bookmarkedSurah.textContent = "None yet";
+    savedCount.textContent = String(quranState.savedKeys.length);
+    return;
+  }
+
+  const arabicPreview = selectedSurahDetails?.arabicEdition?.ayahs
+    ?.slice(0, Math.min(3, surah.numberOfAyahs))
+    .map((ayah) => sanitizeArabicText(ayah.text))
+    .join(" ۝ ");
+  const translationPreview = selectedSurahDetails?.translationEdition?.ayahs
+    ?.slice(0, Math.min(2, surah.numberOfAyahs))
+    .map((ayah) => ayah.text)
+    .join(" ");
+
+  selectedMeta.textContent = `${surah.numberOfAyahs} ayat`;
+  selectedTitle.textContent = surah.englishName;
+  selectedSubtitle.textContent = `${surah.englishNameTranslation} • ${surah.revelationType}`;
+  selectedArabic.textContent = arabicPreview || "Loading Arabic text...";
+  selectedTranslation.textContent = translationPreview || "Loading translation...";
+  currentSurah.textContent = surah.englishName;
+  bookmarkedSurah.textContent = getBookmarkedSurahName();
   savedCount.textContent = String(quranState.savedKeys.length);
 
-  const bookmarked = quranState.bookmarkKey === surah.key;
+  const bookmarked = quranState.bookmarkKey === String(surah.number);
   toggleBookmarkButton.textContent = bookmarked ? "Bookmarked" : "Save bookmark";
   bookmarkCopy.textContent = bookmarked
-    ? `${surah.name} is your active bookmark.`
+    ? `${surah.englishName} is your active bookmark.`
     : "Bookmarks are saved on this device.";
 }
 
 function renderSurahGrid() {
+  if (!surahGrid) {
+    return;
+  }
+
   const term = quranState.search.trim().toLowerCase();
   const filtered = surahs.filter((surah) => {
     if (!term) {
@@ -153,58 +149,85 @@ function renderSurahGrid() {
     }
 
     return (
-      surah.name.toLowerCase().includes(term) ||
-      surah.meaning.toLowerCase().includes(term) ||
-      surah.place.toLowerCase().includes(term)
+      surah.englishName.toLowerCase().includes(term) ||
+      surah.englishNameTranslation.toLowerCase().includes(term) ||
+      surah.revelationType.toLowerCase().includes(term)
     );
   });
 
   surahGrid.innerHTML = filtered
     .map((surah) => {
-      const active = surah.key === quranState.selectedKey ? " is-active" : "";
-      const saved = quranState.savedKeys.includes(surah.key) ? " is-saved" : "";
+      const surahKey = String(surah.number);
+      const active = surahKey === quranState.selectedKey ? " is-active" : "";
+      const saved = quranState.savedKeys.includes(surahKey) ? " is-saved" : "";
 
       return `
-        <button class="quran-surah-card${active}${saved}" data-surah-key="${surah.key}" type="button">
-          <span class="quran-surah-number">${surah.id}</span>
-          <strong>${surah.name}</strong>
-          <small>${surah.meaning}</small>
-          <span class="quran-surah-meta">${surah.ayahCount} ayat • ${surah.place}</span>
+        <button class="quran-surah-card${active}${saved}" data-surah-key="${surahKey}" type="button">
+          <span class="quran-surah-number">${surah.number}</span>
+          <strong>${surah.englishName}</strong>
+          <small>${surah.englishNameTranslation}</small>
+          <span class="quran-surah-meta">${surah.numberOfAyahs} ayat • ${surah.revelationType}</span>
         </button>
       `;
     })
     .join("");
 
   surahGrid.querySelectorAll("[data-surah-key]").forEach((button) => {
-    button.addEventListener("click", () => {
-      quranState.selectedKey = button.dataset.surahKey;
-      quranStatus.textContent = `${getSelectedSurah().name} opened.`;
-      render();
+    button.addEventListener("click", async () => {
+      quranState.selectedKey = String(button.dataset.surahKey);
+      quranStatus.textContent = "Opening surah...";
+      renderSelectedSurah();
+      saveState();
+      await loadSelectedSurahDetails();
     });
   });
 }
 
 function toggleBookmark() {
   const surah = getSelectedSurah();
-  quranState.bookmarkKey = surah.key;
 
-  if (!quranState.savedKeys.includes(surah.key)) {
-    quranState.savedKeys.push(surah.key);
+  if (!surah) {
+    return;
   }
 
-  quranStatus.textContent = `${surah.name} saved.`;
+  quranState.bookmarkKey = String(surah.number);
+
+  if (!quranState.savedKeys.includes(String(surah.number))) {
+    quranState.savedKeys.push(String(surah.number));
+  }
+
+  quranStatus.textContent = `${surah.englishName} saved.`;
   render();
 }
 
-function openBookmark() {
+async function openBookmark() {
   if (!quranState.bookmarkKey) {
     quranStatus.textContent = "No bookmark saved yet.";
     return;
   }
 
   quranState.selectedKey = quranState.bookmarkKey;
-  quranStatus.textContent = `${getSelectedSurah().name} reopened.`;
-  render();
+  quranStatus.textContent = "Opening bookmark...";
+  renderSelectedSurah();
+  saveState();
+  await loadSelectedSurahDetails();
+}
+
+async function loadSelectedSurahDetails() {
+  const surah = getSelectedSurah();
+
+  if (!surah) {
+    return;
+  }
+
+  try {
+    selectedSurahDetails = await fetchSurahDetails(surah.number);
+    quranStatus.textContent = `${surah.englishName} opened.`;
+    render();
+  } catch (error) {
+    quranStatus.textContent = error.message;
+    renderSelectedSurah();
+  }
 }
 
 function render() {
@@ -219,7 +242,8 @@ function render() {
 
 searchInput?.addEventListener("input", (event) => {
   quranState.search = event.target.value;
-  render();
+  renderSurahGrid();
+  saveState();
 });
 
 clearSearchButton?.addEventListener("click", () => {
@@ -231,4 +255,15 @@ clearSearchButton?.addEventListener("click", () => {
 toggleBookmarkButton?.addEventListener("click", toggleBookmark);
 openBookmarkButton?.addEventListener("click", openBookmark);
 
-render();
+async function initQuran() {
+  try {
+    quranStatus.textContent = "Loading Quran...";
+    surahs = await fetchSurahList();
+    render();
+    await loadSelectedSurahDetails();
+  } catch (error) {
+    quranStatus.textContent = "We couldn't load the Quran just now.";
+  }
+}
+
+initQuran();

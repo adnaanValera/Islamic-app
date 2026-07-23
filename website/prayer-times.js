@@ -678,7 +678,6 @@ updateActionVisibility();
 registerServiceWorker().then(() => {
   if (Notification.permission === "granted") {
     subscribeToBackendPush().catch(() => undefined);
-    showVerificationNotification().catch(() => undefined);
   }
 });
 loadPushPublicKey();
