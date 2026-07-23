@@ -20,6 +20,7 @@ let compassReadingReceived = false;
 let compassTimeoutId = null;
 let qiblaBooted = false;
 let locationWatchId = null;
+const qiblaLocationStorageKey = "nooriva-qibla-last-location";
 
 const degreeSymbol = "\u00B0";
 
@@ -77,6 +78,44 @@ function setGuidance(title, detail) {
 
   if (qiblaGuidanceText) {
     qiblaGuidanceText.textContent = detail;
+  }
+}
+
+function loadStoredLocation() {
+  try {
+    const raw = localStorage.getItem(qiblaLocationStorageKey);
+
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+
+    if (
+      typeof parsed?.latitude !== "number" ||
+      typeof parsed?.longitude !== "number"
+    ) {
+      return null;
+    }
+
+    return parsed;
+  } catch (error) {
+    return null;
+  }
+}
+
+function storeLocation(position) {
+  try {
+    localStorage.setItem(
+      qiblaLocationStorageKey,
+      JSON.stringify({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        timestamp: Date.now(),
+      }),
+    );
+  } catch (error) {
+    // Ignore storage failures.
   }
 }
 
@@ -253,6 +292,7 @@ function startCompass() {
 }
 
 function applyLocation(position, sourceLabel) {
+  storeLocation(position);
   currentBearing = calculateQiblaBearing(
     position.coords.latitude,
     position.coords.longitude,
@@ -293,6 +333,20 @@ function startLocationUpdates() {
     "Finding your direction",
     "Nooriva is calculating the Qibla from your location, then it will use your device compass for live alignment.",
   );
+
+  const storedLocation = loadStoredLocation();
+
+  if (storedLocation) {
+    applyLocation(
+      {
+        coords: {
+          latitude: storedLocation.latitude,
+          longitude: storedLocation.longitude,
+        },
+      },
+      "cached",
+    );
+  }
 
   navigator.geolocation.getCurrentPosition(
     (position) => applyLocation(position, "cached"),

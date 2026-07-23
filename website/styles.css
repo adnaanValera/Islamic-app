@@ -100,7 +100,7 @@ a {
   grid-template-columns: 1.05fr 0.95fr;
   gap: 22px;
   align-items: center;
-  padding: 16px 0 24px;
+  padding: 10px 0 18px;
 }
 
 .eyebrow,
@@ -147,13 +147,6 @@ h3 {
   font-size: 1.02rem;
   color: var(--text-strong);
   line-height: 1.2;
-}
-
-.hero-logo {
-  width: min(230px, 56%);
-  height: auto;
-  display: block;
-  margin: 0 0 14px;
 }
 
 .hero-text,
@@ -297,11 +290,40 @@ h3 {
   border-radius: 22px;
 }
 
+.app-preview-card {
+  display: grid;
+  gap: 18px;
+}
+
+.app-preview-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-preview-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  display: block;
+  box-shadow: 0 14px 28px rgba(79, 66, 39, 0.12);
+}
+
+.app-preview-title {
+  color: var(--text-strong);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.app-preview-grid article {
+  min-height: 92px;
+}
+
 .home-quick-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-  padding: 4px 0 14px;
+  padding: 2px 0 12px;
 }
 
 .home-quick-card {
@@ -344,7 +366,7 @@ h3 {
 }
 
 .card-label {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   color: var(--gold-soft);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -387,7 +409,7 @@ h3 {
 
 .features-section,
 .cta-section {
-  padding: 22px 0;
+  padding: 18px 0;
 }
 
 .section-heading {
@@ -410,7 +432,7 @@ h3 {
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -1073,7 +1095,7 @@ h3 {
   }
 
   .hero-panel {
-    min-height: 240px;
+    min-height: 200px;
   }
 }
 
@@ -1097,10 +1119,6 @@ h3 {
 
   .brand-logo {
     width: 138px;
-  }
-
-  .hero-logo {
-    width: min(190px, 70%);
   }
 
   h1 {
@@ -1323,6 +1341,16 @@ h3 {
   .home-quick-card {
     padding: 16px;
     border-radius: 18px;
+  }
+
+  .app-preview-top {
+    align-items: flex-start;
+  }
+
+  .app-preview-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
   }
 
   .home-quick-card strong {

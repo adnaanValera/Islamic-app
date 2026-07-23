@@ -31,6 +31,8 @@ let nextPrayerNotificationTimeout = null;
 let serviceWorkerRegistration = null;
 let pushPublicKey = "";
 let backendPushReady = false;
+const notificationIcon = "./assets/icon-192.png";
+const notificationBadge = "./assets/favicon-32.png";
 
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
@@ -380,8 +382,8 @@ async function showVerificationNotification() {
     body: backendPushReady
       ? "Prayer reminders are ready on this device, including backend push when available."
       : "Prayer reminders are ready while Nooriva is open or installed on this device.",
-    icon: "./assets/nooriva-logo-transparent.png",
-    badge: "./assets/nooriva-logo-transparent.png",
+    icon: notificationIcon,
+    badge: notificationBadge,
     tag: "nooriva-notification-check",
     renotify: false,
   });
@@ -456,8 +458,8 @@ async function removeBackendPushSubscription() {
 async function showPrayerNotification(prayer) {
   const title = `${prayer.label} time`;
   const body = `It is now time for ${prayer.label} in Malawi.`;
-  const icon = "./assets/nooriva-logo-transparent.png";
-  const badge = "./assets/nooriva-logo-transparent.png";
+  const icon = notificationIcon;
+  const badge = notificationBadge;
   const tag = `prayer-${prayer.label.toLowerCase()}`;
 
   if ("serviceWorker" in navigator) {

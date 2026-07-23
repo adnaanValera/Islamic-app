@@ -28,8 +28,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(payload.title, {
       body: payload.body,
-      icon: "./assets/nooriva-logo-transparent.png",
-      badge: "./assets/nooriva-logo-transparent.png",
+      icon: "./assets/icon-192.png",
+      badge: "./assets/favicon-32.png",
       tag: payload.prayer ? `prayer-${String(payload.prayer).toLowerCase()}` : "nooriva-prayer",
       data: {
         url: payload.url ?? "/prayer.html",
