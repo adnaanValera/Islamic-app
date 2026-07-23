@@ -3371,3 +3371,257 @@ h3 {
   }
 }
 
+.quran-reader-shell-premium {
+  max-width: 820px;
+  margin-inline: auto;
+  gap: 12px;
+}
+
+.quran-reader-toolbar {
+  top: 78px;
+  padding: 10px;
+  margin: 0;
+}
+
+.quran-reader-toolbar-top,
+.quran-reader-toolbar-bottom {
+  gap: 10px;
+}
+
+.quran-surah-dropdown {
+  border-radius: 16px;
+}
+
+.quran-surah-dropdown summary {
+  padding: 14px 16px;
+}
+
+.quran-surah-dropdown-list {
+  max-height: 260px;
+  padding: 0 10px 10px;
+}
+
+.quran-surah-card {
+  gap: 3px;
+  padding: 14px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(79, 66, 39, 0.05);
+}
+
+.quran-surah-card strong {
+  font-size: 0.95rem;
+}
+
+.quran-surah-card small,
+.quran-surah-meta {
+  font-size: 0.8rem;
+}
+
+.quran-reader-header-premium .prayer-hero-title {
+  font-size: clamp(1.8rem, 6vw, 2.35rem);
+}
+
+.quran-basmala-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+}
+
+.quran-basmala-text {
+  font-size: clamp(1.45rem, 3.2vw, 2rem);
+}
+
+.quran-reading-stage {
+  gap: 8px;
+}
+
+.quran-ayah-list {
+  gap: 10px;
+}
+
+.quran-reading-pages-track {
+  gap: 8px;
+  padding: 0 0 6px;
+}
+
+.quran-reading-page-premium {
+  min-height: min(52vh, 540px);
+  padding: 18px 14px;
+  border-radius: 22px;
+}
+
+.quran-reading-page::before {
+  inset: 10px;
+  border-radius: 16px;
+}
+
+.quran-reading-page-topline span {
+  padding: 0.35rem 0.72rem;
+  font-size: 0.72rem;
+}
+
+.quran-reading-page-arabic {
+  font-size: clamp(1.42rem, 3.6vw, 1.95rem);
+  line-height: 1.82;
+  word-spacing: 0.08em;
+}
+
+.quran-inline-ayah {
+  min-width: 1.55rem;
+  height: 1.55rem;
+  margin: 0 0.14rem;
+  font-size: 0.7rem;
+}
+
+.quran-ayah-card-premium {
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.quran-dual-block {
+  gap: 12px;
+}
+
+.quran-dual-arabic {
+  font-size: 1.22rem;
+  line-height: 1.72;
+  word-spacing: 0.05em;
+}
+
+.quran-ayah-translation,
+.quran-dual-translation p {
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.quran-page-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.quran-page-dot.is-active {
+  width: 18px;
+}
+
+.quran-reading-page-ornament,
+.quran-ayah-card-accent {
+  width: min(84px, 36%);
+}
+
+@media (max-width: 720px) {
+  .quran-reader-shell-premium {
+    max-width: 100%;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .quran-reader-shell-premium::before {
+    inset: 8px;
+  }
+
+  .quran-reader-toolbar {
+    top: 92px;
+    padding: 9px;
+  }
+
+  .quran-reader-header-premium .prayer-hero-title {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .quran-basmala-card {
+    padding: 12px 14px;
+  }
+
+  .quran-basmala-text {
+    font-size: 1.4rem;
+    line-height: 1.7;
+  }
+
+  .quran-reading-page-premium {
+    min-height: 44vh;
+    padding: 16px 12px;
+  }
+
+  .quran-reading-page::before {
+    inset: 8px;
+  }
+
+  .quran-reading-page-arabic {
+    font-size: 1.28rem;
+    line-height: 1.74;
+  }
+
+  .quran-dual-arabic {
+    font-size: 1.08rem;
+    line-height: 1.65;
+  }
+
+  .quran-ayah-card-premium {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quran-reader-toolbar {
+    top: 88px;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .quran-language-toggle {
+    padding: 4px;
+  }
+
+  .quran-language-button,
+  .quran-nav-button {
+    min-height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .quran-surah-dropdown summary {
+    padding: 12px 14px;
+  }
+
+  .quran-reader-header-premium .prayer-hero-title {
+    font-size: 1.48rem;
+  }
+
+  .quran-reader-subtitle {
+    font-size: 0.82rem;
+  }
+
+  .quran-reader-meta-row {
+    gap: 6px;
+  }
+
+  .quran-basmala-text {
+    font-size: 1.24rem;
+  }
+
+  .quran-reading-page-premium {
+    min-height: 40vh;
+    padding: 14px 10px;
+  }
+
+  .quran-reading-page-arabic {
+    font-size: 1.16rem;
+    line-height: 1.66;
+  }
+
+  .quran-inline-ayah {
+    min-width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.62rem;
+  }
+
+  .quran-dual-arabic {
+    font-size: 1rem;
+    line-height: 1.58;
+  }
+
+  .quran-ayah-translation,
+  .quran-dual-translation p {
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+}
+
