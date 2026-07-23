@@ -205,12 +205,14 @@ function buildArabicPages(arabicAyahs) {
     const slice = arabicAyahs.slice(index, index + pageSize);
     pages.push(`
       <article class="quran-reading-page quran-reading-page-premium" data-page-index="${Math.floor(index / pageSize)}">
+        <div class="quran-reading-page-ornament quran-reading-page-ornament-top" aria-hidden="true"></div>
         <div class="quran-reading-page-topline">
           <span>Page ${Math.floor(index / pageSize) + 1}</span>
         </div>
         <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
           ${slice.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
         </p>
+        <div class="quran-reading-page-ornament quran-reading-page-ornament-bottom" aria-hidden="true"></div>
       </article>
     `);
   }
@@ -223,6 +225,7 @@ function buildEnglishAyahs(translationAyahs) {
     .map(
       (ayah, index) => `
       <article class="quran-ayah-card quran-ayah-card-premium" data-ayah-number="${index + 1}">
+        <div class="quran-ayah-card-accent" aria-hidden="true"></div>
         <div class="quran-ayah-topline"><span>Ayah ${index + 1}</span></div>
         <p class="quran-ayah-translation">${ayah?.text ?? ""}</p>
       </article>
@@ -243,6 +246,7 @@ function buildBothChunks(arabicAyahs, translationAyahs) {
 
     chunks.push(`
       <article class="quran-ayah-card quran-ayah-card-dual quran-ayah-card-premium" data-ayah-number="${startAyah}">
+        <div class="quran-ayah-card-accent" aria-hidden="true"></div>
         <div class="quran-ayah-topline">
           <span>Ayah ${startAyah}${endAyah !== startAyah ? `-${endAyah}` : ""}</span>
         </div>
