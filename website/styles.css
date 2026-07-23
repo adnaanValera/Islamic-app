@@ -3625,3 +3625,139 @@ h3 {
   }
 }
 
+.quran-ayah-list-pages {
+  display: grid;
+  gap: 10px;
+}
+
+.quran-ayah-list:not(.quran-ayah-list-pages) {
+  display: grid;
+  gap: 16px;
+}
+
+.quran-reading-pages-track {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  overflow: visible;
+  padding: 0;
+  scroll-snap-type: none;
+}
+
+.quran-reading-page-premium {
+  max-width: 100%;
+}
+
+.quran-page-surah-chip {
+  justify-self: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 149, 77, 0.16);
+  background: rgba(255, 250, 242, 0.84);
+  color: var(--gold-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quran-surah-break {
+  display: inline-block;
+  margin-inline: 0.32rem;
+  color: var(--gold-soft);
+  font-size: 0.74em;
+  font-weight: 700;
+}
+
+.quran-surah-section {
+  display: grid;
+  gap: 12px;
+}
+
+.quran-surah-section-premium {
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(250, 244, 236, 0.92));
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.05);
+}
+
+.quran-surah-section-head {
+  display: grid;
+  gap: 3px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(191, 149, 77, 0.1);
+}
+
+.quran-surah-section-head h2,
+.quran-surah-section-head p {
+  margin: 0;
+}
+
+.quran-surah-section-number {
+  color: var(--gold-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quran-surah-section-head p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.quran-surah-section-list {
+  display: grid;
+  gap: 10px;
+}
+
+.quran-surah-dropdown summary strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.quran-surah-dropdown summary strong::after {
+  content: "Jump";
+  padding: 0.18rem 0.46rem;
+  border-radius: 999px;
+  background: rgba(212, 180, 118, 0.14);
+  color: var(--gold-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .quran-surah-section-premium {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .quran-surah-section-head p {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quran-ayah-list:not(.quran-ayah-list-pages) {
+    gap: 12px;
+  }
+
+  .quran-surah-section-premium {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .quran-page-surah-chip {
+    font-size: 0.64rem;
+  }
+
+  .quran-surah-break {
+    font-size: 0.68em;
+  }
+}
+
