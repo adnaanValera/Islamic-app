@@ -3191,6 +3191,7 @@ h3 {
   gap: 0;
   padding: 0;
   min-height: 0;
+  margin-bottom: 12px;
 }
 
 .quran-reader-header-minimal .status-stack {

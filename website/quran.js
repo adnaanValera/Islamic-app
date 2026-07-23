@@ -350,7 +350,7 @@ async function goToPage(pageNumber, forceReload = false) {
     currentPageData = pageData;
     const pageSurah = getCurrentSurahFromPageData(currentPageData);
     rememberCurrentReading(pageSurah?.number ?? quranState.selectedKey, safePage);
-    quranStatus.textContent = `${pageSurah?.englishName ?? "Quran"} • Page ${safePage}`;
+    quranStatus.textContent = "";
     render();
   } catch {
     quranStatus.textContent = "We couldn't load that page just now.";
