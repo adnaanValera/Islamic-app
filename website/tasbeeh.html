@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nooriva | Tasbeeh</title>
+    <meta
+      name="description"
+      content="A premium tasbeeh counter in Nooriva with saved progress and quick daily dhikr targets."
+    />
+    <meta name="theme-color" content="#f8f3ea" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-prayer">
+      <header class="site-header prayer-mobile-header">
+        <div class="brand-lockup">
+          <a href="./index.html" aria-label="Back to Nooriva home">
+            <img
+              class="brand-logo"
+              src="./assets/nooriva-logo-transparent.png"
+              alt="Nooriva logo"
+            />
+          </a>
+        </div>
+        <nav class="site-nav">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html">Qibla</a>
+          <a href="./tasbeeh.html" aria-current="page">Tasbeeh</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </header>
+
+      <main class="prayer-page">
+        <section class="prayer-hero">
+          <div class="prayer-hero-copy">
+            <p class="eyebrow">Tasbeeh</p>
+            <h1 class="prayer-hero-title">Dhikr counter.</h1>
+            <p class="hero-text prayer-hero-text">
+              Tap to count, keep your place saved, and follow a simple daily target.
+            </p>
+            <div class="hero-actions">
+              <button class="button button-primary" id="tasbeeh-add" type="button">
+                Add count
+              </button>
+              <button class="button button-secondary" id="tasbeeh-reset" type="button">
+                Reset
+              </button>
+            </div>
+            <div class="status-stack">
+              <p class="status-line" id="tasbeeh-status">Saved on this device.</p>
+              <p class="status-line status-line-soft" id="tasbeeh-goal-copy">
+                Set a target and keep your dhikr flowing.
+              </p>
+            </div>
+          </div>
+
+          <div class="prayer-table-card prayer-table-card-hero tasbeeh-hero-card">
+            <div class="tasbeeh-counter-shell">
+              <div class="tasbeeh-counter-topline">
+                <span class="next-prayer-label">Current dhikr</span>
+                <span class="qibla-mode-badge" id="tasbeeh-target-badge">Target 33</span>
+              </div>
+              <button class="tasbeeh-counter-button" id="tasbeeh-tap" type="button" aria-label="Increase tasbeeh count">
+                <span class="tasbeeh-counter-ring"></span>
+                <strong class="tasbeeh-counter-value" id="tasbeeh-count">0</strong>
+                <span class="tasbeeh-counter-hint">Tap anywhere to count</span>
+              </button>
+              <div class="next-prayer-progress tasbeeh-progress" aria-hidden="true">
+                <span class="next-prayer-progress-fill" id="tasbeeh-progress-fill"></span>
+              </div>
+              <p class="qibla-angle" id="tasbeeh-progress-copy">0 of 33</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="prayer-table-section prayer-meta-section">
+          <div class="prayer-section-meta">
+            <div class="prayer-meta-pill">
+              <span>Today</span>
+              <strong id="tasbeeh-today-total">0</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Current round</span>
+              <strong id="tasbeeh-round-total">0</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Daily target</span>
+              <strong id="tasbeeh-target-total">33</strong>
+            </div>
+            <div class="prayer-meta-pill">
+              <span>Last reset</span>
+              <strong id="tasbeeh-last-reset">Today</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="features-section settings-grid-section">
+          <div class="feature-grid settings-grid">
+            <article class="feature-card feature-card-rich">
+              <p>01</p>
+              <h3>Quick targets</h3>
+              <div class="tasbeeh-targets">
+                <button class="tasbeeh-chip is-active" data-target="33" type="button">33</button>
+                <button class="tasbeeh-chip" data-target="99" type="button">99</button>
+                <button class="tasbeeh-chip" data-target="100" type="button">100</button>
+              </div>
+            </article>
+            <article class="feature-card feature-card-rich">
+              <p>02</p>
+              <h3>Session actions</h3>
+              <div class="tasbeeh-actions-grid">
+                <button class="button button-secondary" id="tasbeeh-minus" type="button">Undo 1</button>
+                <button class="button button-secondary" id="tasbeeh-complete-round" type="button">Complete round</button>
+              </div>
+            </article>
+            <article class="feature-card feature-card-rich">
+              <p>03</p>
+              <h3>Notes</h3>
+              <span>Your current count and today's total stay saved on this device.</span>
+            </article>
+            <article class="feature-card feature-card-rich">
+              <p>04</p>
+              <h3>Built for mobile</h3>
+              <span>The main counter is large so you can tap comfortably with one hand.</span>
+            </article>
+          </div>
+        </section>
+
+        <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
+          <a href="./index.html">Home</a>
+          <a href="./prayer.html">Prayer</a>
+          <a href="./qibla.html">Qibla</a>
+          <a href="./tasbeeh.html" aria-current="page">Tasbeeh</a>
+          <a href="./settings.html">Help</a>
+        </nav>
+      </main>
+    </div>
+
+    <script src="./install-app.js"></script>
+    <script src="./mobile-nav.js"></script>
+    <script src="./tasbeeh.js"></script>
+  </body>
+</html>
