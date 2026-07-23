@@ -9,6 +9,8 @@
   --muted: #5c6d66;
   --green-accent: #25443c;
   --shadow: 0 24px 52px rgba(79, 66, 39, 0.1);
+  --shadow-soft: 0 14px 32px rgba(79, 66, 39, 0.08);
+  --ease-premium: 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -28,6 +30,8 @@ body {
     radial-gradient(circle at top left, rgba(197, 150, 78, 0.14), transparent 30%),
     radial-gradient(circle at 90% 18%, rgba(37, 68, 60, 0.09), transparent 24%),
     linear-gradient(180deg, #fcf8f1 0%, #f7f0e3 44%, #f4ecde 100%);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -81,6 +85,11 @@ a {
   font-size: 0.92rem;
 }
 
+.site-nav a,
+.site-footer a {
+  transition: color var(--ease-premium), opacity var(--ease-premium);
+}
+
 .site-nav a:hover,
 .site-footer a:hover {
   color: var(--green-accent);
@@ -122,19 +131,22 @@ h2 {
 
 h1 {
   font-size: clamp(2.35rem, 4.8vw, 4rem);
-  line-height: 0.98;
+  line-height: 0.96;
   max-width: 11ch;
+  letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: clamp(1.85rem, 3vw, 2.8rem);
-  line-height: 1;
+  line-height: 0.98;
   max-width: 14ch;
+  letter-spacing: -0.02em;
 }
 
 h3 {
   font-size: 1.02rem;
   color: var(--text-strong);
+  line-height: 1.2;
 }
 
 .hero-logo {
@@ -156,7 +168,7 @@ h3 {
 .hero-text {
   max-width: 50ch;
   margin: 14px 0 0;
-  font-size: 0.97rem;
+  font-size: 0.98rem;
 }
 
 .hero-actions,
@@ -198,7 +210,12 @@ h3 {
   border-radius: 999px;
   border: 1px solid transparent;
   font-weight: 700;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition:
+    transform var(--ease-premium),
+    border-color var(--ease-premium),
+    background var(--ease-premium),
+    box-shadow var(--ease-premium),
+    color var(--ease-premium);
 }
 
 .button:hover {
@@ -215,6 +232,11 @@ h3 {
   border-color: var(--line);
   background: rgba(255, 255, 255, 0.58);
   color: var(--text-strong);
+}
+
+.button-secondary:hover {
+  border-color: rgba(191, 149, 77, 0.32);
+  box-shadow: var(--shadow-soft);
 }
 
 .hero-panel {
@@ -252,6 +274,10 @@ h3 {
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
   box-shadow: var(--shadow);
+  transition:
+    transform var(--ease-premium),
+    box-shadow var(--ease-premium),
+    border-color var(--ease-premium);
 }
 
 .home-quick-card,
@@ -259,6 +285,10 @@ h3 {
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(245, 236, 223, 0.96));
   box-shadow: var(--shadow);
+  transition:
+    transform var(--ease-premium),
+    box-shadow var(--ease-premium),
+    border-color var(--ease-premium);
 }
 
 .product-card {
@@ -279,6 +309,15 @@ h3 {
   gap: 6px;
   padding: 18px;
   border-radius: 20px;
+}
+
+.home-quick-card:hover,
+.feature-card:hover,
+.product-card:hover,
+.cta-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 56px rgba(79, 66, 39, 0.12);
+  border-color: rgba(191, 149, 77, 0.3);
 }
 
 .home-quick-card strong {
@@ -322,6 +361,12 @@ h3 {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.56);
   border: 1px solid rgba(191, 149, 77, 0.12);
+  transition: transform var(--ease-premium), background var(--ease-premium);
+}
+
+.card-grid article:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .card-grid span {
@@ -394,6 +439,7 @@ h3 {
   margin-top: 16px;
   font-weight: 700;
   color: var(--green-accent);
+  transition: color var(--ease-premium), transform var(--ease-premium);
 }
 
 .feature-link:hover {
@@ -456,6 +502,7 @@ h3 {
   display: grid;
   gap: 24px;
   padding-bottom: 88px;
+  animation: page-fade-in 420ms var(--ease-premium);
 }
 
 .prayer-hero {
@@ -482,6 +529,7 @@ h3 {
 .status-line-soft {
   color: var(--muted);
   font-weight: 500;
+  line-height: 1.55;
 }
 
 .prayer-table-card {
@@ -525,6 +573,7 @@ h3 {
   color: var(--text-strong);
   font-size: 1.35rem;
   font-family: "Cormorant Garamond", serif;
+  letter-spacing: -0.01em;
 }
 
 .next-prayer-time {
@@ -632,6 +681,7 @@ h3 {
 .prayer-time-row {
   padding: 16px 22px;
   border-top: 1px solid rgba(191, 149, 77, 0.14);
+  transition: background var(--ease-premium), opacity var(--ease-premium);
 }
 
 .prayer-time-row:first-child {
@@ -763,6 +813,7 @@ h3 {
   align-items: center;
   padding: 16px 22px;
   border-top: 1px solid rgba(191, 149, 77, 0.14);
+  transition: background var(--ease-premium);
 }
 
 .timing-row:first-child {
@@ -836,6 +887,7 @@ h3 {
   color: var(--green-accent);
   font-size: 0.78rem;
   font-weight: 800;
+  box-shadow: var(--shadow-soft);
 }
 
 .qibla-compass-frame {
@@ -974,6 +1026,28 @@ h3 {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.55;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .standalone-app .home-mobile-header .site-nav {
