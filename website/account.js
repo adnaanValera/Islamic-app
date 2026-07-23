@@ -20,6 +20,7 @@ const showSigninButton = document.getElementById("account-show-signin");
 const showRegisterButton = document.getElementById("account-show-register");
 const signinCard = document.getElementById("account-signin-card");
 const registerCard = document.getElementById("account-register-card");
+const accountButtons = [registerButton, signinButton];
 
 function loadSession() {
   try {
@@ -91,9 +92,22 @@ function renderSession() {
   if (signoutButton) {
     signoutButton.style.display = signedIn ? "inline-flex" : "none";
   }
+
+  if (signinCard) {
+    signinCard.style.opacity = signedIn && !signinCard.classList.contains("is-hidden") ? "0.96" : "1";
+  }
+}
+
+function setButtonsDisabled(disabled) {
+  accountButtons.forEach((button) => {
+    if (button) {
+      button.disabled = disabled;
+    }
+  });
 }
 
 async function submitAuth(url, fullName, password) {
+  setButtonsDisabled(true);
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -114,6 +128,7 @@ async function submitAuth(url, fullName, password) {
   };
   saveSession(session);
   renderSession();
+  setButtonsDisabled(false);
 }
 
 registerButton?.addEventListener("click", async () => {
@@ -123,6 +138,7 @@ registerButton?.addEventListener("click", async () => {
     setView("signin");
   } catch (error) {
     statusLine.textContent = error.message;
+    setButtonsDisabled(false);
   }
 });
 
@@ -132,6 +148,7 @@ signinButton?.addEventListener("click", async () => {
     statusLine.textContent = "Signed in successfully.";
   } catch (error) {
     statusLine.textContent = error.message;
+    setButtonsDisabled(false);
   }
 });
 
@@ -144,6 +161,20 @@ signoutButton?.addEventListener("click", () => {
 
 showSigninButton?.addEventListener("click", () => setView("signin"));
 showRegisterButton?.addEventListener("click", () => setView("register"));
+
+signinPassword?.addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    signinButton?.click();
+  }
+});
+
+registerPassword?.addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    registerButton?.click();
+  }
+});
 
 setView("signin");
 renderSession();

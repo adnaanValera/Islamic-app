@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -57,10 +57,16 @@
 
             <div class="quran-reader-toolbar-bottom">
               <div class="quran-toolbar-search">
-                <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
+                <input
+                  class="quran-search-input"
+                  id="quran-search"
+                  type="search"
+                  placeholder="Search surah name or number"
+                  autocomplete="off"
+                />
               </div>
 
-              <details class="quran-surah-dropdown">
+              <details class="quran-surah-dropdown" id="quran-surah-dropdown">
                 <summary>
                   <span>Surah</span>
                   <strong id="quran-current-surah">Al-Fatihah</strong>
@@ -75,31 +81,25 @@
             <p class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</p>
             <div class="quran-reader-meta-row">
               <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
-              <span class="qibla-mode-badge" id="quran-continue-surah">Continue not set</span>
+              <span class="qibla-mode-badge" id="quran-last-read">Resumes automatically</span>
             </div>
             <div class="status-stack">
               <p class="status-line" id="quran-status">Loading Quran...</p>
-              <p class="status-line status-line-soft" id="quran-bookmark-copy">
-                Your place is saved on this device.
+              <p class="status-line status-line-soft" id="quran-reading-copy">
+                Nooriva opens your last read place automatically on this device.
               </p>
             </div>
-          </div>
-
-          <div class="quran-reader-actions">
-            <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
-            <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
-            <button class="button button-secondary" id="quran-open-continue" type="button">Continue reading</button>
           </div>
 
           <div class="quran-ayah-list" id="quran-ayah-list">
             <article class="quran-ayah-card">
               <div class="quran-ayah-topline">
-                <span>Ayah 1</span>
+                <span>Loading</span>
               </div>
-              <p class="quran-ayah-arabic">Loading...</p>
               <p class="quran-ayah-translation">Please wait.</p>
             </article>
           </div>
+          <div class="quran-page-indicators" id="quran-page-indicators" aria-label="Quran page navigation"></div>
         </section>
 
         <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">

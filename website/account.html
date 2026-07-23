@@ -45,7 +45,7 @@
             <p class="eyebrow">Account</p>
             <h1 class="prayer-hero-title">Sign in simply.</h1>
             <p class="hero-text prayer-hero-text">
-              Use your full name and password now. Nooriva can grow into cloud sync later.
+              Use your full name and password. Keep it simple now, with sync-ready foundations for later.
             </p>
             <div class="status-stack">
               <p class="status-line" id="account-status">No account session yet.</p>
@@ -82,17 +82,19 @@
               <div class="account-form-stack">
                 <div class="account-form-card" id="account-signin-card">
                   <strong class="quran-reader-title">Welcome back</strong>
+                  <p class="account-card-note">Open your Nooriva account with your saved full name and password.</p>
                   <div class="account-fields">
-                    <input id="signin-full-name" class="quran-search-input" type="text" placeholder="Full name" />
-                    <input id="signin-password" class="quran-search-input" type="password" placeholder="Password" />
+                    <input id="signin-full-name" class="quran-search-input" type="text" placeholder="Full name" autocomplete="name" />
+                    <input id="signin-password" class="quran-search-input" type="password" placeholder="Password" autocomplete="current-password" />
                     <button class="button button-primary" id="account-signin" type="button">Sign in</button>
                   </div>
                 </div>
                 <div class="account-form-card is-hidden" id="account-register-card">
                   <strong class="quran-reader-title">Create account</strong>
+                  <p class="account-card-note">Create a simple Nooriva login for future sync and saved progress.</p>
                   <div class="account-fields">
-                    <input id="register-full-name" class="quran-search-input" type="text" placeholder="Full name" />
-                    <input id="register-password" class="quran-search-input" type="password" placeholder="Password" />
+                    <input id="register-full-name" class="quran-search-input" type="text" placeholder="Full name" autocomplete="name" />
+                    <input id="register-password" class="quran-search-input" type="password" placeholder="Password" autocomplete="new-password" />
                     <button class="button button-secondary" id="account-register" type="button">Create account</button>
                   </div>
                 </div>

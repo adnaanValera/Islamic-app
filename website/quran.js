@@ -2,33 +2,34 @@ const quranStorageKey = "nooriva-quran-state";
 const quranApiBaseUrl = "https://api.alquran.cloud/v1";
 const surahGrid = document.getElementById("quran-surah-grid");
 const ayahList = document.getElementById("quran-ayah-list");
+const pageIndicators = document.getElementById("quran-page-indicators");
 const searchInput = document.getElementById("quran-search");
 const quranStatus = document.getElementById("quran-status");
-const bookmarkCopy = document.getElementById("quran-bookmark-copy");
+const readingCopy = document.getElementById("quran-reading-copy");
 const selectedMeta = document.getElementById("quran-selected-meta");
 const selectedTitle = document.getElementById("quran-selected-title");
 const selectedSubtitle = document.getElementById("quran-selected-subtitle");
 const currentSurah = document.getElementById("quran-current-surah");
-const continueSurah = document.getElementById("quran-continue-surah");
-const toggleBookmarkButton = document.getElementById("quran-toggle-bookmark");
-const openBookmarkButton = document.getElementById("quran-open-bookmark");
-const openContinueButton = document.getElementById("quran-open-continue");
+const lastReadBadge = document.getElementById("quran-last-read");
 const previousSurahButton = document.getElementById("quran-prev-surah");
 const nextSurahButton = document.getElementById("quran-next-surah");
+const surahDropdown = document.getElementById("quran-surah-dropdown");
 const languageButtons = Array.from(document.querySelectorAll("[data-quran-view]"));
 
 let surahs = [];
 let selectedSurahDetails = null;
+let searchResults = [];
+let currentArabicPageIndex = 0;
 
 function defaultState() {
   return {
     selectedKey: "1",
-    bookmarkKey: "",
     search: "",
     view: "both",
-    continueReading: {
-      surahKey: "",
-      ayahNumber: 1,
+    lastReading: {
+      surahKey: "1",
+      pageIndex: 0,
+      view: "both",
     },
   };
 }
@@ -41,14 +42,19 @@ function loadState() {
     }
 
     const parsed = JSON.parse(raw);
+    const initial = defaultState();
+    const savedSurahKey = String(parsed?.lastReading?.surahKey || parsed?.selectedKey || initial.selectedKey);
+
     return {
-      selectedKey: String(parsed.selectedKey || "1"),
-      bookmarkKey: String(parsed.bookmarkKey || ""),
+      selectedKey: savedSurahKey,
       search: parsed.search || "",
-      view: ["arabic", "english", "both"].includes(parsed.view) ? parsed.view : "both",
-      continueReading: {
-        surahKey: String(parsed?.continueReading?.surahKey || ""),
-        ayahNumber: Number(parsed?.continueReading?.ayahNumber || 1),
+      view: ["arabic", "english", "both"].includes(parsed.view) ? parsed.view : initial.view,
+      lastReading: {
+        surahKey: savedSurahKey,
+        pageIndex: Number(parsed?.lastReading?.pageIndex || 0),
+        view: ["arabic", "english", "both"].includes(parsed?.lastReading?.view)
+          ? parsed.lastReading.view
+          : initial.view,
       },
     };
   } catch {
@@ -66,9 +72,34 @@ function getSelectedSurah() {
   return surahs.find((surah) => String(surah.number) === quranState.selectedKey) ?? surahs[0] ?? null;
 }
 
-function getContinueSurahName() {
-  const surah = surahs.find((item) => String(item.number) === quranState.continueReading.surahKey);
-  return surah ? `${surah.englishName} • Ayah ${quranState.continueReading.ayahNumber}` : "Continue not set";
+function getFilteredSurahs() {
+  const term = quranState.search.trim().toLowerCase();
+  if (!term) {
+    return surahs;
+  }
+
+  return surahs.filter((surah) => {
+    const surahNumber = String(surah.number);
+    return (
+      surahNumber.includes(term) ||
+      surah.englishName.toLowerCase().includes(term) ||
+      surah.englishNameTranslation.toLowerCase().includes(term) ||
+      surah.revelationType.toLowerCase().includes(term)
+    );
+  });
+}
+
+function getLastReadLabel() {
+  const lastSurah = surahs.find((item) => String(item.number) === quranState.lastReading.surahKey);
+  if (!lastSurah) {
+    return "Resumes automatically";
+  }
+
+  if (quranState.lastReading.view === "arabic") {
+    return `${lastSurah.englishName} • Page ${quranState.lastReading.pageIndex + 1}`;
+  }
+
+  return `${lastSurah.englishName} • Last opened`;
 }
 
 function sanitizeArabicText(text) {
@@ -103,6 +134,15 @@ async function fetchSurahDetails(surahNumber) {
   };
 }
 
+function rememberCurrentReading(pageIndex = 0) {
+  quranState.lastReading = {
+    surahKey: quranState.selectedKey,
+    pageIndex,
+    view: quranState.view,
+  };
+  saveState();
+}
+
 function renderHeader() {
   const surah = getSelectedSurah();
   if (!surah) {
@@ -117,13 +157,11 @@ function renderHeader() {
   selectedSubtitle.textContent = `${surah.englishNameTranslation} • ${surah.revelationType}`;
   selectedMeta.textContent = `${surah.numberOfAyahs} ayat`;
   currentSurah.textContent = surah.englishName;
-  continueSurah.textContent = getContinueSurahName();
-  bookmarkCopy.textContent =
-    quranState.bookmarkKey === String(surah.number)
-      ? `${surah.englishName} is your active bookmark.`
-      : "Your place is saved on this device.";
-  toggleBookmarkButton.textContent =
-    quranState.bookmarkKey === String(surah.number) ? "Bookmarked" : "Save bookmark";
+  lastReadBadge.textContent = getLastReadLabel();
+  readingCopy.textContent =
+    quranState.view === "arabic"
+      ? "Swipe left or right to move through the pages."
+      : "Nooriva reopens your last surah automatically on this device.";
 
   if (previousSurahButton) {
     previousSurahButton.disabled = !hasPrevious;
@@ -135,20 +173,19 @@ function renderHeader() {
 }
 
 function renderSurahGrid() {
-  const term = quranState.search.trim().toLowerCase();
-  const filtered = surahs.filter((surah) => {
-    if (!term) {
-      return true;
-    }
+  searchResults = getFilteredSurahs();
 
-    return (
-      surah.englishName.toLowerCase().includes(term) ||
-      surah.englishNameTranslation.toLowerCase().includes(term) ||
-      surah.revelationType.toLowerCase().includes(term)
-    );
-  });
+  if (searchResults.length === 0) {
+    surahGrid.innerHTML = `
+      <div class="quran-surah-empty">
+        <strong>No surah found</strong>
+        <small>Try another name or surah number.</small>
+      </div>
+    `;
+    return;
+  }
 
-  surahGrid.innerHTML = filtered
+  surahGrid.innerHTML = searchResults
     .map((surah) => {
       const active = String(surah.number) === quranState.selectedKey ? " is-active" : "";
 
@@ -166,7 +203,8 @@ function renderSurahGrid() {
   surahGrid.querySelectorAll("[data-surah-key]").forEach((button) => {
     button.addEventListener("click", async () => {
       await openSurahByKey(button.dataset.surahKey, "Opening surah...");
-      document.querySelector(".quran-surah-dropdown")?.removeAttribute("open");
+      surahDropdown?.removeAttribute("open");
+      searchInput?.blur();
     });
   });
 }
@@ -184,11 +222,11 @@ function buildArabicPages(arabicAyahs) {
   for (let index = 0; index < arabicAyahs.length; index += pageSize) {
     const slice = arabicAyahs.slice(index, index + pageSize);
     pages.push(`
-      <article class="quran-reading-page">
+      <article class="quran-reading-page" data-page-index="${Math.floor(index / pageSize)}">
         <div class="quran-reading-page-topline">
           <span>Page ${Math.floor(index / pageSize) + 1}</span>
         </div>
-        <p class="quran-reading-page-arabic">
+        <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
           ${slice
             .map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`)
             .join(" ")}
@@ -197,19 +235,22 @@ function buildArabicPages(arabicAyahs) {
     `);
   }
 
-  return pages.join("");
+  return `
+    <div class="quran-reading-pages-track" id="quran-reading-pages-track">
+      ${pages.join("")}
+    </div>
+  `;
 }
 
-function buildEnglishAyahs(arabicAyahs, translationAyahs) {
-  return arabicAyahs
+function buildEnglishAyahs(translationAyahs) {
+  return translationAyahs
     .map(
       (ayah, index) => `
-      <article class="quran-ayah-card" data-ayah-number="${ayah.numberInSurah}">
+      <article class="quran-ayah-card" data-ayah-number="${index + 1}">
         <div class="quran-ayah-topline">
-          <span>Ayah ${ayah.numberInSurah}</span>
-          <button class="quran-ayah-save" type="button" data-save-ayah="${ayah.numberInSurah}">Continue here</button>
+          <span>Ayah ${index + 1}</span>
         </div>
-        <p class="quran-ayah-translation">${translationAyahs[index]?.text ?? ""}</p>
+        <p class="quran-ayah-translation">${ayah?.text ?? ""}</p>
       </article>
     `,
     )
@@ -230,10 +271,9 @@ function buildBothChunks(arabicAyahs, translationAyahs) {
       <article class="quran-ayah-card quran-ayah-card-dual" data-ayah-number="${startAyah}">
         <div class="quran-ayah-topline">
           <span>Ayah ${startAyah}${endAyah !== startAyah ? `-${endAyah}` : ""}</span>
-          <button class="quran-ayah-save" type="button" data-save-ayah="${startAyah}">Continue here</button>
         </div>
         <div class="quran-dual-block">
-          <p class="quran-dual-arabic">
+          <p class="quran-dual-arabic" dir="rtl" lang="ar">
             ${arabicSlice
               .map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`)
               .join(" ")}
@@ -255,15 +295,71 @@ function buildBothChunks(arabicAyahs, translationAyahs) {
   return chunks.join("");
 }
 
-function attachContinueHandlers() {
-  ayahList.querySelectorAll("[data-save-ayah]").forEach((button) => {
-    button.addEventListener("click", () => {
-      quranState.continueReading = {
-        surahKey: quranState.selectedKey,
-        ayahNumber: Number(button.dataset.saveAyah),
-      };
-      quranStatus.textContent = `Saved continue reading for Ayah ${button.dataset.saveAyah}.`;
-      render();
+function updateArabicPagerUI(activeIndex, pageCount) {
+  currentArabicPageIndex = activeIndex;
+
+  const dots = Array.from(pageIndicators.querySelectorAll("[data-page-dot]"));
+  dots.forEach((dot) => {
+    dot.classList.toggle("is-active", Number(dot.dataset.pageDot) === activeIndex);
+  });
+
+  rememberCurrentReading(Math.min(activeIndex, Math.max(pageCount - 1, 0)));
+  renderHeader();
+}
+
+function attachArabicPager() {
+  const track = document.getElementById("quran-reading-pages-track");
+  const pages = Array.from(track?.querySelectorAll(".quran-reading-page") ?? []);
+
+  if (!track || pages.length === 0) {
+    pageIndicators.innerHTML = "";
+    return;
+  }
+
+  pageIndicators.innerHTML = pages
+    .map(
+      (_, index) => `
+        <button
+          class="quran-page-dot${index === currentArabicPageIndex ? " is-active" : ""}"
+          data-page-dot="${index}"
+          type="button"
+          aria-label="Open Quran page ${index + 1}"
+        ></button>
+      `,
+    )
+    .join("");
+
+  const savedIndex =
+    quranState.lastReading.surahKey === quranState.selectedKey && quranState.lastReading.view === "arabic"
+      ? Math.min(quranState.lastReading.pageIndex, pages.length - 1)
+      : 0;
+
+  currentArabicPageIndex = savedIndex;
+  window.requestAnimationFrame(() => {
+    pages[savedIndex]?.scrollIntoView({ inline: "start", block: "nearest" });
+    updateArabicPagerUI(savedIndex, pages.length);
+  });
+
+  pageIndicators.querySelectorAll("[data-page-dot]").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const pageIndex = Number(dot.dataset.pageDot);
+      pages[pageIndex]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      updateArabicPagerUI(pageIndex, pages.length);
+    });
+  });
+
+  let scrollTicking = false;
+  track.addEventListener("scroll", () => {
+    if (scrollTicking) {
+      return;
+    }
+
+    scrollTicking = true;
+    window.requestAnimationFrame(() => {
+      const pageWidth = pages[0].getBoundingClientRect().width || 1;
+      const activeIndex = Math.round(track.scrollLeft / pageWidth);
+      updateArabicPagerUI(Math.max(0, Math.min(activeIndex, pages.length - 1)), pages.length);
+      scrollTicking = false;
     });
   });
 }
@@ -277,28 +373,32 @@ function renderReading() {
     ayahList.innerHTML = `
       <article class="quran-reading-page">
         <div class="quran-reading-page-topline"><span>Loading</span></div>
-        <p class="quran-reading-page-arabic">Please wait...</p>
+        <p class="quran-reading-page-arabic" dir="rtl" lang="ar">Please wait...</p>
       </article>
     `;
+    pageIndicators.innerHTML = "";
     return;
   }
+
+  rememberCurrentReading(quranState.view === "arabic" ? quranState.lastReading.pageIndex : 0);
 
   if (quranState.view === "arabic") {
     ayahList.className = "quran-ayah-list quran-ayah-list-pages";
     ayahList.innerHTML = buildArabicPages(arabicAyahs);
+    attachArabicPager();
     return;
   }
 
+  pageIndicators.innerHTML = "";
+
   if (quranState.view === "english") {
     ayahList.className = "quran-ayah-list";
-    ayahList.innerHTML = buildEnglishAyahs(arabicAyahs, translationAyahs);
-    attachContinueHandlers();
+    ayahList.innerHTML = buildEnglishAyahs(translationAyahs);
     return;
   }
 
   ayahList.className = "quran-ayah-list";
   ayahList.innerHTML = buildBothChunks(arabicAyahs, translationAyahs);
-  attachContinueHandlers();
 }
 
 function render() {
@@ -330,42 +430,22 @@ async function loadSelectedSurahDetails() {
 
 async function openSurahByKey(surahKey, statusMessage = "Opening surah...") {
   quranState.selectedKey = String(surahKey);
+  currentArabicPageIndex = 0;
   selectedSurahDetails = null;
   quranStatus.textContent = statusMessage;
+  rememberCurrentReading(0);
   render();
   await loadSelectedSurahDetails();
 }
 
-function toggleBookmark() {
-  const surah = getSelectedSurah();
-  if (!surah) {
+async function openFirstSearchResult() {
+  if (!searchResults.length) {
+    quranStatus.textContent = "No surah matches that search.";
     return;
   }
 
-  quranState.bookmarkKey = String(surah.number);
-  quranStatus.textContent = `${surah.englishName} saved.`;
-  render();
-}
-
-async function openBookmark() {
-  if (!quranState.bookmarkKey) {
-    quranStatus.textContent = "No bookmark saved yet.";
-    return;
-  }
-
-  await openSurahByKey(quranState.bookmarkKey, "Opening bookmark...");
-}
-
-async function openContinueReading() {
-  if (!quranState.continueReading.surahKey) {
-    quranStatus.textContent = "No continue reading position saved yet.";
-    return;
-  }
-
-  await openSurahByKey(quranState.continueReading.surahKey, "Opening continue reading...");
-
-  const target = document.querySelector(`[data-ayah-number="${quranState.continueReading.ayahNumber}"]`);
-  target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  await openSurahByKey(searchResults[0].number, `Opening ${searchResults[0].englishName}...`);
+  surahDropdown?.removeAttribute("open");
 }
 
 async function stepSurah(direction) {
@@ -384,15 +464,32 @@ async function stepSurah(direction) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-searchInput?.addEventListener("input", (event) => {
-  quranState.search = event.target.value;
+searchInput?.addEventListener("input", () => {
+  quranState.search = searchInput.value;
+  if (quranState.search.trim()) {
+    surahDropdown?.setAttribute("open", "open");
+  }
   renderSurahGrid();
   saveState();
+});
+
+searchInput?.addEventListener("keydown", async (event) => {
+  if (event.key !== "Enter") {
+    return;
+  }
+
+  event.preventDefault();
+  await openFirstSearchResult();
+});
+
+searchInput?.addEventListener("focus", () => {
+  surahDropdown?.setAttribute("open", "open");
 });
 
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     quranState.view = button.dataset.quranView;
+    rememberCurrentReading(0);
     render();
   });
 });
@@ -405,14 +502,11 @@ nextSurahButton?.addEventListener("click", async () => {
   await stepSurah(1);
 });
 
-toggleBookmarkButton?.addEventListener("click", toggleBookmark);
-openBookmarkButton?.addEventListener("click", openBookmark);
-openContinueButton?.addEventListener("click", openContinueReading);
-
 async function initQuran() {
   try {
     quranStatus.textContent = "Loading Quran...";
     surahs = await fetchSurahList();
+    renderSurahGrid();
     render();
     await loadSelectedSurahDetails();
   } catch {
