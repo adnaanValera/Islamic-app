@@ -653,7 +653,7 @@ h3 {
   grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.95fr);
   gap: 22px;
   align-items: start;
-  padding: 18px 0 8px;
+  padding: 14px 0 8px;
 }
 
 .status-stack {
@@ -694,6 +694,7 @@ h3 {
 
 .prayer-hero-text {
   max-width: 42ch;
+  margin-top: 10px;
 }
 
 .next-prayer-banner {
@@ -755,6 +756,10 @@ h3 {
 
 .prayer-meta-section {
   padding-top: 0;
+}
+
+.settings-grid-section {
+  padding-top: 8px;
 }
 
 .prayer-section-heading {
@@ -994,6 +999,10 @@ h3 {
     linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
 }
 
+.qibla-hero-card .qibla-compass-shell {
+  max-width: 420px;
+}
+
 .qibla-compass-shell {
   display: grid;
   justify-items: center;
@@ -1145,8 +1154,8 @@ h3 {
   margin: 0;
   max-width: 24ch;
   color: var(--text-strong);
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.02rem;
+  font-weight: 800;
   text-align: center;
 }
 
@@ -1158,6 +1167,10 @@ h3 {
   border-radius: 18px;
   border: 1px solid rgba(191, 149, 77, 0.16);
   background: rgba(255, 255, 255, 0.74);
+}
+
+.settings-grid .feature-card {
+  min-height: 148px;
 }
 
 .qibla-guidance-card strong {

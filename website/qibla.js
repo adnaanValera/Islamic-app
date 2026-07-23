@@ -20,6 +20,8 @@ let compassReadingReceived = false;
 let compassTimeoutId = null;
 let qiblaBooted = false;
 let locationWatchId = null;
+let orientationHandler = null;
+let motionPermissionRequested = false;
 const qiblaLocationStorageKey = "nooriva-qibla-last-location";
 
 const degreeSymbol = "\u00B0";
@@ -136,6 +138,35 @@ function setWaitingForHeading() {
   );
 }
 
+function getScreenAngle() {
+  if (window.screen?.orientation && typeof window.screen.orientation.angle === "number") {
+    return window.screen.orientation.angle;
+  }
+
+  if (typeof window.orientation === "number") {
+    return window.orientation;
+  }
+
+  return 0;
+}
+
+function normalizeHeading(degrees) {
+  return (degrees % 360 + 360) % 360;
+}
+
+function getHeadingFromOrientationEvent(event) {
+  if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
+    return normalizeHeading(event.webkitCompassHeading);
+  }
+
+  if (typeof event.alpha !== "number" || Number.isNaN(event.alpha)) {
+    return null;
+  }
+
+  const adjusted = 360 - event.alpha + getScreenAngle();
+  return normalizeHeading(adjusted);
+}
+
 function useBearingFallback(reason) {
   qiblaPhoneArrow.style.opacity = "0.14";
   qiblaPhoneArrow.style.transform = "rotate(0deg)";
@@ -235,25 +266,31 @@ function startCompassWatchdog() {
 }
 
 function attachOrientationListeners(handleOrientation) {
+  detachOrientationListeners();
   window.addEventListener("deviceorientationabsolute", handleOrientation, true);
   window.addEventListener("deviceorientation", handleOrientation, true);
+  orientationHandler = handleOrientation;
+}
+
+function detachOrientationListeners() {
+  if (!orientationHandler) {
+    return;
+  }
+
+  window.removeEventListener("deviceorientationabsolute", orientationHandler, true);
+  window.removeEventListener("deviceorientation", orientationHandler, true);
+  orientationHandler = null;
 }
 
 function startCompass() {
   const handleOrientation = (event) => {
-    const alpha =
-      event.webkitCompassHeading ??
-      (typeof event.absolute === "boolean" && event.absolute && typeof event.alpha === "number"
-        ? 360 - event.alpha
-        : typeof event.alpha === "number"
-          ? 360 - event.alpha
-          : null);
+    const heading = getHeadingFromOrientationEvent(event);
 
-    if (typeof alpha !== "number" || Number.isNaN(alpha)) {
+    if (typeof heading !== "number" || Number.isNaN(heading)) {
       return;
     }
 
-    updateAlignment(alpha % 360);
+    updateAlignment(heading);
   };
 
   setWaitingForHeading();
@@ -263,8 +300,13 @@ function startCompass() {
     typeof DeviceOrientationEvent !== "undefined" &&
     typeof DeviceOrientationEvent.requestPermission === "function"
   ) {
-    DeviceOrientationEvent.requestPermission(true)
-      .catch(() => DeviceOrientationEvent.requestPermission())
+    if (motionPermissionRequested) {
+      attachOrientationListeners(handleOrientation);
+      return;
+    }
+
+    motionPermissionRequested = true;
+    DeviceOrientationEvent.requestPermission()
       .then((permission) => {
         if (permission !== "granted") {
           qiblaStatus.textContent = "Motion permission was not granted.";
@@ -401,4 +443,16 @@ function startQibla() {
 
 if (enableQiblaButton) {
   enableQiblaButton.addEventListener("click", startQibla);
+}
+
+if (
+  typeof DeviceOrientationEvent !== "undefined" &&
+  typeof DeviceOrientationEvent.requestPermission !== "function" &&
+  window.isSecureContext
+) {
+  window.setTimeout(() => {
+    if (!qiblaBooted) {
+      startQibla();
+    }
+  }, 300);
 }
