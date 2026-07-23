@@ -2489,3 +2489,99 @@ h3 {
   }
 }
 
+.quran-ayah-list-pages {
+  gap: 18px;
+}
+
+.quran-reading-page {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 26px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(247, 239, 226, 0.98));
+  box-shadow: var(--shadow-soft);
+}
+
+.quran-reading-page-topline {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.quran-reading-page-topline span {
+  color: var(--gold-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quran-reading-page-arabic {
+  margin: 0;
+  color: var(--text-strong);
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  line-height: 2.05;
+}
+
+.quran-inline-ayah {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.7rem;
+  height: 1.7rem;
+  margin: 0 0.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 149, 77, 0.24);
+  color: var(--gold-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.quran-ayah-card-dual {
+  gap: 16px;
+}
+
+.quran-dual-block {
+  display: grid;
+  gap: 14px;
+}
+
+.quran-dual-arabic {
+  margin: 0;
+  color: var(--text-strong);
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.7rem;
+  line-height: 1.95;
+}
+
+.quran-dual-translation {
+  display: grid;
+  gap: 10px;
+}
+
+.quran-dual-translation p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+@media (max-width: 720px) {
+  .quran-reading-page {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .quran-reading-page-arabic {
+    font-size: 1.75rem;
+    line-height: 1.9;
+  }
+
+  .quran-dual-arabic {
+    font-size: 1.45rem;
+    line-height: 1.85;
+  }
+}
+
