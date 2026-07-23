@@ -30,6 +30,7 @@ let latestPrayerTimes = [];
 let nextPrayerNotificationTimeout = null;
 let serviceWorkerRegistration = null;
 let pushPublicKey = "";
+let backendPushReady = false;
 
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
@@ -356,10 +357,34 @@ async function loadPushPublicKey() {
 
     const payload = await response.json();
     pushPublicKey = payload?.configured ? payload?.publicKey ?? "" : "";
+    backendPushReady = Boolean(pushPublicKey);
     return pushPublicKey;
   } catch (error) {
+    backendPushReady = false;
     return "";
   }
+}
+
+async function showVerificationNotification() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
+
+  if (!registration) {
+    return;
+  }
+
+  await registration.showNotification("Nooriva notifications enabled", {
+    body: backendPushReady
+      ? "Prayer reminders are ready on this device, including backend push when available."
+      : "Prayer reminders are ready while Nooriva is open or installed on this device.",
+    icon: "./assets/nooriva-logo-transparent.png",
+    badge: "./assets/nooriva-logo-transparent.png",
+    tag: "nooriva-notification-check",
+    renotify: false,
+  });
 }
 
 async function subscribeToBackendPush() {
@@ -392,15 +417,19 @@ async function subscribeToBackendPush() {
     });
   }
 
-  const response = await fetch(pushSubscribeApiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ subscription }),
-  });
+  try {
+    const response = await fetch(pushSubscribeApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subscription }),
+    });
 
-  return response.ok;
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
 }
 
 async function removeBackendPushSubscription() {
@@ -452,6 +481,18 @@ async function showPrayerNotification(prayer) {
   }
 
   return false;
+}
+
+function getNotificationSupportMode() {
+  if (!("Notification" in window)) {
+    return "unsupported";
+  }
+
+  if (window.noorivaInstall?.isStandaloneApp?.()) {
+    return "standalone";
+  }
+
+  return "browser";
 }
 
 function clearScheduledPrayerNotification() {
@@ -581,7 +622,10 @@ if (notificationButton) {
       const pushSubscribed = await subscribeToBackendPush();
       prayerStatus.textContent = pushSubscribed
         ? "Notifications enabled. Nooriva will use installed-app reminders and server push for stronger closed-app delivery."
-        : "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
+        : getNotificationSupportMode() === "browser"
+          ? "Notifications enabled. For the best mobile reminder reliability, install Nooriva to your home screen."
+          : "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
+      await showVerificationNotification();
       await maybeSendPrayerNotification();
       scheduleNextPrayerNotification();
     }
@@ -608,6 +652,7 @@ updateActionVisibility();
 registerServiceWorker().then(() => {
   if (Notification.permission === "granted") {
     subscribeToBackendPush().catch(() => undefined);
+    showVerificationNotification().catch(() => undefined);
   }
 });
 loadPushPublicKey();
@@ -626,6 +671,9 @@ window.addEventListener("nooriva:installed", () => {
   }
 
   updateActionVisibility();
+  if (Notification.permission === "granted") {
+    subscribeToBackendPush().catch(() => undefined);
+  }
   scheduleNextPrayerNotification();
 });
 
