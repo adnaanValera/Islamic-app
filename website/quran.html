@@ -6,7 +6,7 @@
     <title>Nooriva | Quran</title>
     <meta
       name="description"
-      content="Read full surahs in Nooriva with saved bookmarks and continue-reading support."
+      content="Read the Quran in Arabic, English, or both with a simple Nooriva web reader."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -40,97 +40,57 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-hero prayer-hero-quran">
-          <div class="prayer-table-card prayer-table-card-hero quran-hero-card quran-hero-card-premium">
-            <div class="quran-hero-shell">
-              <div class="tasbeeh-counter-topline">
-                <span class="next-prayer-label">Reading now</span>
-                <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
-              </div>
-              <div class="quran-reader-card quran-reader-card-premium">
-                <strong class="quran-reader-title" id="quran-selected-title">Al-Fatihah</strong>
-                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</span>
-                <p class="quran-reader-arabic quran-reader-arabic-large" id="quran-selected-arabic">
-                  Loading surah...
-                </p>
-                <p class="quran-reader-translation" id="quran-selected-translation">
-                  Loading translation...
-                </p>
-              </div>
-              <div class="tasbeeh-actions-grid quran-actions-grid">
-                <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
-                <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
-                <button class="button button-secondary" id="quran-open-continue" type="button">Continue reading</button>
-              </div>
+        <section class="prayer-table-card prayer-table-card-hero quran-reader-shell">
+          <div class="quran-reader-toolbar">
+            <div class="quran-language-toggle" id="quran-language-toggle">
+              <button class="quran-language-button is-active" data-quran-view="both" type="button">Both</button>
+              <button class="quran-language-button" data-quran-view="arabic" type="button">Arabic</button>
+              <button class="quran-language-button" data-quran-view="english" type="button">English</button>
             </div>
+
+            <div class="quran-toolbar-search">
+              <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
+            </div>
+
+            <details class="quran-surah-dropdown">
+              <summary>
+                <span>Surah</span>
+                <strong id="quran-current-surah">Al-Fatihah</strong>
+              </summary>
+              <div class="quran-surah-dropdown-list" id="quran-surah-grid"></div>
+            </details>
           </div>
 
-          <div class="prayer-hero-copy prayer-hero-copy-compact">
+          <div class="quran-reader-header">
             <p class="eyebrow">Quran</p>
-            <h1 class="prayer-hero-title">Full surah reading.</h1>
-            <p class="hero-text prayer-hero-text">
-              Open a surah, read ayah by ayah, and continue from where you stopped.
-            </p>
-            <div class="hero-actions quran-search-bar">
-              <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
-              <button class="button button-secondary" id="quran-clear-search" type="button">Clear</button>
+            <h1 class="prayer-hero-title" id="quran-selected-title">Al-Fatihah</h1>
+            <p class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</p>
+            <div class="quran-reader-meta-row">
+              <span class="qibla-mode-badge" id="quran-selected-meta">7 ayat</span>
+              <span class="qibla-mode-badge" id="quran-continue-surah">Continue not set</span>
             </div>
             <div class="status-stack">
               <p class="status-line" id="quran-status">Loading Quran...</p>
               <p class="status-line status-line-soft" id="quran-bookmark-copy">
-                Bookmarks and reading position are saved on this device.
+                Your place is saved on this device.
               </p>
             </div>
-            <div class="prayer-section-meta quran-meta-simple">
-              <div class="prayer-meta-pill">
-                <span>Current</span>
-                <strong id="quran-current-surah">Al-Fatihah</strong>
-              </div>
-              <div class="prayer-meta-pill">
-                <span>Bookmark</span>
-                <strong id="quran-bookmarked-surah">None yet</strong>
-              </div>
-              <div class="prayer-meta-pill">
-                <span>Continue</span>
-                <strong id="quran-continue-surah">None yet</strong>
-              </div>
-              <div class="prayer-meta-pill">
-                <span>Saved</span>
-                <strong id="quran-saved-count">0</strong>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="prayer-table-section">
-          <div class="section-heading prayer-section-heading">
-            <div>
-              <p class="eyebrow">Reading list</p>
-              <h2>Selected surahs</h2>
-            </div>
           </div>
 
-          <div class="quran-surah-grid" id="quran-surah-grid"></div>
-        </section>
-
-        <section class="prayer-table-section">
-          <div class="section-heading prayer-section-heading">
-            <div>
-              <p class="eyebrow">Read</p>
-              <h2>Ayah by ayah</h2>
-            </div>
+          <div class="quran-reader-actions">
+            <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
+            <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
+            <button class="button button-secondary" id="quran-open-continue" type="button">Continue reading</button>
           </div>
 
-          <div class="prayer-table-card quran-full-reader-card">
-            <div class="quran-ayah-list" id="quran-ayah-list">
-              <article class="quran-ayah-card">
-                <div class="quran-ayah-topline">
-                  <span>Ayah 1</span>
-                </div>
-                <p class="quran-ayah-arabic">Loading...</p>
-                <p class="quran-ayah-translation">Please wait.</p>
-              </article>
-            </div>
+          <div class="quran-ayah-list" id="quran-ayah-list">
+            <article class="quran-ayah-card">
+              <div class="quran-ayah-topline">
+                <span>Ayah 1</span>
+              </div>
+              <p class="quran-ayah-arabic">Loading...</p>
+              <p class="quran-ayah-translation">Please wait.</p>
+            </article>
           </div>
         </section>
 

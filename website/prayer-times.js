@@ -5,11 +5,11 @@ const pushUnsubscribeApiUrl = "/api/push-unsubscribe";
 const malawiTimeZone = "Africa/Blantyre";
 
 const prayers = [
-  { athanKey: "fajrAthan", salahKey: "fajrJamaah", label: "Fajr" },
-  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", label: "Zuhr" },
-  { athanKey: "asrAthan", salahKey: "asrJamaah", label: "Asr" },
-  { athanKey: "maghribAthan", salahKey: "maghribJamaah", label: "Maghrib" },
-  { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha" },
+  { athanKey: "fajrAthan", salahKey: "fajrJamaah", label: "Fajr", endKey: "sunrise" },
+  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", label: "Zuhr", endKey: "asrShafi" },
+  { athanKey: "asrAthan", salahKey: "asrJamaah", label: "Asr", endKey: "sunset" },
+  { athanKey: "maghribAthan", salahKey: "maghribJamaah", label: "Maghrib", endKey: "eshaStarts" },
+  { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha", endKey: null },
 ];
 
 const startTimings = [
@@ -37,7 +37,7 @@ const notificationBadge = "./assets/favicon-32.png";
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
-const endTimesList = document.getElementById("end-times-list");
+const currentPrayerWindow = document.getElementById("current-prayer-window");
 const nextPrayerLabel = document.getElementById("next-prayer-label");
 const nextPrayerName = document.getElementById("next-prayer-name");
 const nextPrayerTime = document.getElementById("next-prayer-time");
@@ -67,7 +67,6 @@ function getMalawiDateParts() {
   return {
     dateKey: `${values.year}-${values.month}-${values.day}`,
     timeKey: `${values.hour}:${values.minute}`,
-    timeDisplay: `${values.hour}:${values.minute}`,
   };
 }
 
@@ -83,21 +82,6 @@ function getMinutesFromTimeString(timeValue) {
   return hours * 60 + minutes;
 }
 
-function formatCountdown(totalMinutes) {
-  if (totalMinutes <= 0) {
-    return "Starting now";
-  }
-
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m remaining`;
-  }
-
-  return `${minutes}m remaining`;
-}
-
 function formatFriendlyCountdown(totalMinutes, prayerLabel) {
   if (totalMinutes <= 0) {
     return `${prayerLabel} is starting now`;
@@ -109,12 +93,9 @@ function formatFriendlyCountdown(totalMinutes, prayerLabel) {
 
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-
-  if (minutes === 0) {
-    return `${hours} hour${hours === 1 ? "" : "s"} until ${prayerLabel}`;
-  }
-
-  return `${hours}h ${minutes}m until ${prayerLabel}`;
+  return minutes === 0
+    ? `${hours} hour${hours === 1 ? "" : "s"} until ${prayerLabel}`
+    : `${hours}h ${minutes}m until ${prayerLabel}`;
 }
 
 function getChecklistState() {
@@ -132,10 +113,7 @@ function getChecklistState() {
       return { dateKey, checked: {} };
     }
 
-    return {
-      dateKey,
-      checked: parsed.checked ?? {},
-    };
+    return { dateKey, checked: parsed.checked ?? {} };
   } catch (error) {
     return { dateKey, checked: {} };
   }
@@ -157,6 +135,27 @@ function resetChecklistIfNeeded() {
   saveChecklistState(checklist.checked);
 }
 
+function getPrayerWindows() {
+  return latestPrayerTimes.map((prayer, index) => {
+    const startMinutes = getMinutesFromTimeString(prayer.athan) ?? 0;
+    let endMinutes = getMinutesFromTimeString(prayer.endTime);
+
+    if (endMinutes === null) {
+      if (index < latestPrayerTimes.length - 1) {
+        endMinutes = getMinutesFromTimeString(latestPrayerTimes[index + 1].athan) ?? 24 * 60;
+      } else {
+        endMinutes = 24 * 60;
+      }
+    }
+
+    return {
+      ...prayer,
+      startMinutes,
+      endMinutes,
+    };
+  });
+}
+
 function renderPrayerTimes() {
   if (!prayerTimeList) {
     return;
@@ -165,32 +164,21 @@ function renderPrayerTimes() {
   const { timeKey } = getMalawiDateParts();
   const checklist = getChecklistState();
   const currentMinutes = getMinutesFromTimeString(timeKey) ?? 0;
-  const prayerWindows = latestPrayerTimes.map((prayer, index) => {
-    const startMinutes = getMinutesFromTimeString(prayer.athan) ?? 0;
-    const nextStart =
-      index < latestPrayerTimes.length - 1
-        ? getMinutesFromTimeString(latestPrayerTimes[index + 1].athan) ?? startMinutes
-        : 24 * 60;
+  const prayerWindows = getPrayerWindows();
 
-    return {
-      ...prayer,
-      startMinutes,
-      nextStart,
-    };
-  });
-
-  const nextPrayer =
-    prayerWindows.find((prayer) => prayer.startMinutes >= currentMinutes) ?? prayerWindows[0];
   const currentPrayer =
     prayerWindows.find(
-      (prayer) =>
-        currentMinutes >= prayer.startMinutes &&
-      currentMinutes < prayer.nextStart,
+      (prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes,
     ) ?? null;
+
+  const nextPrayer =
+    prayerWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? prayerWindows[0] ?? null;
+
   const nextPrayerMinutes =
-    nextPrayer && nextPrayer.startMinutes < currentMinutes
+    nextPrayer && nextPrayer.startMinutes <= currentMinutes
       ? nextPrayer.startMinutes + 24 * 60
       : nextPrayer?.startMinutes ?? currentMinutes;
+
   const minutesUntilNext = nextPrayerMinutes - currentMinutes;
 
   if (nextPrayerName) {
@@ -198,7 +186,7 @@ function renderPrayerTimes() {
   }
 
   if (nextPrayerTime) {
-    nextPrayerTime.textContent = currentPrayer?.athan ?? nextPrayer?.athan ?? "--:--";
+    nextPrayerTime.textContent = currentPrayer?.salah ?? nextPrayer?.athan ?? "--:--";
   }
 
   if (nextPrayerCountdown) {
@@ -211,18 +199,20 @@ function renderPrayerTimes() {
     nextPrayerLabel.textContent = currentPrayer ? "Current prayer" : "Next prayer";
   }
 
+  if (currentPrayerWindow) {
+    currentPrayerWindow.textContent = currentPrayer
+      ? `${currentPrayer.label}: ${currentPrayer.salah} - ${currentPrayer.endTime || "--:--"}`
+      : `Next: ${nextPrayer?.label ?? "--"} at ${nextPrayer?.athan ?? "--:--"}`;
+  }
+
   if (nextPrayerProgressFill) {
     if (currentPrayer) {
-      const windowLength = Math.max(currentPrayer.nextStart - currentPrayer.startMinutes, 1);
-      const elapsed = Math.min(
-        Math.max(currentMinutes - currentPrayer.startMinutes, 0),
-        windowLength,
-      );
+      const windowLength = Math.max(currentPrayer.endMinutes - currentPrayer.startMinutes, 1);
+      const elapsed = Math.min(Math.max(currentMinutes - currentPrayer.startMinutes, 0), windowLength);
       const progress = Math.max(6, Math.min((elapsed / windowLength) * 100, 100));
       nextPrayerProgressFill.style.width = `${progress}%`;
     } else {
-      const capped = nextPrayer ? Math.max(0, Math.min(100 - minutesUntilNext, 24)) : 0;
-      nextPrayerProgressFill.style.width = `${capped}%`;
+      nextPrayerProgressFill.style.width = "0%";
     }
   }
 
@@ -258,9 +248,13 @@ function renderJumuahTimes(times) {
   }
 
   jumuahTimeList.innerHTML = `
-    <div class="jumuah-time-row">
+    <div class="jumuah-split-card">
+      <span>Adhan</span>
       <strong>${times.adhan}</strong>
-      <strong class="align-right">${times.khutbah}</strong>
+    </div>
+    <div class="jumuah-split-card">
+      <span>Khutbah</span>
+      <strong>${times.khutbah}</strong>
     </div>
   `;
 }
@@ -271,23 +265,6 @@ function renderStartTimings(items) {
   }
 
   timingsList.innerHTML = items
-    .map(
-      (item) => `
-        <div class="timing-row">
-          <span>${item.label}</span>
-          <strong>${item.time}</strong>
-        </div>
-      `,
-    )
-    .join("");
-}
-
-function renderEndTimings(items) {
-  if (!endTimesList) {
-    return;
-  }
-
-  endTimesList.innerHTML = items
     .map(
       (item) => `
         <div class="timing-row">
@@ -337,9 +314,7 @@ function updateActionVisibility() {
     downloadAppButton.style.display = "none";
   }
 
-  const visibleButtons = prayerActions.querySelectorAll(
-    ".button:not([style*='display: none'])",
-  );
+  const visibleButtons = prayerActions.querySelectorAll(".button:not([style*='display: none'])");
 
   if (visibleButtons.length === 0) {
     prayerActions.classList.add("prayer-actions-hidden");
@@ -370,7 +345,6 @@ function base64UrlToUint8Array(base64String) {
 async function loadPushPublicKey() {
   try {
     const response = await fetch(pushPublicKeyApiUrl, { cache: "no-store" });
-
     if (!response.ok) {
       return "";
     }
@@ -391,7 +365,6 @@ async function showVerificationNotification() {
   }
 
   const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
-
   if (!registration) {
     return;
   }
@@ -408,28 +381,21 @@ async function showVerificationNotification() {
 }
 
 async function subscribeToBackendPush() {
-  if (
-    !("serviceWorker" in navigator) ||
-    !("PushManager" in window) ||
-    Notification.permission !== "granted"
-  ) {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window) || Notification.permission !== "granted") {
     return false;
   }
 
   const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
-
   if (!registration) {
     return false;
   }
 
   const publicKey = pushPublicKey || (await loadPushPublicKey());
-
   if (!publicKey) {
     return false;
   }
 
   let subscription = await registration.pushManager.getSubscription();
-
   if (!subscription) {
     subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
@@ -440,9 +406,7 @@ async function subscribeToBackendPush() {
   try {
     const response = await fetch(pushSubscribeApiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ subscription }),
     });
 
@@ -452,42 +416,18 @@ async function subscribeToBackendPush() {
   }
 }
 
-async function removeBackendPushSubscription() {
-  if (!("serviceWorker" in navigator)) {
-    return;
-  }
-
-  const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
-  const subscription = await registration?.pushManager?.getSubscription?.();
-
-  if (!subscription) {
-    return;
-  }
-
-  await fetch(pushUnsubscribeApiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ endpoint: subscription.endpoint }),
-  }).catch(() => undefined);
-}
-
 async function showPrayerNotification(prayer) {
   const title = `${prayer.label} time`;
   const body = `It is now time for ${prayer.label} in Malawi.`;
-  const icon = notificationIcon;
-  const badge = notificationBadge;
   const tag = `prayer-${prayer.label.toLowerCase()}`;
 
   if ("serviceWorker" in navigator) {
     const registration = await navigator.serviceWorker.ready.catch(() => null);
-
     if (registration) {
       await registration.showNotification(title, {
         body,
-        icon,
-        badge,
+        icon: notificationIcon,
+        badge: notificationBadge,
         tag,
         renotify: true,
       });
@@ -496,30 +436,18 @@ async function showPrayerNotification(prayer) {
   }
 
   if ("Notification" in window && Notification.permission === "granted") {
-    new Notification(title, { body, icon, badge, tag });
+    new Notification(title, { body, icon: notificationIcon, badge: notificationBadge, tag });
     return true;
   }
 
   return false;
 }
 
-function getNotificationSupportMode() {
-  if (!("Notification" in window)) {
-    return "unsupported";
-  }
-
-  if (window.noorivaInstall?.isStandaloneApp?.()) {
-    return "standalone";
-  }
-
-  return "browser";
-}
-
-function clearScheduledPrayerNotification() {
-  if (nextPrayerNotificationTimeout) {
-    window.clearTimeout(nextPrayerNotificationTimeout);
-    nextPrayerNotificationTimeout = null;
-  }
+function getPrayerWindowsForNotifications() {
+  return latestPrayerTimes.map((prayer) => ({
+    ...prayer,
+    startMinutes: getMinutesFromTimeString(prayer.athan) ?? 0,
+  }));
 }
 
 function getNextUpcomingPrayer() {
@@ -529,23 +457,23 @@ function getNextUpcomingPrayer() {
 
   const { dateKey, timeKey } = getMalawiDateParts();
   const currentMinutes = getMinutesFromTimeString(timeKey) ?? 0;
-  const prayerWindows = latestPrayerTimes.map((prayer) => ({
-    ...prayer,
-    startMinutes: getMinutesFromTimeString(prayer.athan) ?? 0,
-  }));
-
-  const nextPrayer =
-    prayerWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? prayerWindows[0];
+  const prayerWindows = getPrayerWindowsForNotifications();
+  const nextPrayer = prayerWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? prayerWindows[0];
   const nextPrayerMinutes =
-    nextPrayer.startMinutes > currentMinutes
-      ? nextPrayer.startMinutes
-      : nextPrayer.startMinutes + 24 * 60;
+    nextPrayer.startMinutes > currentMinutes ? nextPrayer.startMinutes : nextPrayer.startMinutes + 24 * 60;
 
   return {
     prayer: nextPrayer,
     waitMs: Math.max((nextPrayerMinutes - currentMinutes) * 60 * 1000, 0),
     dateKey,
   };
+}
+
+function clearScheduledPrayerNotification() {
+  if (nextPrayerNotificationTimeout) {
+    window.clearTimeout(nextPrayerNotificationTimeout);
+    nextPrayerNotificationTimeout = null;
+  }
 }
 
 function scheduleNextPrayerNotification() {
@@ -556,17 +484,14 @@ function scheduleNextPrayerNotification() {
   }
 
   const upcoming = getNextUpcomingPrayer();
-
   if (!upcoming) {
     return;
   }
 
-  const bufferedDelay = Math.min(upcoming.waitMs + 1500, 2147483647);
-
   nextPrayerNotificationTimeout = window.setTimeout(async () => {
     await maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
-  }, bufferedDelay);
+  }, Math.min(upcoming.waitMs + 1500, 2147483647));
 }
 
 async function loadPrayerTimes() {
@@ -574,17 +499,18 @@ async function loadPrayerTimes() {
     prayerStatus.textContent = "Refreshing live prayer times...";
 
     const response = await fetch(prayerApiUrl, { cache: "no-store" });
-
     if (!response.ok) {
       throw new Error(`Prayer API returned ${response.status}`);
     }
 
     const payload = await response.json();
     const data = payload?.data;
+
     latestPrayerTimes = prayers.map((prayer) => ({
       label: prayer.label,
       athan: data?.[prayer.athanKey] ?? "--:--",
       salah: data?.[prayer.salahKey] ?? "--:--",
+      endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
     }));
 
     renderPrayerTimes();
@@ -598,12 +524,6 @@ async function loadPrayerTimes() {
         time: data?.[timing.key] || "--:--",
       })),
     );
-    renderEndTimings([
-      { label: "Fajr", time: data?.sunrise || "--:--" },
-      { label: "Zuhr", time: data?.asrShafi || "--:--" },
-      { label: "Asr", time: data?.sunset || "--:--" },
-      { label: "Maghrib", time: data?.eshaStarts || "--:--" },
-    ]);
 
     prayerStatus.textContent = "Prayer times updated.";
     scheduleNextPrayerNotification();
@@ -621,10 +541,8 @@ async function maybeSendPrayerNotification() {
 
   for (const prayer of latestPrayerTimes) {
     const storageKey = `nooriva-notified-${dateKey}-${prayer.label.toLowerCase()}`;
-
     if (prayer.athan === timeKey && !localStorage.getItem(storageKey)) {
       const shown = await showPrayerNotification(prayer);
-
       if (shown) {
         localStorage.setItem(storageKey, "true");
       }
@@ -632,45 +550,38 @@ async function maybeSendPrayerNotification() {
   }
 }
 
-if (notificationButton) {
-  notificationButton.addEventListener("click", async () => {
-    if (!("Notification" in window)) {
-      updateNotificationStatus();
-      updateActionVisibility();
-      return;
-    }
-
-    const permission = await Notification.requestPermission();
+notificationButton?.addEventListener("click", async () => {
+  if (!("Notification" in window)) {
     updateNotificationStatus();
     updateActionVisibility();
+    return;
+  }
 
-    if (permission === "granted") {
-      const pushSubscribed = await subscribeToBackendPush();
-      prayerStatus.textContent = pushSubscribed
-        ? "Notifications enabled. Nooriva will use installed-app reminders and server push for stronger closed-app delivery."
-        : getNotificationSupportMode() === "browser"
-          ? "Notifications enabled. For the best mobile reminder reliability, install Nooriva to your home screen."
-          : "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
-      await showVerificationNotification();
-      await maybeSendPrayerNotification();
-      scheduleNextPrayerNotification();
-    }
-  });
-}
+  const permission = await Notification.requestPermission();
+  updateNotificationStatus();
+  updateActionVisibility();
 
-if (downloadAppButton) {
-  downloadAppButton.addEventListener("click", async () => {
-    const installResult = await window.noorivaInstall?.triggerInstall?.();
+  if (permission === "granted") {
+    const pushSubscribed = await subscribeToBackendPush();
+    prayerStatus.textContent = pushSubscribed
+      ? "Notifications enabled. Nooriva will use installed-app reminders and server push for stronger closed-app delivery."
+      : "Notifications enabled for upcoming prayer reminders while Nooriva is open or installed.";
+    await showVerificationNotification();
+    await maybeSendPrayerNotification();
+    scheduleNextPrayerNotification();
+  }
+});
 
-    if (installResult === "installed" || installResult === "standalone") {
-      downloadAppButton.style.display = "none";
-      updateActionVisibility();
-      return;
-    }
+downloadAppButton?.addEventListener("click", async () => {
+  const installResult = await window.noorivaInstall?.triggerInstall?.();
+  if (installResult === "installed" || installResult === "standalone") {
+    downloadAppButton.style.display = "none";
+    updateActionVisibility();
+    return;
+  }
 
-    prayerStatus.textContent = "Use your browser's install option to add Nooriva to your device.";
-  });
-}
+  prayerStatus.textContent = "Use your browser's install option to add Nooriva to your device.";
+});
 
 resetChecklistIfNeeded();
 updateNotificationStatus();
@@ -694,7 +605,6 @@ window.addEventListener("nooriva:installed", () => {
   if (downloadAppButton) {
     downloadAppButton.style.display = "none";
   }
-
   updateActionVisibility();
   if (Notification.permission === "granted") {
     subscribeToBackendPush().catch(() => undefined);
@@ -707,9 +617,6 @@ document.addEventListener("visibilitychange", () => {
     maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
     loadPrayerTimes();
-    if (Notification.permission === "granted") {
-      subscribeToBackendPush().catch(() => undefined);
-    }
   }
 });
 
@@ -730,6 +637,7 @@ setInterval(() => {
     renderPrayerTimes();
   }
 }, 1000);
+
 setInterval(() => {
   maybeSendPrayerNotification();
 }, 15000);
