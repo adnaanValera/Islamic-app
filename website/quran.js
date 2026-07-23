@@ -148,15 +148,16 @@ function renderHeader() {
   if (!surah) return;
 
   const activeIndex = surahs.findIndex((item) => Number(item.number) === Number(surah.number));
-  selectedTitle.textContent = "Quran reader";
-  selectedSubtitle.textContent = quranState.view === "arabic" ? "Swipe page by page with fast surah jump." : "Swipe page by page with fast surah jump.";
-  selectedMeta.textContent = "";
-  currentSurah.textContent = "Jump to surah";
-  lastReadBadge.textContent = "";
+  const viewLabel = quranState.view === "arabic" ? "Arabic" : quranState.view === "english" ? "English" : "Arabic + English";
+  selectedTitle.textContent = "Quran";
+  selectedSubtitle.textContent = `${viewLabel} reading with smooth surah jump.`;
+  selectedMeta.textContent = `${surah.number}. ${surah.englishName}`;
+  currentSurah.textContent = `${surah.number}. ${surah.englishName}`;
+  lastReadBadge.textContent = `Page ${currentPageNumber}`;
   readingCopy.textContent =
     quranState.view === "arabic"
       ? "Swipe left or right to move between Quran pages."
-      : "Swipe left or right to move between Quran pages. Search jumps to a surah.";
+      : "Swipe left or right to move between Quran pages.";
 
   if (basmalaTextNode) basmalaTextNode.textContent = basmalaText;
   if (basmalaCard) basmalaCard.style.display = Number(surah.number) === 9 ? "none" : "grid";
