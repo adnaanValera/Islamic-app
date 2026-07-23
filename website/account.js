@@ -20,6 +20,8 @@ const showSigninButton = document.getElementById("account-show-signin");
 const showRegisterButton = document.getElementById("account-show-register");
 const signinCard = document.getElementById("account-signin-card");
 const registerCard = document.getElementById("account-register-card");
+const signedInCard = document.getElementById("account-signed-in-card");
+const signedInName = document.getElementById("account-signed-in-name");
 const accountButtons = [registerButton, signinButton];
 
 function loadSession() {
@@ -93,6 +95,14 @@ function renderSession() {
     signoutButton.style.display = signedIn ? "inline-flex" : "none";
   }
 
+  if (signedInCard) {
+    signedInCard.classList.toggle("is-hidden", !signedIn);
+  }
+
+  if (signedInName) {
+    signedInName.textContent = session?.user?.fullName ?? "Nooriva user";
+  }
+
   if (signinCard) {
     signinCard.style.opacity = signedIn && !signinCard.classList.contains("is-hidden") ? "0.96" : "1";
   }
@@ -136,6 +146,8 @@ registerButton?.addEventListener("click", async () => {
     await submitAuth(registerUrl, registerFullName.value, registerPassword.value);
     statusLine.textContent = "Account created and signed in.";
     setView("signin");
+    registerFullName.value = "";
+    registerPassword.value = "";
   } catch (error) {
     statusLine.textContent = error.message;
     setButtonsDisabled(false);
@@ -146,6 +158,7 @@ signinButton?.addEventListener("click", async () => {
   try {
     await submitAuth(signinUrl, signinFullName.value, signinPassword.value);
     statusLine.textContent = "Signed in successfully.";
+    signinPassword.value = "";
   } catch (error) {
     statusLine.textContent = error.message;
     setButtonsDisabled(false);

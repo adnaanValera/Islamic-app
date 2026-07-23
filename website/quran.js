@@ -11,6 +11,7 @@ const selectedTitle = document.getElementById("quran-selected-title");
 const selectedSubtitle = document.getElementById("quran-selected-subtitle");
 const currentSurah = document.getElementById("quran-current-surah");
 const lastReadBadge = document.getElementById("quran-last-read");
+const basmalaCard = document.getElementById("quran-basmala-card");
 const previousSurahButton = document.getElementById("quran-prev-surah");
 const nextSurahButton = document.getElementById("quran-next-surah");
 const surahDropdown = document.getElementById("quran-surah-dropdown");
@@ -102,6 +103,10 @@ function getLastReadLabel() {
   return `${lastSurah.englishName} • Last opened`;
 }
 
+function shouldShowBasmala(surahNumber) {
+  return Number(surahNumber) !== 9;
+}
+
 function sanitizeArabicText(text) {
   return String(text || "").replace(/^\uFEFF/, "").trim();
 }
@@ -162,6 +167,9 @@ function renderHeader() {
     quranState.view === "arabic"
       ? "Swipe left or right to move through the pages."
       : "Nooriva reopens your last surah automatically on this device.";
+  if (basmalaCard) {
+    basmalaCard.style.display = shouldShowBasmala(surah.number) ? "grid" : "none";
+  }
 
   if (previousSurahButton) {
     previousSurahButton.disabled = !hasPrevious;
@@ -216,7 +224,7 @@ function renderViewButtons() {
 }
 
 function buildArabicPages(arabicAyahs) {
-  const pageSize = 8;
+  const pageSize = 7;
   const pages = [];
 
   for (let index = 0; index < arabicAyahs.length; index += pageSize) {
@@ -362,6 +370,32 @@ function attachArabicPager() {
       scrollTicking = false;
     });
   });
+
+  let touchStartX = 0;
+  track.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX = event.changedTouches[0]?.clientX ?? 0;
+    },
+    { passive: true },
+  );
+
+  track.addEventListener(
+    "touchend",
+    (event) => {
+      const touchEndX = event.changedTouches[0]?.clientX ?? 0;
+      const deltaX = touchStartX - touchEndX;
+      if (Math.abs(deltaX) < 44) {
+        return;
+      }
+
+      const nextIndex = deltaX > 0 ? currentArabicPageIndex + 1 : currentArabicPageIndex - 1;
+      const safeIndex = Math.max(0, Math.min(nextIndex, pages.length - 1));
+      pages[safeIndex]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      updateArabicPagerUI(safeIndex, pages.length);
+    },
+    { passive: true },
+  );
 }
 
 function renderReading() {

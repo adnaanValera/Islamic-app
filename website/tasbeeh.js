@@ -287,6 +287,7 @@ function renderTasbeeh() {
 
 function addCount(amount = 1) {
   const activeEntry = getActiveEntry();
+  const wasBelowTarget = activeEntry.count < activeEntry.target;
   activeEntry.count += amount;
   activeEntry.todayTotal += amount;
   tasbeehStatus.textContent = `${getActiveMode().label} updated.`;
@@ -300,7 +301,16 @@ function addCount(amount = 1) {
   }
 
   if (navigator.vibrate) {
-    navigator.vibrate(12);
+    navigator.vibrate(wasBelowTarget && activeEntry.count >= activeEntry.target ? [18, 40, 18] : 12);
+  }
+
+  if (wasBelowTarget && activeEntry.count >= activeEntry.target) {
+    activeEntry.completedRounds += 1;
+    tasbeehStatus.textContent = `${getActiveMode().label} round completed.`;
+    if (tapButton) {
+      tapButton.classList.add("is-complete");
+      window.setTimeout(() => tapButton.classList.remove("is-complete"), 600);
+    }
   }
 
   renderTasbeeh();

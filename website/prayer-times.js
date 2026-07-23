@@ -37,7 +37,6 @@ const notificationBadge = "./assets/favicon-32.png";
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
-const currentPrayerWindow = document.getElementById("current-prayer-window");
 const nextPrayerLabel = document.getElementById("next-prayer-label");
 const nextPrayerName = document.getElementById("next-prayer-name");
 const nextPrayerTime = document.getElementById("next-prayer-time");
@@ -186,7 +185,7 @@ function renderPrayerTimes() {
   }
 
   if (nextPrayerTime) {
-    nextPrayerTime.textContent = currentPrayer?.salah ?? nextPrayer?.athan ?? "--:--";
+    nextPrayerTime.textContent = currentPrayer?.salah ?? nextPrayer?.salah ?? "--:--";
   }
 
   if (nextPrayerCountdown) {
@@ -197,12 +196,6 @@ function renderPrayerTimes() {
 
   if (nextPrayerLabel) {
     nextPrayerLabel.textContent = currentPrayer ? "Current prayer" : "Next prayer";
-  }
-
-  if (currentPrayerWindow) {
-    currentPrayerWindow.textContent = currentPrayer
-      ? `${currentPrayer.label}: ${currentPrayer.salah} - ${currentPrayer.endTime || "--:--"}`
-      : `Next: ${nextPrayer?.label ?? "--"} at ${nextPrayer?.athan ?? "--:--"}`;
   }
 
   if (nextPrayerProgressFill) {
