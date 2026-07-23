@@ -4059,6 +4059,12 @@ h3 {
   gap: 8px;
 }
 
+.main-prayer-meta {
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 .main-next-salah {
   color: var(--muted);
   font-size: 0.84rem;

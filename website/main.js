@@ -6,7 +6,6 @@ const mainTasbeehStorageKey = "nooriva-main-tasbeeh";
 const mainPrayerLabel = document.getElementById("main-prayer-label");
 const mainPrayerName = document.getElementById("main-prayer-name");
 const mainPrayerTime = document.getElementById("main-prayer-time");
-const mainPrayerCountdown = document.getElementById("main-prayer-countdown");
 const mainNextSalah = document.getElementById("main-next-salah");
 const mainPrayerProgress = document.getElementById("main-prayer-progress");
 const mainQiblaArrow = document.getElementById("main-qibla-arrow");
@@ -102,7 +101,7 @@ function renderMainPrayer() {
   const minutesUntilNext = nextPrayerMinutes - currentMinutes;
 
   if (mainPrayerLabel) {
-    mainPrayerLabel.textContent = currentPrayer ? "Current prayer" : "Next prayer";
+    mainPrayerLabel.textContent = currentPrayer ? "Current" : "Next";
   }
 
   if (mainPrayerName) {
@@ -113,18 +112,12 @@ function renderMainPrayer() {
     mainPrayerTime.textContent = currentPrayer?.salah ?? nextPrayer?.salah ?? "--:--";
   }
 
-  if (mainPrayerCountdown) {
-    mainPrayerCountdown.textContent = currentPrayer
-      ? `${currentPrayer.label} active`
-      : formatMainCountdown(minutesUntilNext, nextPrayer?.label ?? "Prayer");
-  }
-
   if (mainNextSalah) {
     const nextSalahMinutes = nextPrayer && nextPrayer.startMinutes <= currentMinutes
       ? nextPrayer.startMinutes + 24 * 60
       : nextPrayer?.startMinutes ?? currentMinutes;
     const minutesUntilNextSalah = nextSalahMinutes - currentMinutes;
-    mainNextSalah.textContent = `Next salah: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`;
+    mainNextSalah.textContent = `Next: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -154,7 +147,7 @@ async function loadMainPrayer() {
     window.setInterval(renderMainPrayer, 60000);
   } catch {
     if (mainPrayerName) mainPrayerName.textContent = "Prayer unavailable";
-    if (mainPrayerCountdown) mainPrayerCountdown.textContent = "Please try again later";
+    if (mainPrayerTime) mainPrayerTime.textContent = "--:--";
     if (mainNextSalah) mainNextSalah.textContent = "Next salah unavailable";
   }
 }
