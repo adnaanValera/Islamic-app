@@ -128,6 +128,7 @@ function setWaitingForHeading() {
 
   qiblaPhoneArrow.style.opacity = "0.5";
   qiblaPhoneArrow.style.transform = "rotate(0deg)";
+  qiblaDirectionArrow.style.transform = "rotate(0deg)";
   deviceHeading.textContent = "--";
   qiblaAlignment.textContent = "Starting";
   setAccuracyLabel("Warming up");
@@ -208,8 +209,8 @@ function updateAlignment(heading) {
   const diff = shortestAngleDelta(smoothedHeading, currentBearing);
   const absoluteDiff = Math.abs(diff);
 
-  qiblaPhoneArrow.style.transform = `rotate(${smoothedHeading}deg)`;
-  qiblaDirectionArrow.style.transform = `rotate(${currentBearing}deg)`;
+  qiblaPhoneArrow.style.transform = "rotate(0deg)";
+  qiblaDirectionArrow.style.transform = `rotate(${diff}deg)`;
   deviceHeading.textContent = `${Math.round(smoothedHeading)}${degreeSymbol} ${degreesToCardinal(smoothedHeading)}`;
   setCompassMode("Live compass");
   setFallbackLabel("Compass first");
