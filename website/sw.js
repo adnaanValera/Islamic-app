@@ -1,4 +1,4 @@
-const STATIC_CACHE = "nooriva-static-v20";
+const STATIC_CACHE = "nooriva-static-v21";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -11,6 +11,7 @@ const CORE_ASSETS = [
   "/settings.html",
   "/styles.css",
   "/install-app.js",
+  "/main.js",
   "/mobile-nav.js",
   "/prayer-times.js",
   "/qibla.js",

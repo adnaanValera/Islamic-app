@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nooriva</title>
+    <title>Nooriva | Main</title>
     <meta
       name="description"
-      content="Nooriva is a refined Islamic companion with prayer, Qibla, Quran, and tasbeeh."
+      content="Nooriva main dashboard with prayer, qibla, ayah of the day, and tasbeeh."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -31,6 +31,7 @@
           />
         </div>
         <nav class="site-nav">
+          <a href="./index.html" aria-current="page">Main</a>
           <a href="./prayer.html">Prayer</a>
           <a href="./qibla.html">Qibla</a>
           <a href="./quran.html">Quran</a>
@@ -42,13 +43,10 @@
       </header>
 
       <main>
-        <section class="hero-section hero-section-simple hero-section-clean">
+        <section class="hero-section hero-section-simple hero-section-clean main-hero-section">
           <div class="hero-copy">
-            <p class="eyebrow">Nooriva</p>
-            <h1>Daily essentials, kept clean.</h1>
-            <p class="hero-text">
-              Prayer, Qibla, Quran, tasbeeh, and account access in one calm mobile experience.
-            </p>
+            <p class="eyebrow">Main</p>
+            <h1>Your daily Nooriva essentials.</h1>
             <div class="hero-actions" id="home-install-actions">
               <button class="button button-primary" id="home-download-app" type="button">
                 Download app
@@ -56,64 +54,69 @@
               <a class="button button-secondary" href="./prayer.html">Open prayer</a>
             </div>
             <p class="install-status" id="home-install-status"></p>
-            <div class="home-quick-links home-quick-links-clean">
-              <a class="home-quick-card" href="./prayer.html">
-                <span class="home-quick-label">Prayer</span>
-                <strong>Live timings</strong>
-              </a>
-              <a class="home-quick-card" href="./qibla.html">
-                <span class="home-quick-label">Qibla</span>
-                <strong>Open compass</strong>
-              </a>
-              <a class="home-quick-card" href="./quran.html">
-                <span class="home-quick-label">Quran</span>
-                <strong>Read now</strong>
-              </a>
-              <a class="home-quick-card" href="./tasbeeh.html">
-                <span class="home-quick-label">Tasbeeh</span>
-                <strong>Start dhikr</strong>
-              </a>
-              <a class="home-quick-card" href="./dhikr.html">
-                <span class="home-quick-label">Dhikr</span>
-                <strong>Open library</strong>
-              </a>
-            </div>
           </div>
         </section>
 
-        <section class="features-section" id="features">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Features</p>
-              <h2>Everything you need, kept clean.</h2>
-            </div>
-          </div>
-          <div class="feature-grid feature-grid-dashboard">
-            <a class="feature-card feature-card-rich feature-card-link" href="./prayer.html">
-              <p>01</p>
-              <h3>Prayer</h3>
-              <span>Live adhan, salah, Jumu'ah, and daily timings.</span>
+        <section class="main-dashboard-section">
+          <div class="main-dashboard-grid">
+            <a class="main-card main-card-prayer" href="./prayer.html">
+              <div class="main-card-head">
+                <span>Main</span>
+                <strong>Prayer</strong>
+              </div>
+              <div class="next-prayer-banner main-prayer-banner">
+                <span class="next-prayer-label" id="main-prayer-label">Current prayer</span>
+                <strong class="next-prayer-name" id="main-prayer-name">Loading...</strong>
+                <span class="next-prayer-time" id="main-prayer-time">--:--</span>
+                <span class="next-prayer-countdown" id="main-prayer-countdown">Please wait</span>
+                <div class="next-prayer-progress" aria-hidden="true">
+                  <span class="next-prayer-progress-fill" id="main-prayer-progress"></span>
+                </div>
+              </div>
             </a>
-            <a class="feature-card feature-card-rich feature-card-link" href="./qibla.html">
-              <p>02</p>
-              <h3>Qibla</h3>
-              <span>Fast compass direction in the same Nooriva style.</span>
+
+            <a class="main-card main-card-qibla" href="./qibla.html">
+              <div class="main-card-head">
+                <span>Main</span>
+                <strong>Qibla</strong>
+              </div>
+              <div class="main-qibla-mini">
+                <div class="qibla-compass-frame main-qibla-frame">
+                  <div class="qibla-compass main-qibla-compass">
+                    <span class="qibla-north-mark">N</span>
+                    <span class="qibla-ring"></span>
+                    <span class="qibla-direction-arrow" id="main-qibla-arrow"></span>
+                    <span class="qibla-phone-arrow" id="main-qibla-phone"></span>
+                    <span class="qibla-center-dot"></span>
+                  </div>
+                </div>
+                <p class="main-mini-copy" id="main-qibla-status">Opening qibla…</p>
+              </div>
             </a>
-            <a class="feature-card feature-card-rich feature-card-link" href="./quran.html">
-              <p>03</p>
-              <h3>Quran</h3>
-              <span>Read in Arabic, English, or both.</span>
-            </a>
-            <a class="feature-card feature-card-rich feature-card-link" href="./tasbeeh.html">
-              <p>04</p>
-              <h3>Tasbeeh</h3>
-              <span>A simple tap counter for daily dhikr.</span>
-            </a>
-            <a class="feature-card feature-card-rich feature-card-link" href="./dhikr.html">
-              <p>05</p>
-              <h3>Dhikr</h3>
-              <span>Daily adhkar library with a clean reading flow.</span>
-            </a>
+
+            <section class="main-card main-card-ayah">
+              <div class="main-card-head">
+                <span>Main</span>
+                <strong>Ayah of the day</strong>
+              </div>
+              <div class="main-ayah-body">
+                <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                <p class="main-mini-copy" id="main-ayah-reference"></p>
+              </div>
+            </section>
+
+            <section class="main-card main-card-tasbeeh">
+              <div class="main-card-head">
+                <span>Main</span>
+                <strong>Tasbeeh</strong>
+              </div>
+              <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
+                <span class="main-tasbeeh-ring"></span>
+                <strong id="main-tasbeeh-count">0</strong>
+                <span id="main-tasbeeh-label">Today</span>
+              </button>
+            </section>
           </div>
         </section>
 
@@ -131,7 +134,7 @@
         </section>
 
         <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
-          <a href="./index.html" aria-current="page">Home</a>
+          <a href="./index.html" aria-current="page">Main</a>
           <a href="./prayer.html">Prayer</a>
           <a href="./qibla.html">Qibla</a>
           <a href="./quran.html">Quran</a>
@@ -153,6 +156,7 @@
           <p>Nooriva</p>
         </div>
         <div>
+          <a href="./index.html">Main</a>
           <a href="./prayer.html">Prayer</a>
           <a href="./qibla.html">Qibla</a>
           <a href="./quran.html">Quran</a>
@@ -165,5 +169,6 @@
     </div>
   </body>
   <script src="./install-app.js"></script>
+  <script src="./main.js"></script>
   <script src="./mobile-nav.js"></script>
 </html>
