@@ -13,7 +13,6 @@ const selectedMeta = document.getElementById("quran-selected-meta");
 const selectedTitle = document.getElementById("quran-selected-title");
 const selectedSubtitle = document.getElementById("quran-selected-subtitle");
 const currentSurah = document.getElementById("quran-current-surah");
-const stickySurah = document.getElementById("quran-sticky-surah");
 const lastReadBadge = document.getElementById("quran-last-read");
 const basmalaCard = document.getElementById("quran-basmala-card");
 const basmalaTextNode = document.getElementById("quran-basmala-text");
@@ -119,7 +118,6 @@ async function fetchPage(pageNumber) {
 
   const edition =
     quranState.view === "arabic" ? "quran-uthmani" : quranState.view === "english" ? "en.sahih" : "quran-uthmani,en.sahih";
-
   const response = await fetch(`${quranApiBaseUrl}/page/${pageNumber}/${edition}`, { cache: "force-cache" });
   if (!response.ok) throw new Error("Unable to load Quran page.");
   const payload = await response.json();
@@ -150,20 +148,11 @@ function renderHeader() {
   if (!surah) return;
 
   const activeIndex = surahs.findIndex((item) => Number(item.number) === Number(surah.number));
-  const pageAyahs = Array.isArray(currentPageData?.ayahs) ? currentPageData.ayahs : [];
-  const uniqueSurahsOnPage = [...new Set(pageAyahs.map((ayah) => ayah.surah?.englishName).filter(Boolean))];
-
   selectedTitle.textContent = "Quran reader";
-  selectedSubtitle.textContent =
-    quranState.view === "arabic"
-      ? "Swipe page by page with fast surah jump."
-      : quranState.view === "english"
-        ? "English page reading with fast surah jump."
-        : "Arabic and English ayah by ayah on each page.";
-  selectedMeta.textContent = `Page ${currentPageNumber} • ${pageAyahs.length} ayat`;
+  selectedSubtitle.textContent = quranState.view === "arabic" ? "Swipe page by page with fast surah jump." : "Swipe page by page with fast surah jump.";
+  selectedMeta.textContent = "";
   currentSurah.textContent = "Jump to surah";
-  stickySurah.textContent = uniqueSurahsOnPage.join(" • ") || surah.englishName;
-  lastReadBadge.textContent = `${surah.englishName} • Page ${currentPageNumber}`;
+  lastReadBadge.textContent = "";
   readingCopy.textContent =
     quranState.view === "arabic"
       ? "Swipe left or right to move between Quran pages."
@@ -218,21 +207,12 @@ function renderViewButtons() {
 
 function buildArabicPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
-  const pageSurah = getCurrentSurahFromPageData(pageData);
-
   return `
     <article class="quran-reading-page quran-reading-page-premium quran-reading-page-paged">
       <div class="quran-reading-page-ornament quran-reading-page-ornament-top" aria-hidden="true"></div>
       <div class="quran-reading-page-topline"><span>Page ${pageData?.number ?? currentPageNumber}</span></div>
-      <div class="quran-page-surah-chip">${pageSurah?.englishName ?? ""}</div>
       <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
-        ${ayahs
-          .map((ayah, index) => {
-            const previousSurahNumber = ayahs[index - 1]?.surah?.number;
-            const showSurahBreak = index === 0 || previousSurahNumber !== ayah.surah?.number;
-            return `${showSurahBreak ? `<span class="quran-surah-break">${ayah.surah?.englishName ?? ""}</span> ` : ""}${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`;
-          })
-          .join(" ")}
+        ${ayahs.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
       </p>
       <div class="quran-reading-page-ornament quran-reading-page-ornament-bottom" aria-hidden="true"></div>
     </article>
