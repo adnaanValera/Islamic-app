@@ -1,6 +1,8 @@
 const quranStorageKey = "nooriva-quran-state";
 const quranApiBaseUrl = "https://api.alquran.cloud/v1";
 const totalQuranPages = 604;
+const basmalaText = "\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0652\u0645\u064e\u0670\u0646\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0650\u064a\u0645\u0650";
+
 const surahGrid = document.getElementById("quran-surah-grid");
 const ayahList = document.getElementById("quran-ayah-list");
 const pageIndicators = document.getElementById("quran-page-indicators");
@@ -139,6 +141,20 @@ function getCurrentSurahFromPageData(pageData) {
   return pageAyahs[0]?.surah ?? surahs[0] ?? null;
 }
 
+function shouldShowBasmala(pageData) {
+  const surah = getCurrentSurahFromPageData(pageData);
+  return Number(surah?.number) !== 1 && Number(surah?.number) !== 9;
+}
+
+function stripOpeningBasmala(text, ayah, surah) {
+  const cleanText = sanitizeArabicText(text);
+  if (Number(surah?.number) === 1 || Number(surah?.number) === 9) return cleanText;
+  if (Number(ayah?.numberInSurah) !== 1) return cleanText;
+
+  const escaped = basmalaText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return cleanText.replace(new RegExp(`^${escaped}\\s*`), "").trim();
+}
+
 function renderHeader() {
   const surah = getCurrentSurahFromPageData(currentPageData);
   if (!surah) return;
@@ -199,14 +215,23 @@ function renderViewButtons() {
 function buildArabicPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
   const surah = getCurrentSurahFromPageData(pageData);
+  const basmalaMarkup = shouldShowBasmala(pageData)
+    ? `
+      <div class="quran-page-basmala">
+        <p class="quran-basmala-label">Bismillah</p>
+        <p class="quran-basmala-text" dir="rtl" lang="ar">${basmalaText}</p>
+      </div>
+    `
+    : "";
 
   return `
     <article class="quran-reading-page quran-reading-page-premium quran-reading-page-paged">
       <div class="quran-reading-page-ornament quran-reading-page-ornament-top" aria-hidden="true"></div>
       <div class="quran-reading-page-surah-name">${surah?.englishName ?? ""}</div>
       <div class="quran-reading-page-topline"><span>Page ${pageData?.number ?? currentPageNumber}</span></div>
+      ${basmalaMarkup}
       <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
-        ${ayahs.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
+        ${ayahs.map((ayah) => `${stripOpeningBasmala(ayah.text, ayah, surah)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
       </p>
       <div class="quran-reading-page-ornament quran-reading-page-ornament-bottom" aria-hidden="true"></div>
     </article>
@@ -230,13 +255,14 @@ function buildEnglishPage(pageData) {
 
 function buildBothPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
+  const surah = getCurrentSurahFromPageData(pageData);
   return ayahs
     .map(
       (ayah) => `
         <article class="quran-ayah-card quran-ayah-card-premium quran-ayah-card-both">
           <div class="quran-ayah-card-accent" aria-hidden="true"></div>
           <div class="quran-ayah-topline"><span>Ayah ${ayah.numberInSurah}</span></div>
-          <p class="quran-dual-arabic quran-dual-arabic-single" dir="rtl" lang="ar">${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span></p>
+          <p class="quran-dual-arabic quran-dual-arabic-single" dir="rtl" lang="ar">${stripOpeningBasmala(ayah.text, ayah, surah)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span></p>
           <p class="quran-ayah-translation">${ayah.secondaryText ?? ""}</p>
         </article>
       `,
