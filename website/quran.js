@@ -29,6 +29,7 @@ let currentPageNumber = 1;
 const pageCache = new Map();
 const surahStartPageCache = new Map();
 let touchStartX = 0;
+let touchStartY = 0;
 let isNavigating = false;
 
 function defaultState() {
@@ -304,6 +305,7 @@ function attachSwipeHandlers() {
     "touchstart",
     (event) => {
       touchStartX = event.changedTouches[0]?.clientX ?? 0;
+      touchStartY = event.changedTouches[0]?.clientY ?? 0;
     },
     { passive: true },
   );
@@ -312,7 +314,10 @@ function attachSwipeHandlers() {
     "touchend",
     async (event) => {
       const touchEndX = event.changedTouches[0]?.clientX ?? 0;
+      const touchEndY = event.changedTouches[0]?.clientY ?? 0;
       const deltaX = touchStartX - touchEndX;
+      const deltaY = touchStartY - touchEndY;
+      if (Math.abs(deltaY) > Math.abs(deltaX)) return;
       if (Math.abs(deltaX) < 44 || isNavigating) return;
       await goToPage(deltaX > 0 ? currentPageNumber + 1 : currentPageNumber - 1);
     },
@@ -392,7 +397,6 @@ async function goToPage(pageNumber) {
 
     quranStatus.textContent = `${currentSurahOnPage?.englishName ?? "Quran"} • Page ${safePage}`;
     render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
   } catch {
     quranStatus.textContent = "We couldn't load that page just now.";
   } finally {

@@ -3775,6 +3775,8 @@ h3 {
   background: rgba(255, 252, 246, 0.9);
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 20px rgba(79, 66, 39, 0.05);
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .quran-current-sticky span {
@@ -3789,6 +3791,11 @@ h3 {
   color: var(--text-strong);
   font-size: 0.92rem;
   text-align: right;
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .quran-reading-page-paged {
@@ -3833,6 +3840,7 @@ h3 {
   .quran-current-sticky {
     top: 132px;
     padding: 9px 12px;
+    margin-top: 4px;
   }
 
   .quran-reading-page-paged {
@@ -3846,6 +3854,7 @@ h3 {
     gap: 8px;
     padding: 8px 10px;
     border-radius: 14px;
+    margin-top: 6px;
   }
 
   .quran-current-sticky strong {
