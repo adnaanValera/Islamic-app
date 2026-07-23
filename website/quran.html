@@ -40,7 +40,7 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-table-card prayer-table-card-hero quran-reader-shell">
+        <section class="prayer-table-card prayer-table-card-hero quran-reader-shell quran-reader-shell-premium">
           <div class="quran-reader-toolbar">
             <div class="quran-reader-toolbar-top">
               <div class="quran-language-toggle" id="quran-language-toggle">
@@ -76,7 +76,8 @@
             </div>
           </div>
 
-          <div class="quran-reader-header">
+          <div class="quran-reader-header quran-reader-header-premium">
+            <p class="eyebrow quran-page-eyebrow">Quran</p>
             <h1 class="prayer-hero-title" id="quran-selected-title">Al-Fatihah</h1>
             <p class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</p>
             <div class="quran-reader-meta-row">
@@ -93,19 +94,21 @@
 
           <div class="quran-basmala-card" id="quran-basmala-card">
             <p class="quran-basmala-label">Bismillah</p>
-            <p class="quran-basmala-text" id="quran-basmala-text" dir="rtl" lang="ar">بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+            <p class="quran-basmala-text" id="quran-basmala-text" dir="rtl" lang="ar"></p>
           </div>
 
-          <div class="quran-ayah-list" id="quran-ayah-list">
-            <article class="quran-ayah-card">
-              <div class="quran-ayah-topline">
-                <span>Loading</span>
-              </div>
-              <p class="quran-ayah-translation">Please wait.</p>
-            </article>
-          </div>
+          <div class="quran-reading-stage">
+            <div class="quran-ayah-list" id="quran-ayah-list">
+              <article class="quran-ayah-card">
+                <div class="quran-ayah-topline">
+                  <span>Loading</span>
+                </div>
+                <p class="quran-ayah-translation">Please wait.</p>
+              </article>
+            </div>
 
-          <div class="quran-page-indicators" id="quran-page-indicators" aria-label="Quran page navigation"></div>
+            <div class="quran-page-indicators" id="quran-page-indicators" aria-label="Quran page navigation"></div>
+          </div>
         </section>
 
         <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">

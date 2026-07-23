@@ -1,6 +1,7 @@
 const quranStorageKey = "nooriva-quran-state";
 const quranApiBaseUrl = "https://api.alquran.cloud/v1";
-const basmalaText = "بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+const basmalaText = "\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0652\u0645\u064e\u0670\u0646\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0650\u064a\u0645\u0650";
+
 const surahGrid = document.getElementById("quran-surah-grid");
 const ayahList = document.getElementById("quran-ayah-list");
 const pageIndicators = document.getElementById("quran-page-indicators");
@@ -43,14 +44,14 @@ function loadState() {
     if (!raw) return defaultState();
 
     const parsed = JSON.parse(raw);
-    const savedSurahKey = String(parsed?.lastReading?.surahKey || parsed?.selectedKey || "1");
+    const selectedKey = String(parsed?.lastReading?.surahKey || parsed?.selectedKey || "1");
 
     return {
-      selectedKey: savedSurahKey,
+      selectedKey,
       search: parsed.search || "",
       view: ["arabic", "english", "both"].includes(parsed.view) ? parsed.view : "both",
       lastReading: {
-        surahKey: savedSurahKey,
+        surahKey: selectedKey,
         pageIndex: Number(parsed?.lastReading?.pageIndex || 0),
         view: ["arabic", "english", "both"].includes(parsed?.lastReading?.view)
           ? parsed.lastReading.view
@@ -77,9 +78,9 @@ function getFilteredSurahs() {
   if (!term) return surahs;
 
   return surahs.filter((surah) => {
-    const surahNumber = String(surah.number);
+    const number = String(surah.number);
     return (
-      surahNumber.includes(term) ||
+      number.includes(term) ||
       surah.englishName.toLowerCase().includes(term) ||
       surah.englishNameTranslation.toLowerCase().includes(term) ||
       surah.revelationType.toLowerCase().includes(term)
@@ -115,9 +116,9 @@ async function fetchSurahDetails(surahNumber) {
     cache: "force-cache",
   });
   if (!response.ok) throw new Error("Unable to load the selected surah.");
+
   const payload = await response.json();
   const editions = payload?.data ?? [];
-
   return {
     arabicEdition: editions.find((edition) => edition?.edition?.identifier === "quran-uthmani"),
     translationEdition: editions.find((edition) => edition?.edition?.identifier === "en.sahih"),
@@ -138,7 +139,6 @@ function renderHeader() {
   if (!surah) return;
 
   const activeIndex = surahs.findIndex((item) => String(item.number) === String(surah.number));
-
   selectedTitle.textContent = surah.englishName;
   selectedSubtitle.textContent = `${surah.englishNameTranslation} • ${surah.revelationType}`;
   selectedMeta.textContent = `${surah.numberOfAyahs} ayat`;
@@ -159,7 +159,12 @@ function renderSurahGrid() {
   searchResults = getFilteredSurahs();
 
   if (searchResults.length === 0) {
-    surahGrid.innerHTML = `<div class="quran-surah-empty"><strong>No surah found</strong><small>Try another name or surah number.</small></div>`;
+    surahGrid.innerHTML = `
+      <div class="quran-surah-empty">
+        <strong>No surah found</strong>
+        <small>Try another name or surah number.</small>
+      </div>
+    `;
     return;
   }
 
@@ -199,8 +204,10 @@ function buildArabicPages(arabicAyahs) {
   for (let index = 0; index < arabicAyahs.length; index += pageSize) {
     const slice = arabicAyahs.slice(index, index + pageSize);
     pages.push(`
-      <article class="quran-reading-page" data-page-index="${Math.floor(index / pageSize)}">
-        <div class="quran-reading-page-topline"><span>Page ${Math.floor(index / pageSize) + 1}</span></div>
+      <article class="quran-reading-page quran-reading-page-premium" data-page-index="${Math.floor(index / pageSize)}">
+        <div class="quran-reading-page-topline">
+          <span>Page ${Math.floor(index / pageSize) + 1}</span>
+        </div>
         <p class="quran-reading-page-arabic" dir="rtl" lang="ar">
           ${slice.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
         </p>
@@ -215,7 +222,7 @@ function buildEnglishAyahs(translationAyahs) {
   return translationAyahs
     .map(
       (ayah, index) => `
-      <article class="quran-ayah-card" data-ayah-number="${index + 1}">
+      <article class="quran-ayah-card quran-ayah-card-premium" data-ayah-number="${index + 1}">
         <div class="quran-ayah-topline"><span>Ayah ${index + 1}</span></div>
         <p class="quran-ayah-translation">${ayah?.text ?? ""}</p>
       </article>
@@ -235,15 +242,20 @@ function buildBothChunks(arabicAyahs, translationAyahs) {
     const endAyah = arabicSlice[arabicSlice.length - 1]?.numberInSurah ?? startAyah;
 
     chunks.push(`
-      <article class="quran-ayah-card quran-ayah-card-dual" data-ayah-number="${startAyah}">
-        <div class="quran-ayah-topline"><span>Ayah ${startAyah}${endAyah !== startAyah ? `-${endAyah}` : ""}</span></div>
+      <article class="quran-ayah-card quran-ayah-card-dual quran-ayah-card-premium" data-ayah-number="${startAyah}">
+        <div class="quran-ayah-topline">
+          <span>Ayah ${startAyah}${endAyah !== startAyah ? `-${endAyah}` : ""}</span>
+        </div>
         <div class="quran-dual-block">
           <p class="quran-dual-arabic" dir="rtl" lang="ar">
             ${arabicSlice.map((ayah) => `${sanitizeArabicText(ayah.text)} <span class="quran-inline-ayah">${ayah.numberInSurah}</span>`).join(" ")}
           </p>
           <div class="quran-dual-translation">
             ${translationSlice
-              .map((ayah, ayahIndex) => `<p><strong>${arabicSlice[ayahIndex]?.numberInSurah ?? ""}.</strong> ${ayah?.text ?? ""}</p>`)
+              .map(
+                (ayah, ayahIndex) =>
+                  `<p><strong>${arabicSlice[ayahIndex]?.numberInSurah ?? ""}.</strong> ${ayah?.text ?? ""}</p>`,
+              )
               .join("")}
           </div>
         </div>
@@ -272,7 +284,10 @@ function attachArabicPager() {
   }
 
   pageIndicators.innerHTML = pages
-    .map((_, index) => `<button class="quran-page-dot${index === currentArabicPageIndex ? " is-active" : ""}" data-page-dot="${index}" type="button" aria-label="Open Quran page ${index + 1}"></button>`)
+    .map(
+      (_, index) =>
+        `<button class="quran-page-dot${index === currentArabicPageIndex ? " is-active" : ""}" data-page-dot="${index}" type="button" aria-label="Open Quran page ${index + 1}"></button>`,
+    )
     .join("");
 
   const savedIndex =
@@ -301,7 +316,12 @@ function renderReading() {
   const translationAyahs = selectedSurahDetails?.translationEdition?.ayahs ?? [];
 
   if (!surah || arabicAyahs.length === 0 || translationAyahs.length === 0) {
-    ayahList.innerHTML = `<article class="quran-reading-page"><div class="quran-reading-page-topline"><span>Loading</span></div><p class="quran-reading-page-arabic" dir="rtl" lang="ar">Please wait...</p></article>`;
+    ayahList.innerHTML = `
+      <article class="quran-reading-page quran-reading-page-premium">
+        <div class="quran-reading-page-topline"><span>Loading</span></div>
+        <p class="quran-reading-page-arabic" dir="rtl" lang="ar">Please wait...</p>
+      </article>
+    `;
     pageIndicators.innerHTML = "";
     return;
   }
@@ -363,6 +383,7 @@ async function openFirstSearchResult() {
     quranStatus.textContent = "No surah matches that search.";
     return;
   }
+
   await openSurahByKey(searchResults[0].number, `Opening ${searchResults[0].englishName}...`);
   surahDropdown?.removeAttribute("open");
 }
