@@ -151,8 +151,20 @@ function stripOpeningBasmala(text, ayah, surah) {
   if (Number(surah?.number) === 1 || Number(surah?.number) === 9) return cleanText;
   if (Number(ayah?.numberInSurah) !== 1) return cleanText;
 
-  const escaped = basmalaText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return cleanText.replace(new RegExp(`^${escaped}\\s*`), "").trim();
+  const basmalaVariants = [
+    basmalaText,
+    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    "بسم الله الرحمن الرحيم",
+  ];
+
+  for (const variant of basmalaVariants) {
+    if (cleanText.startsWith(variant)) {
+      return cleanText.slice(variant.length).trim();
+    }
+  }
+
+  return cleanText;
 }
 
 function renderHeader() {
