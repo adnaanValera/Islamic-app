@@ -43,113 +43,33 @@
         </nav>
       </header>
 
-      <main class="prayer-page">
-        <section class="prayer-hero">
-          <div class="prayer-hero-copy">
-            <p class="eyebrow">Qibla direction</p>
-            <h1>Qibla compass.</h1>
-            <p class="hero-text prayer-hero-text">
-              Fast live direction with a clean fallback when your phone compass is weak.
-            </p>
-            <div class="hero-actions qibla-actions" id="qibla-actions">
-              <button class="button button-primary" id="enable-qibla" type="button">
-                Enable qibla
-              </button>
-              <a class="button button-secondary" href="./prayer.html">Open prayer</a>
-            </div>
-            <div class="status-stack">
-              <p class="status-line" id="qibla-status">Allow location and motion access to begin.</p>
-              <p class="status-line status-line-soft" id="qibla-guidance-text">
-                Hold your phone flat and away from strong magnets or metal surfaces for the
-                cleanest reading.
-              </p>
-            </div>
-          </div>
-
-          <div class="prayer-table-card prayer-table-card-hero qibla-hero-card">
-            <div class="qibla-compass-shell qibla-premium-shell">
-              <div class="qibla-topline">
-                <div class="qibla-target-label">Kaaba direction</div>
-                <div class="qibla-mode-badge" id="qibla-mode">Awaiting sensors</div>
-              </div>
-              <div class="qibla-compass-frame">
-                <div class="qibla-compass-glow"></div>
-                <div class="qibla-compass">
-                  <div class="qibla-ring"></div>
-                  <div class="qibla-north-mark">N</div>
-                  <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
-                  <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
-                  <div class="qibla-center-dot"></div>
-                </div>
-              </div>
-              <p class="qibla-angle" id="qibla-angle">Calculating...</p>
-              <div class="qibla-guidance-card">
-                <strong id="qibla-guidance-title">Best results</strong>
-                <span id="qibla-guidance-detail">
-                  Keep the gold Qibla arrow and the dark phone arrow aligned.
-                </span>
+      <main class="prayer-page qibla-page-simple">
+        <section class="prayer-table-card prayer-table-card-hero qibla-hero-card qibla-hero-card-simple">
+          <button class="qibla-auto-enable" id="enable-qibla" type="button" aria-label="Enable Qibla compass"></button>
+          <div class="qibla-compass-shell qibla-premium-shell">
+            <div class="qibla-compass-frame">
+              <div class="qibla-compass-glow"></div>
+              <div class="qibla-compass">
+                <div class="qibla-ring"></div>
+                <div class="qibla-north-mark">N</div>
+                <div class="qibla-direction-arrow" id="qibla-direction-arrow"></div>
+                <div class="qibla-phone-arrow" id="qibla-phone-arrow"></div>
+                <div class="qibla-center-dot"></div>
               </div>
             </div>
+            <p class="qibla-angle" id="qibla-angle">Preparing compass...</p>
+            <p class="qibla-simple-status" id="qibla-status">Allow location and motion access to begin.</p>
           </div>
-        </section>
-
-        <section class="prayer-table-section prayer-meta-section">
-          <div class="prayer-section-meta">
-            <div class="prayer-meta-pill">
-              <span>Your heading</span>
-              <strong id="device-heading">--&deg;</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Qibla bearing</span>
-              <strong id="qibla-bearing">--&deg;</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Alignment</span>
-              <strong id="qibla-alignment">Waiting...</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Accuracy guide</span>
-              <strong id="qibla-accuracy">Needs calibration</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Fallback mode</span>
-              <strong id="qibla-fallback">Compass first</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="features-section settings-grid-section">
-          <div class="feature-grid settings-grid">
-            <article class="feature-card feature-card-rich">
-              <p>01</p>
-              <h3>Location needed</h3>
-              <span>Allow location once so Nooriva can calculate your Qibla bearing.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>02</p>
-              <h3>Compass access</h3>
-              <span>Some phones need motion access before the live compass starts moving.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>03</p>
-              <h3>Best accuracy</h3>
-              <span>Hold your phone flat and step away from metal, speakers, or magnets.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>04</p>
-              <h3>Arrow guide</h3>
-              <span>Match the dark phone arrow with the gold Qibla arrow.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>05</p>
-              <h3>Bearing fallback</h3>
-              <span>If the compass is weak, Nooriva still shows the direction from north.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>06</p>
-              <h3>Troubleshooting</h3>
-              <span>If it feels off, rotate the phone gently and try again in open space.</span>
-            </article>
+          <div class="qibla-hidden-data" aria-hidden="true">
+            <span id="device-heading"></span>
+            <span id="qibla-bearing"></span>
+            <span id="qibla-alignment"></span>
+            <span id="qibla-accuracy"></span>
+            <span id="qibla-mode"></span>
+            <span id="qibla-fallback"></span>
+            <span id="qibla-guidance-title"></span>
+            <span id="qibla-guidance-detail"></span>
+            <span id="qibla-guidance-text"></span>
           </div>
         </section>
 

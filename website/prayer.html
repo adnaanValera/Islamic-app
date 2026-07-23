@@ -46,11 +46,8 @@
       <main class="prayer-page">
         <section class="prayer-hero">
           <div class="prayer-hero-copy">
-            <p class="eyebrow">Live prayer timings</p>
+            <p class="eyebrow">Prayer</p>
             <h1 class="prayer-hero-title">Prayer times for today.</h1>
-            <p class="hero-text prayer-hero-text">
-              Live timings, today's prayer flow, and reminders in one clean view.
-            </p>
             <div class="hero-actions" id="prayer-actions">
               <button class="button button-secondary" id="download-app" type="button">
                 Download app
@@ -100,27 +97,47 @@
           </div>
         </section>
 
-        <section class="prayer-table-section">
-          <div class="section-heading prayer-section-heading">
-            <div>
-              <p class="eyebrow">Jumu'ah</p>
-              <h2>Friday prayer timings</h2>
-            </div>
-          </div>
-
-          <div class="prayer-table-card">
-            <div class="prayer-table-head prayer-table-head-jumuah">
-              <span>Adhan</span>
-              <span>Khutbah</span>
-            </div>
-
-            <div class="jumuah-time-list" id="jumuah-time-list">
-              <div class="jumuah-time-row">
-                <strong>--:--</strong>
-                <strong>--:--</strong>
+        <section class="prayer-grid">
+          <section class="prayer-table-section">
+            <div class="section-heading prayer-section-heading">
+              <div>
+                <p class="eyebrow">Jumu'ah</p>
+                <h2>Friday prayer timings</h2>
               </div>
             </div>
-          </div>
+
+            <div class="prayer-table-card">
+              <div class="prayer-table-head prayer-table-head-jumuah">
+                <span>Adhan</span>
+                <span class="align-right">Khutbah</span>
+              </div>
+
+              <div class="jumuah-time-list" id="jumuah-time-list">
+                <div class="jumuah-time-row">
+                  <strong>--:--</strong>
+                  <strong>--:--</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="prayer-table-section">
+            <div class="section-heading prayer-section-heading">
+              <div>
+                <p class="eyebrow">End times</p>
+                <h2>Salah end times</h2>
+              </div>
+            </div>
+
+            <div class="prayer-table-card">
+              <div class="timings-list" id="end-times-list">
+                <div class="timing-row">
+                  <span>Fajr</span>
+                  <strong>--:--</strong>
+                </div>
+              </div>
+            </div>
+          </section>
         </section>
 
         <section class="prayer-table-section">

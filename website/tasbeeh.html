@@ -6,7 +6,7 @@
     <title>Nooriva | Tasbeeh</title>
     <meta
       name="description"
-      content="A premium tasbeeh counter in Nooriva with saved progress and quick daily dhikr targets."
+      content="A simple tasbeeh counter in Nooriva with saved progress and daily dhikr modes."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -44,144 +44,70 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-hero">
-          <div class="prayer-hero-copy">
-            <p class="eyebrow">Tasbeeh</p>
-            <h1 class="prayer-hero-title">Dhikr counter.</h1>
-            <p class="hero-text prayer-hero-text">
-              Tap to count, keep your place saved, and follow a simple daily target.
-            </p>
-            <div class="hero-actions">
-              <button class="button button-primary" id="tasbeeh-add" type="button">
-                Add count
-              </button>
-              <button class="button button-secondary" id="tasbeeh-reset" type="button">
-                Reset
-              </button>
-            </div>
-            <div class="status-stack">
-              <p class="status-line" id="tasbeeh-status">Saved on this device.</p>
-              <p class="status-line status-line-soft" id="tasbeeh-goal-copy">
-                Set a target and keep your dhikr flowing.
-              </p>
-            </div>
-            <div class="tasbeeh-active-dhikr">
-              <strong id="active-dhikr-label">SubhanAllah</strong>
-              <span id="active-dhikr-arabic">سبحان الله</span>
-            </div>
-          </div>
-
-          <div class="prayer-table-card prayer-table-card-hero tasbeeh-hero-card">
+        <section class="prayer-hero prayer-hero-tasbeeh-simple">
+          <div class="prayer-table-card prayer-table-card-hero tasbeeh-hero-card tasbeeh-hero-card-simple">
             <div class="tasbeeh-counter-shell">
-              <div class="tasbeeh-counter-topline">
-                <span class="next-prayer-label">Current dhikr</span>
-                <span class="qibla-mode-badge" id="tasbeeh-target-badge">Target 33</span>
-              </div>
               <button class="tasbeeh-counter-button" id="tasbeeh-tap" type="button" aria-label="Increase tasbeeh count">
                 <span class="tasbeeh-counter-ring"></span>
                 <strong class="tasbeeh-counter-value" id="tasbeeh-count">0</strong>
-                <span class="tasbeeh-counter-hint">Tap anywhere to count</span>
+                <span class="tasbeeh-counter-hint">Tap to count</span>
               </button>
+              <div class="tasbeeh-active-dhikr tasbeeh-active-dhikr-centered">
+                <strong id="active-dhikr-label">SubhanAllah</strong>
+                <span id="active-dhikr-arabic">SubhanAllah</span>
+              </div>
               <div class="next-prayer-progress tasbeeh-progress" aria-hidden="true">
                 <span class="next-prayer-progress-fill" id="tasbeeh-progress-fill"></span>
               </div>
               <p class="qibla-angle" id="tasbeeh-progress-copy">0 of 33</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="prayer-table-section prayer-meta-section">
-          <div class="prayer-section-meta">
-            <div class="prayer-meta-pill">
-              <span>Today</span>
-              <strong id="tasbeeh-today-total">0</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Current round</span>
-              <strong id="tasbeeh-round-total">0</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Daily target</span>
-              <strong id="tasbeeh-target-total">33</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Last reset</span>
-              <strong id="tasbeeh-last-reset">Today</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Active streak</span>
-              <strong id="tasbeeh-streak">0 days</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Best today</span>
-              <strong id="tasbeeh-best-dhikr">No entries yet</strong>
-            </div>
-            <div class="prayer-meta-pill">
-              <span>Rounds done</span>
-              <strong id="tasbeeh-completed-rounds">0</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="features-section settings-grid-section">
-          <div class="feature-grid settings-grid">
-            <article class="feature-card feature-card-rich">
-              <p>01</p>
-              <h3>Dhikr mode</h3>
-              <div class="tasbeeh-targets">
-                <button class="tasbeeh-chip is-active" data-dhikr="subhanallah" type="button">SubhanAllah</button>
-                <button class="tasbeeh-chip" data-dhikr="alhamdulillah" type="button">Alhamdulillah</button>
-                <button class="tasbeeh-chip" data-dhikr="allahuakbar" type="button">Allahu Akbar</button>
-                <button class="tasbeeh-chip" data-dhikr="custom" type="button">General</button>
-              </div>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>02</p>
-              <h3>Quick targets</h3>
-              <div class="tasbeeh-targets">
-                <button class="tasbeeh-chip is-active" data-target="33" type="button">33</button>
-                <button class="tasbeeh-chip" data-target="99" type="button">99</button>
-                <button class="tasbeeh-chip" data-target="100" type="button">100</button>
-              </div>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>03</p>
-              <h3>Session actions</h3>
-              <div class="tasbeeh-actions-grid">
-                <button class="button button-secondary" id="tasbeeh-minus" type="button">Undo 1</button>
-                <button class="button button-secondary" id="tasbeeh-complete-round" type="button">Complete round</button>
-              </div>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>04</p>
-              <h3>Notes</h3>
-              <span>Each dhikr keeps its own progress, total, target, and round count on this device.</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>05</p>
-              <h3>Built for mobile</h3>
-              <span>The main counter is large so you can tap comfortably with one hand.</span>
-            </article>
-          </div>
-        </section>
-
-        <section class="prayer-table-section">
-          <div class="section-heading prayer-section-heading">
-            <div>
-              <p class="eyebrow">History</p>
-              <h2>Recent dhikr summary</h2>
+              <p class="qibla-simple-status" id="tasbeeh-status">Saved on this device.</p>
+              <p class="tasbeeh-goal-copy-simple" id="tasbeeh-goal-copy">33 remaining in this round.</p>
             </div>
           </div>
 
-          <div class="prayer-table-card">
-            <div class="timings-list" id="tasbeeh-history-list">
-              <div class="timing-row tasbeeh-history-row">
+          <div class="prayer-hero-copy prayer-hero-copy-compact">
+            <p class="eyebrow">Tasbeeh</p>
+            <h1 class="prayer-hero-title">Keep dhikr simple.</h1>
+            <div class="tasbeeh-targets tasbeeh-targets-simple">
+              <button class="tasbeeh-chip is-active" data-dhikr="subhanallah" type="button">SubhanAllah</button>
+              <button class="tasbeeh-chip" data-dhikr="alhamdulillah" type="button">Alhamdulillah</button>
+              <button class="tasbeeh-chip" data-dhikr="allahuakbar" type="button">Allahu Akbar</button>
+              <button class="tasbeeh-chip" data-dhikr="custom" type="button">General</button>
+            </div>
+            <div class="tasbeeh-targets tasbeeh-targets-simple">
+              <button class="tasbeeh-chip is-active" data-target="33" type="button">33</button>
+              <button class="tasbeeh-chip" data-target="99" type="button">99</button>
+              <button class="tasbeeh-chip" data-target="100" type="button">100</button>
+            </div>
+            <div class="prayer-section-meta tasbeeh-meta-simple">
+              <div class="prayer-meta-pill">
                 <span>Today</span>
-                <strong>No dhikr</strong>
+                <strong id="tasbeeh-today-total">0</strong>
+              </div>
+              <div class="prayer-meta-pill">
+                <span>Round</span>
+                <strong id="tasbeeh-round-total">0</strong>
+              </div>
+              <div class="prayer-meta-pill">
+                <span>Target</span>
+                <strong id="tasbeeh-target-total">33</strong>
               </div>
             </div>
           </div>
         </section>
+
+        <div class="tasbeeh-hidden-data" aria-hidden="true">
+          <span id="tasbeeh-last-reset"></span>
+          <span id="tasbeeh-target-badge"></span>
+          <span id="tasbeeh-streak"></span>
+          <span id="tasbeeh-best-dhikr"></span>
+          <span id="tasbeeh-completed-rounds"></span>
+          <div id="tasbeeh-history-list"></div>
+          <button id="tasbeeh-add" type="button"></button>
+          <button id="tasbeeh-reset" type="button"></button>
+          <button id="tasbeeh-minus" type="button"></button>
+          <button id="tasbeeh-complete-round" type="button"></button>
+        </div>
 
         <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">
           <a href="./index.html">Home</a>

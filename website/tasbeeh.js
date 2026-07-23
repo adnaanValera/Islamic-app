@@ -1,10 +1,10 @@
 const tasbeehStorageKey = "nooriva-tasbeeh-state";
 const malawiTimeZone = "Africa/Blantyre";
 const dhikrModes = [
-  { key: "subhanallah", label: "SubhanAllah", arabic: "سبحان الله", defaultTarget: 33 },
-  { key: "alhamdulillah", label: "Alhamdulillah", arabic: "الحمد لله", defaultTarget: 33 },
-  { key: "allahuakbar", label: "Allahu Akbar", arabic: "الله أكبر", defaultTarget: 34 },
-  { key: "custom", label: "General Dhikr", arabic: "ذكر", defaultTarget: 100 },
+  { key: "subhanallah", label: "SubhanAllah", arabic: "SubhanAllah", defaultTarget: 33 },
+  { key: "alhamdulillah", label: "Alhamdulillah", arabic: "Alhamdulillah", defaultTarget: 33 },
+  { key: "allahuakbar", label: "Allahu Akbar", arabic: "Allahu Akbar", defaultTarget: 34 },
+  { key: "custom", label: "General Dhikr", arabic: "General Dhikr", defaultTarget: 100 },
 ];
 
 const tasbeehCount = document.getElementById("tasbeeh-count");
@@ -17,11 +17,7 @@ const tasbeehProgressCopy = document.getElementById("tasbeeh-progress-copy");
 const tasbeehTargetBadge = document.getElementById("tasbeeh-target-badge");
 const tasbeehStatus = document.getElementById("tasbeeh-status");
 const tasbeehGoalCopy = document.getElementById("tasbeeh-goal-copy");
-const addButton = document.getElementById("tasbeeh-add");
 const tapButton = document.getElementById("tasbeeh-tap");
-const resetButton = document.getElementById("tasbeeh-reset");
-const minusButton = document.getElementById("tasbeeh-minus");
-const completeRoundButton = document.getElementById("tasbeeh-complete-round");
 const targetButtons = Array.from(document.querySelectorAll("[data-target]"));
 const dhikrButtons = Array.from(document.querySelectorAll("[data-dhikr]"));
 const activeDhikrLabel = document.getElementById("active-dhikr-label");
@@ -253,8 +249,8 @@ function renderTasbeeh() {
   if (tasbeehGoalCopy) {
     tasbeehGoalCopy.textContent =
       activeEntry.count >= activeEntry.target
-        ? `${activeMode.label} target reached. Complete the round or continue.`
-        : `${activeEntry.target - activeEntry.count} remaining in this ${activeMode.label} round.`;
+        ? `${activeMode.label} target reached. Keep going if you want.`
+        : `${Math.max(activeEntry.target - activeEntry.count, 0)} remaining in this round.`;
   }
 
   if (activeDhikrLabel) {
@@ -297,37 +293,6 @@ function addCount(amount = 1) {
   renderTasbeeh();
 }
 
-function undoCount() {
-  const activeEntry = getActiveEntry();
-
-  if (activeEntry.count <= 0 || activeEntry.todayTotal <= 0) {
-    tasbeehStatus.textContent = "Nothing to undo.";
-    return;
-  }
-
-  activeEntry.count -= 1;
-  activeEntry.todayTotal -= 1;
-  tasbeehStatus.textContent = "Removed one count.";
-  renderTasbeeh();
-}
-
-function resetRound() {
-  const activeEntry = getActiveEntry();
-  activeEntry.count = 0;
-  tasbeehState.lastResetLabel = "Just now";
-  tasbeehStatus.textContent = `${getActiveMode().label} round reset.`;
-  renderTasbeeh();
-}
-
-function completeRound() {
-  const activeEntry = getActiveEntry();
-  activeEntry.count = 0;
-  activeEntry.completedRounds += 1;
-  tasbeehState.lastResetLabel = "Round completed";
-  tasbeehStatus.textContent = `${getActiveMode().label} round completed.`;
-  renderTasbeeh();
-}
-
 function setTarget(target) {
   const activeEntry = getActiveEntry();
   activeEntry.target = target;
@@ -341,11 +306,7 @@ function setDhikrMode(modeKey) {
   renderTasbeeh();
 }
 
-addButton?.addEventListener("click", () => addCount(1));
 tapButton?.addEventListener("click", () => addCount(1));
-resetButton?.addEventListener("click", resetRound);
-minusButton?.addEventListener("click", undoCount);
-completeRoundButton?.addEventListener("click", completeRound);
 targetButtons.forEach((button) => {
   button.addEventListener("click", () => setTarget(Number(button.dataset.target)));
 });

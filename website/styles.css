@@ -1973,8 +1973,103 @@ h3 {
     width: 94px;
   }
 
-  .site-footer {
+.site-footer {
     padding-bottom: 72px;
+  }
+}
+
+.hero-section-simple {
+  padding-bottom: 8px;
+}
+
+.hero-panel-simple {
+  min-height: 250px;
+}
+
+.home-preview-card {
+  width: min(100%, 360px);
+}
+
+.feature-card-link {
+  text-decoration: none;
+}
+
+.prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.align-right {
+  text-align: right !important;
+}
+
+.qibla-page-simple {
+  justify-items: center;
+}
+
+.qibla-hero-card-simple {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  position: relative;
+}
+
+.qibla-auto-enable,
+.qibla-hidden-data,
+.tasbeeh-hidden-data {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.qibla-simple-status,
+.tasbeeh-goal-copy-simple {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.55;
+}
+
+.prayer-hero-tasbeeh-simple {
+  grid-template-columns: minmax(320px, 0.95fr) minmax(0, 0.8fr);
+  align-items: center;
+}
+
+.tasbeeh-hero-card-simple {
+  order: -1;
+}
+
+.tasbeeh-active-dhikr-centered {
+  margin-top: 0;
+  justify-items: center;
+  text-align: center;
+}
+
+.prayer-hero-copy-compact {
+  display: grid;
+  gap: 14px;
+}
+
+.tasbeeh-targets-simple {
+  margin-top: 0;
+}
+
+.tasbeeh-meta-simple {
+  gap: 10px;
+}
+
+@media (max-width: 960px) {
+  .prayer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .prayer-hero-tasbeeh-simple .prayer-table-card {
+    order: -1;
   }
 }
 

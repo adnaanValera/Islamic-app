@@ -37,6 +37,7 @@ const notificationBadge = "./assets/favicon-32.png";
 const prayerTimeList = document.getElementById("prayer-time-list");
 const jumuahTimeList = document.getElementById("jumuah-time-list");
 const timingsList = document.getElementById("timings-list");
+const endTimesList = document.getElementById("end-times-list");
 const nextPrayerLabel = document.getElementById("next-prayer-label");
 const nextPrayerName = document.getElementById("next-prayer-name");
 const nextPrayerTime = document.getElementById("next-prayer-time");
@@ -259,7 +260,7 @@ function renderJumuahTimes(times) {
   jumuahTimeList.innerHTML = `
     <div class="jumuah-time-row">
       <strong>${times.adhan}</strong>
-      <strong>${times.khutbah}</strong>
+      <strong class="align-right">${times.khutbah}</strong>
     </div>
   `;
 }
@@ -270,6 +271,23 @@ function renderStartTimings(items) {
   }
 
   timingsList.innerHTML = items
+    .map(
+      (item) => `
+        <div class="timing-row">
+          <span>${item.label}</span>
+          <strong>${item.time}</strong>
+        </div>
+      `,
+    )
+    .join("");
+}
+
+function renderEndTimings(items) {
+  if (!endTimesList) {
+    return;
+  }
+
+  endTimesList.innerHTML = items
     .map(
       (item) => `
         <div class="timing-row">
@@ -580,6 +598,12 @@ async function loadPrayerTimes() {
         time: data?.[timing.key] || "--:--",
       })),
     );
+    renderEndTimings([
+      { label: "Fajr", time: data?.sunrise || "--:--" },
+      { label: "Zuhr", time: data?.asrShafi || "--:--" },
+      { label: "Asr", time: data?.sunset || "--:--" },
+      { label: "Maghrib", time: data?.eshaStarts || "--:--" },
+    ]);
 
     prayerStatus.textContent = "Prayer times updated.";
     scheduleNextPrayerNotification();

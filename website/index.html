@@ -6,7 +6,7 @@
     <title>Nooriva</title>
     <meta
       name="description"
-      content="Nooriva is an elegant Islamic companion centered on essential daily features and a refined user experience."
+      content="Nooriva is a refined Islamic companion with prayer, Qibla, Quran, and tasbeeh."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -36,42 +36,35 @@
           <a href="./quran.html">Quran</a>
           <a href="./tasbeeh.html">Tasbeeh</a>
           <a href="./account.html">Account</a>
-          <a href="#features">Features</a>
-          <a href="./settings.html">Help</a>
           <a href="#contact">Contact Us</a>
         </nav>
       </header>
 
       <main>
-        <section class="hero-section">
+        <section class="hero-section hero-section-simple">
           <div class="hero-copy">
-            <p class="eyebrow">Mobile-first Islamic companion</p>
-            <h1>Nooriva dashboard.</h1>
-            <p class="hero-text">Daily essentials, ready the moment you open the app.</p>
+            <p class="eyebrow">Nooriva</p>
+            <h1>Simple daily essentials.</h1>
+            <p class="hero-text">
+              Prayer times, Qibla, Quran, and tasbeeh in one clean mobile experience.
+            </p>
             <div class="hero-actions" id="home-install-actions">
               <button class="button button-primary" id="home-download-app" type="button">
                 Download app
               </button>
-              <a class="button button-primary" href="./prayer.html">Open prayer</a>
-              <a class="button button-secondary" href="./qibla.html">Open qibla</a>
+              <a class="button button-secondary" href="./prayer.html">Open prayer</a>
             </div>
             <p class="install-status" id="home-install-status"></p>
-            <div class="hero-meta">
-              <span>Prayer timings</span>
-              <span>Qibla</span>
-              <span>Reminders</span>
-              <span>Islamic tools</span>
-            </div>
           </div>
 
-          <div class="hero-panel">
+          <div class="hero-panel hero-panel-simple">
             <div class="orb orb-one"></div>
             <div class="orb orb-two"></div>
-            <div class="product-card app-preview-card dashboard-card">
+            <div class="product-card app-preview-card dashboard-card home-preview-card">
               <div class="dashboard-card-top">
                 <div>
-                  <p class="card-label">Today</p>
-                  <strong class="app-preview-title">Open your essentials</strong>
+                  <p class="card-label">Now</p>
+                  <strong class="app-preview-title">Prayer timings</strong>
                 </div>
                 <img
                   class="app-preview-icon"
@@ -82,111 +75,42 @@
               <div class="dashboard-stack">
                 <article class="dashboard-primary-tile">
                   <span class="dashboard-tile-label">Main</span>
-                  <strong><a href="./prayer.html">Prayer timings</a></strong>
-                  <small>Open live board</small>
+                  <strong><a href="./prayer.html">Open live prayer page</a></strong>
+                  <small>Prayer, salah, Jumu'ah, and reminders</small>
                 </article>
-                <div class="dashboard-secondary-grid">
-                  <article>
-                    <span>Compass</span>
-                    <strong><a href="./qibla.html">Qibla</a></strong>
-                  </article>
-                  <article>
-                    <span>Next</span>
-                    <strong><a href="./quran.html">Quran</a></strong>
-                  </article>
-                  <article>
-                    <span>Next</span>
-                    <strong><a href="./tasbeeh.html">Tasbeeh</a></strong>
-                  </article>
-                  <article>
-                    <span>Next</span>
-                    <strong>Calendar</strong>
-                  </article>
-                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="dashboard-overview">
-          <a class="dashboard-overview-card dashboard-overview-card-primary" href="./prayer.html">
-            <span class="dashboard-overview-label">Open now</span>
-            <strong>Prayer</strong>
-            <small>Live timings</small>
-          </a>
-          <a class="dashboard-overview-card" href="./qibla.html">
-            <span class="dashboard-overview-label">Compass</span>
-            <strong>Qibla</strong>
-            <small>Fast direction</small>
-          </a>
-          <article class="dashboard-overview-card dashboard-overview-card-muted">
-            <span class="dashboard-overview-label">Open now</span>
-            <strong><a href="./quran.html">Quran</a></strong>
-            <small>Reading</small>
-          </article>
-          <article class="dashboard-overview-card dashboard-overview-card-muted">
-            <span class="dashboard-overview-label">Open now</span>
-            <strong><a href="./tasbeeh.html">Tasbeeh</a></strong>
-            <small>Remembrance</small>
-          </article>
-        </section>
-
-        <section class="home-quick-links">
-          <a class="home-quick-card" href="./prayer.html">
-            <span class="home-quick-label">Primary</span>
-            <strong>Prayer Timings</strong>
-          </a>
-          <a class="home-quick-card home-quick-card-soft" href="./qibla.html">
-            <span class="home-quick-label">Utility</span>
-            <strong>Qibla</strong>
-          </a>
-          <a class="home-quick-card" href="./tasbeeh.html">
-            <span class="home-quick-label">Dhikr</span>
-            <strong>Tasbeeh</strong>
-          </a>
-        </section>
-
         <section class="features-section" id="features">
-          <div class="section-heading section-heading-inline">
+          <div class="section-heading">
             <div>
               <p class="eyebrow">Features</p>
-              <h2>Built for daily return.</h2>
+              <h2>Everything you need, kept clean.</h2>
             </div>
-            <p class="section-support">
-              A focused home screen now, with room for the wider Nooriva ecosystem later.
-            </p>
           </div>
           <div class="feature-grid feature-grid-dashboard">
-            <article class="feature-card feature-card-interactive feature-card-rich">
+            <a class="feature-card feature-card-rich feature-card-link" href="./prayer.html">
               <p>01</p>
-              <h3>Prayer times</h3>
-              <a class="feature-link" href="./prayer.html">Open prayer page</a>
-            </article>
-            <article class="feature-card feature-card-rich">
+              <h3>Prayer</h3>
+              <span>Live adhan, salah, Jumu'ah, and daily timings.</span>
+            </a>
+            <a class="feature-card feature-card-rich feature-card-link" href="./qibla.html">
               <p>02</p>
-              <h3>Qibla direction</h3>
-              <a class="feature-link" href="./qibla.html">Open qibla page</a>
-            </article>
-            <article class="feature-card feature-card-rich">
+              <h3>Qibla</h3>
+              <span>Fast compass direction in the same Nooriva style.</span>
+            </a>
+            <a class="feature-card feature-card-rich feature-card-link" href="./quran.html">
               <p>03</p>
               <h3>Quran</h3>
-              <a class="feature-link" href="./quran.html">Open quran page</a>
-            </article>
-            <article class="feature-card feature-card-rich">
+              <span>Read, search, and continue where you left off.</span>
+            </a>
+            <a class="feature-card feature-card-rich feature-card-link" href="./tasbeeh.html">
               <p>04</p>
               <h3>Tasbeeh</h3>
-              <a class="feature-link" href="./tasbeeh.html">Open tasbeeh page</a>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>05</p>
-              <h3>Islamic calendar</h3>
-              <span>Planned</span>
-            </article>
-            <article class="feature-card feature-card-rich">
-              <p>06</p>
-              <h3>Mosque finder</h3>
-              <span>Planned</span>
-            </article>
+              <span>A simple tap counter for daily dhikr.</span>
+            </a>
           </div>
         </section>
 
@@ -194,13 +118,11 @@
           <div class="cta-card cta-card-compact">
             <div class="cta-copy">
               <p class="eyebrow">Contact us</p>
-              <h2>Stay close to Nooriva.</h2>
+              <h2>Stay connected to Nooriva.</h2>
             </div>
             <form class="cta-form">
               <input type="email" placeholder="Enter your email" />
-              <button type="button" class="button button-primary">
-                Contact us
-              </button>
+              <button type="button" class="button button-primary">Contact us</button>
             </form>
           </div>
         </section>
@@ -213,7 +135,6 @@
           <a href="./tasbeeh.html">Tasbeeh</a>
           <a href="./account.html">Account</a>
           <a href="./settings.html">Help</a>
-          <a href="#features">Features</a>
           <a href="#contact">Contact</a>
         </nav>
       </main>
@@ -233,8 +154,6 @@
           <a href="./quran.html">Quran</a>
           <a href="./tasbeeh.html">Tasbeeh</a>
           <a href="./account.html">Account</a>
-          <a href="#features">Features</a>
-          <a href="./settings.html">Help</a>
           <a href="#contact">Contact Us</a>
         </div>
       </footer>
@@ -243,4 +162,3 @@
   <script src="./install-app.js"></script>
   <script src="./mobile-nav.js"></script>
 </html>
-

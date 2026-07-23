@@ -23,7 +23,6 @@ let locationWatchId = null;
 let orientationHandler = null;
 let motionPermissionRequested = false;
 const qiblaLocationStorageKey = "nooriva-qibla-last-location";
-
 const degreeSymbol = "\u00B0";
 
 function degreesToCardinal(degrees) {
@@ -39,11 +38,9 @@ function calculateQiblaBearing(latitude, longitude) {
   const deltaLon = kaabaLon - userLon;
 
   const y = Math.sin(deltaLon);
-  const x =
-    Math.cos(userLat) * Math.tan(kaabaLat) -
-    Math.sin(userLat) * Math.cos(deltaLon);
-
+  const x = Math.cos(userLat) * Math.tan(kaabaLat) - Math.sin(userLat) * Math.cos(deltaLon);
   const bearing = (Math.atan2(y, x) * 180) / Math.PI;
+
   return (bearing + 360) % 360;
 }
 
@@ -51,36 +48,28 @@ function shortestAngleDelta(from, to) {
   return ((to - from + 540) % 360) - 180;
 }
 
-function setAccuracyLabel(label) {
-  if (qiblaAccuracy) {
-    qiblaAccuracy.textContent = label;
+function setText(element, value) {
+  if (element) {
+    element.textContent = value;
   }
+}
+
+function setAccuracyLabel(label) {
+  setText(qiblaAccuracy, label);
 }
 
 function setCompassMode(label) {
-  if (qiblaMode) {
-    qiblaMode.textContent = label;
-  }
+  setText(qiblaMode, label);
 }
 
 function setFallbackLabel(label) {
-  if (qiblaFallback) {
-    qiblaFallback.textContent = label;
-  }
+  setText(qiblaFallback, label);
 }
 
 function setGuidance(title, detail) {
-  if (qiblaGuidanceTitle) {
-    qiblaGuidanceTitle.textContent = title;
-  }
-
-  if (qiblaGuidanceDetail) {
-    qiblaGuidanceDetail.textContent = detail;
-  }
-
-  if (qiblaGuidanceText) {
-    qiblaGuidanceText.textContent = detail;
-  }
+  setText(qiblaGuidanceTitle, title);
+  setText(qiblaGuidanceDetail, detail);
+  setText(qiblaGuidanceText, detail);
 }
 
 function loadStoredLocation() {
@@ -93,10 +82,7 @@ function loadStoredLocation() {
 
     const parsed = JSON.parse(raw);
 
-    if (
-      typeof parsed?.latitude !== "number" ||
-      typeof parsed?.longitude !== "number"
-    ) {
+    if (typeof parsed?.latitude !== "number" || typeof parsed?.longitude !== "number") {
       return null;
     }
 
@@ -129,13 +115,13 @@ function setWaitingForHeading() {
   qiblaPhoneArrow.style.opacity = "0.5";
   qiblaPhoneArrow.style.transform = "rotate(0deg)";
   qiblaDirectionArrow.style.transform = "rotate(0deg)";
-  deviceHeading.textContent = "--";
-  qiblaAlignment.textContent = "Starting";
+  setText(deviceHeading, "--");
+  setText(qiblaAlignment, "Starting");
   setAccuracyLabel("Warming up");
   setCompassMode("Opening compass");
   setGuidance(
     "Preparing live compass",
-    "Nooriva is opening your device sensors now, so the direction should start reacting as soon as the first heading arrives.",
+    "Nooriva is opening your device sensors now.",
   );
 }
 
@@ -164,34 +150,29 @@ function getHeadingFromOrientationEvent(event) {
     return null;
   }
 
-  const adjusted = 360 - event.alpha + getScreenAngle();
-  return normalizeHeading(adjusted);
+  return normalizeHeading(360 - event.alpha + getScreenAngle());
 }
 
 function useBearingFallback(reason) {
   qiblaPhoneArrow.style.opacity = "0.14";
   qiblaPhoneArrow.style.transform = "rotate(0deg)";
   qiblaDirectionArrow.style.transform = `rotate(${currentBearing ?? 0}deg)`;
-  deviceHeading.textContent = "Use north";
-  qiblaAlignment.textContent = "Bearing mode";
+  setText(deviceHeading, "Use north");
+  setText(qiblaAlignment, "Bearing mode");
   setAccuracyLabel("Manual guidance");
   setCompassMode("Bearing fallback");
   setFallbackLabel("North reference");
   qiblaAngle.textContent = currentBearing
-    ? `Qibla is ${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)} from north`
+    ? `Qibla is ${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`
     : "Qibla bearing ready";
-  setGuidance(
-    "Compass fallback active",
-    reason ??
-      "Your device is not giving a stable live compass, so Nooriva is showing the Qibla bearing from north instead.",
-  );
+  qiblaStatus.textContent = reason ?? "Compass unavailable. Using bearing direction.";
 }
 
 function updateAlignment(heading) {
   if (currentBearing === null) {
     latestHeading = heading;
     smoothedHeading = heading;
-    deviceHeading.textContent = `${Math.round(heading)}${degreeSymbol} ${degreesToCardinal(heading)}`;
+    setText(deviceHeading, `${Math.round(heading)}${degreeSymbol} ${degreesToCardinal(heading)}`);
     setCompassMode("Compass ready");
     setAccuracyLabel("Waiting for location");
     return;
@@ -211,44 +192,33 @@ function updateAlignment(heading) {
 
   qiblaPhoneArrow.style.transform = "rotate(0deg)";
   qiblaDirectionArrow.style.transform = `rotate(${diff}deg)`;
-  deviceHeading.textContent = `${Math.round(smoothedHeading)}${degreeSymbol} ${degreesToCardinal(smoothedHeading)}`;
+  setText(
+    deviceHeading,
+    `${Math.round(smoothedHeading)}${degreeSymbol} ${degreesToCardinal(smoothedHeading)}`,
+  );
   setCompassMode("Live compass");
   setFallbackLabel("Compass first");
 
   if (absoluteDiff <= 6) {
-    qiblaAlignment.textContent = "Aligned";
+    setText(qiblaAlignment, "Aligned");
     qiblaAngle.textContent = "You are facing the Qibla";
+    qiblaStatus.textContent = "Aligned";
     setAccuracyLabel("Excellent");
-    setGuidance(
-      "Perfect alignment",
-      "You are lined up well. Small hand movement is normal, so aim to keep both arrows overlapping.",
-    );
     return;
   }
 
   if (absoluteDiff <= 15) {
-    qiblaAlignment.textContent = "Very close";
+    setText(qiblaAlignment, "Very close");
     setAccuracyLabel("Very good");
-    setGuidance(
-      "Just a little more",
-      "Slow, gentle movement usually works better than big turns when you are already close.",
-    );
   } else if (absoluteDiff <= 30) {
-    qiblaAlignment.textContent = "Close";
+    setText(qiblaAlignment, "Close");
     setAccuracyLabel("Good");
-    setGuidance(
-      "Fine-tune your angle",
-      "If the reading keeps drifting, step away from metal furniture, chargers, speakers, or magnets.",
-    );
   } else {
-    qiblaAlignment.textContent = "Turn";
+    setText(qiblaAlignment, "Turn");
     setAccuracyLabel("Re-align");
-    setGuidance(
-      "Large correction needed",
-      "Turn until the dark phone arrow approaches the gold Qibla arrow, then slow down for the final alignment.",
-    );
   }
 
+  qiblaStatus.textContent = "Move slowly until both arrows line up.";
   qiblaAngle.textContent =
     diff > 0
       ? `Turn ${Math.round(absoluteDiff)}${degreeSymbol} clockwise`
@@ -259,9 +229,7 @@ function startCompassWatchdog() {
   window.clearTimeout(compassTimeoutId);
   compassTimeoutId = window.setTimeout(() => {
     if (!compassReadingReceived && currentBearing !== null) {
-      useBearingFallback(
-        "No live compass reading came through on this device. Nooriva switched to bearing mode so you can still orient using north.",
-      );
+      useBearingFallback("No live compass reading came through on this device.");
     }
   }, 2200);
 }
@@ -311,9 +279,7 @@ function startCompass() {
       .then((permission) => {
         if (permission !== "granted") {
           qiblaStatus.textContent = "Motion permission was not granted.";
-          useBearingFallback(
-            "Motion access was denied, so Nooriva is using bearing mode. You can still follow the angle from north.",
-          );
+          useBearingFallback("Motion access was denied, so Nooriva is using bearing mode.");
           return;
         }
 
@@ -322,9 +288,7 @@ function startCompass() {
       })
       .catch(() => {
         qiblaStatus.textContent = "Unable to access motion sensors.";
-        useBearingFallback(
-          "This device could not expose motion sensors, so Nooriva switched to the manual Qibla bearing view.",
-        );
+        useBearingFallback("This device could not expose motion sensors.");
       });
 
     return;
@@ -336,31 +300,27 @@ function startCompass() {
 
 function applyLocation(position, sourceLabel) {
   storeLocation(position);
-  currentBearing = calculateQiblaBearing(
-    position.coords.latitude,
-    position.coords.longitude,
+  currentBearing = calculateQiblaBearing(position.coords.latitude, position.coords.longitude);
+  setText(
+    qiblaBearing,
+    `${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`,
   );
-
-  qiblaBearing.textContent = `${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`;
   qiblaStatus.textContent =
     sourceLabel === "cached"
-      ? "Using your last known location while Nooriva refreshes live accuracy."
-      : "Move your phone gently and keep it away from metal objects for the best result.";
+      ? "Using your last known location."
+      : "Move your phone gently for the best result.";
 
   if (latestHeading !== null) {
     updateAlignment(latestHeading);
   } else {
-    setGuidance(
-      "Compass calibration matters",
-      "If the compass feels off, make a slow figure-eight motion and keep the phone flat for a cleaner reading.",
-    );
+    qiblaAngle.textContent = "Preparing compass...";
   }
 }
 
 function startLocationUpdates() {
   if (!navigator.geolocation) {
     qiblaStatus.textContent = "Geolocation is not supported on this device.";
-    qiblaAlignment.textContent = "Unavailable";
+    setText(qiblaAlignment, "Unavailable");
     setAccuracyLabel("Unavailable");
     setCompassMode("Unavailable");
     setFallbackLabel("No location");
@@ -368,14 +328,10 @@ function startLocationUpdates() {
   }
 
   qiblaStatus.textContent = "Getting your location...";
-  qiblaAlignment.textContent = "Checking";
+  setText(qiblaAlignment, "Checking");
   setAccuracyLabel("Checking");
   setCompassMode("Checking sensors");
   setFallbackLabel("Compass first");
-  setGuidance(
-    "Finding your direction",
-    "Nooriva is calculating the Qibla from your location, then it will use your device compass for live alignment.",
-  );
 
   const storedLocation = loadStoredLocation();
 
@@ -410,14 +366,10 @@ function startLocationUpdates() {
     () => {
       if (currentBearing === null) {
         qiblaStatus.textContent = "Location permission is needed for Qibla direction.";
-        qiblaAlignment.textContent = "Unavailable";
+        setText(qiblaAlignment, "Unavailable");
         setAccuracyLabel("Unavailable");
         setCompassMode("Unavailable");
         setFallbackLabel("No location");
-        setGuidance(
-          "Location required",
-          "Nooriva needs your location to calculate the Qibla direction from where you are standing.",
-        );
       }
     },
     {
@@ -433,7 +385,7 @@ function startQibla() {
     qiblaStatus.textContent =
       currentBearing === null
         ? "Still preparing your Qibla direction..."
-        : "Qibla is active. Move your phone gently for the fastest alignment.";
+        : "Qibla is active.";
     return;
   }
 
@@ -442,9 +394,13 @@ function startQibla() {
   startLocationUpdates();
 }
 
-if (enableQiblaButton) {
-  enableQiblaButton.addEventListener("click", startQibla);
-}
+enableQiblaButton?.addEventListener("click", startQibla);
+
+window.setTimeout(() => {
+  if (!qiblaBooted) {
+    startQibla();
+  }
+}, 180);
 
 if (
   typeof DeviceOrientationEvent !== "undefined" &&
