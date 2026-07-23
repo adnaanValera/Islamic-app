@@ -6,7 +6,7 @@
     <title>Nooriva | Quran</title>
     <meta
       name="description"
-      content="Read and return to selected Quran surahs in Nooriva with saved bookmarks and a calm reading view."
+      content="Read full surahs in Nooriva with saved bookmarks and continue-reading support."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -49,35 +49,36 @@
               </div>
               <div class="quran-reader-card quran-reader-card-premium">
                 <strong class="quran-reader-title" id="quran-selected-title">Al-Fatihah</strong>
-                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Makkah</span>
-                <p class="quran-reader-arabic" id="quran-selected-arabic">
-                  Bismillahir Rahmanir Rahim
+                <span class="quran-reader-subtitle" id="quran-selected-subtitle">The Opening • Meccan</span>
+                <p class="quran-reader-arabic quran-reader-arabic-large" id="quran-selected-arabic">
+                  Loading surah...
                 </p>
                 <p class="quran-reader-translation" id="quran-selected-translation">
-                  In the name of Allah, the Entirely Merciful, the Especially Merciful.
+                  Loading translation...
                 </p>
               </div>
               <div class="tasbeeh-actions-grid quran-actions-grid">
                 <button class="button button-primary" id="quran-toggle-bookmark" type="button">Save bookmark</button>
                 <button class="button button-secondary" id="quran-open-bookmark" type="button">Open bookmark</button>
+                <button class="button button-secondary" id="quran-open-continue" type="button">Continue reading</button>
               </div>
             </div>
           </div>
 
           <div class="prayer-hero-copy prayer-hero-copy-compact">
             <p class="eyebrow">Quran</p>
-            <h1 class="prayer-hero-title">A calmer reading space.</h1>
+            <h1 class="prayer-hero-title">Full surah reading.</h1>
             <p class="hero-text prayer-hero-text">
-              Open a surah, save your place, and keep your reading simple on mobile.
+              Open a surah, read ayah by ayah, and continue from where you stopped.
             </p>
             <div class="hero-actions quran-search-bar">
               <input class="quran-search-input" id="quran-search" type="search" placeholder="Search surah" />
               <button class="button button-secondary" id="quran-clear-search" type="button">Clear</button>
             </div>
             <div class="status-stack">
-              <p class="status-line" id="quran-status">Selected reading list loaded.</p>
+              <p class="status-line" id="quran-status">Loading Quran...</p>
               <p class="status-line status-line-soft" id="quran-bookmark-copy">
-                Bookmarks are saved on this device.
+                Bookmarks and reading position are saved on this device.
               </p>
             </div>
             <div class="prayer-section-meta quran-meta-simple">
@@ -88,6 +89,10 @@
               <div class="prayer-meta-pill">
                 <span>Bookmark</span>
                 <strong id="quran-bookmarked-surah">None yet</strong>
+              </div>
+              <div class="prayer-meta-pill">
+                <span>Continue</span>
+                <strong id="quran-continue-surah">None yet</strong>
               </div>
               <div class="prayer-meta-pill">
                 <span>Saved</span>
@@ -106,6 +111,27 @@
           </div>
 
           <div class="quran-surah-grid" id="quran-surah-grid"></div>
+        </section>
+
+        <section class="prayer-table-section">
+          <div class="section-heading prayer-section-heading">
+            <div>
+              <p class="eyebrow">Read</p>
+              <h2>Ayah by ayah</h2>
+            </div>
+          </div>
+
+          <div class="prayer-table-card quran-full-reader-card">
+            <div class="quran-ayah-list" id="quran-ayah-list">
+              <article class="quran-ayah-card">
+                <div class="quran-ayah-topline">
+                  <span>Ayah 1</span>
+                </div>
+                <p class="quran-ayah-arabic">Loading...</p>
+                <p class="quran-ayah-translation">Please wait.</p>
+              </article>
+            </div>
+          </div>
         </section>
 
         <nav class="mobile-bottom-nav home-mobile-bottom-nav" aria-label="Mobile navigation">

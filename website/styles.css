@@ -2191,3 +2191,95 @@ h3 {
   }
 }
 
+.quran-reader-arabic-large {
+  font-size: 2rem;
+  line-height: 1.9;
+}
+
+.quran-surah-card.is-saved strong::after {
+  content: " • Saved";
+}
+
+.quran-full-reader-card {
+  padding: 18px;
+}
+
+.quran-ayah-list {
+  display: grid;
+  gap: 14px;
+}
+
+.quran-ayah-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.quran-ayah-card.is-current-ayah {
+  border-color: rgba(191, 149, 77, 0.34);
+  background: linear-gradient(135deg, rgba(197, 150, 78, 0.14), rgba(255, 255, 255, 0.88));
+  box-shadow: var(--shadow-soft);
+}
+
+.quran-ayah-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.quran-ayah-topline span {
+  color: var(--gold-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quran-ayah-save {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 149, 77, 0.2);
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.quran-ayah-arabic {
+  margin: 0;
+  color: var(--text-strong);
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  line-height: 1.95;
+}
+
+.quran-ayah-translation {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 0.98rem;
+}
+
+@media (max-width: 720px) {
+  .quran-ayah-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quran-reader-arabic-large,
+  .quran-ayah-arabic {
+    font-size: 1.6rem;
+    line-height: 1.8;
+  }
+}
+
