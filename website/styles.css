@@ -492,12 +492,23 @@ h3 {
 
 .prayer-table-card-hero {
   align-self: stretch;
+  background:
+    radial-gradient(circle at top right, rgba(197, 150, 78, 0.16), transparent 30%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
+}
+
+.prayer-hero-copy {
+  padding-top: 6px;
+}
+
+.prayer-hero-text {
+  max-width: 42ch;
 }
 
 .next-prayer-banner {
   display: grid;
-  gap: 4px;
-  padding: 16px 22px;
+  gap: 5px;
+  padding: 18px 22px 16px;
   border-bottom: 1px solid rgba(191, 149, 77, 0.16);
   background: linear-gradient(135deg, rgba(197, 150, 78, 0.18), rgba(37, 68, 60, 0.08));
 }
@@ -605,7 +616,7 @@ h3 {
 }
 
 .prayer-table-head {
-  padding: 18px 22px;
+  padding: 16px 22px;
   background: rgba(37, 68, 60, 0.08);
   color: var(--green-accent);
   font-size: 0.8rem;
@@ -615,11 +626,11 @@ h3 {
 }
 
 .prayer-time-list {
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .prayer-time-row {
-  padding: 18px 22px;
+  padding: 16px 22px;
   border-top: 1px solid rgba(191, 149, 77, 0.14);
 }
 
@@ -674,7 +685,7 @@ h3 {
 }
 
 .prayer-check input:checked + span::after {
-  content: "✓";
+  content: "\2713";
   display: grid;
   place-items: center;
   color: #fffaf2;
@@ -732,11 +743,11 @@ h3 {
 
 .jumuah-time-list,
 .timings-list {
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .jumuah-time-row {
-  padding: 18px 22px;
+  padding: 16px 22px;
 }
 
 .jumuah-time-row strong {
@@ -750,7 +761,7 @@ h3 {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
-  padding: 18px 22px;
+  padding: 16px 22px;
   border-top: 1px solid rgba(191, 149, 77, 0.14);
 }
 
@@ -948,7 +959,7 @@ h3 {
   width: min(100%, 340px);
   display: grid;
   gap: 6px;
-  padding: 14px 16px;
+  padding: 14px 16px 13px;
   border-radius: 18px;
   border: 1px solid rgba(191, 149, 77, 0.16);
   background: rgba(255, 255, 255, 0.74);
@@ -1030,7 +1041,7 @@ h3 {
 
   .hero-section,
   .prayer-page {
-    gap: 18px;
+    gap: 16px;
   }
 
   .hero-section,
@@ -1108,13 +1119,13 @@ h3 {
   }
 
   .prayer-table-head {
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 13px;
+    padding-bottom: 13px;
     font-size: 0.72rem;
   }
 
   .next-prayer-banner {
-    padding: 14px 16px;
+    padding: 14px 16px 13px;
   }
 
   .next-prayer-name {
@@ -1139,8 +1150,8 @@ h3 {
   .prayer-time-row,
   .jumuah-time-row,
   .timing-row {
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 13px;
+    padding-bottom: 13px;
   }
 
   .prayer-time-row span,
@@ -1227,7 +1238,7 @@ h3 {
   .hero-section,
   .prayer-page,
   .prayer-hero {
-    gap: 14px;
+    gap: 12px;
   }
 
   .home-quick-links {
@@ -1270,6 +1281,10 @@ h3 {
     width: min(250px, 78vw);
   }
 
+  .prayer-hero-copy {
+    padding-top: 0;
+  }
+
   .button {
     min-height: 42px;
     padding: 0 14px;
@@ -1297,6 +1312,11 @@ h3 {
   .timing-row strong {
     font-size: 0.92rem;
     min-width: 42px;
+  }
+
+  .prayer-table-card,
+  .qibla-guidance-card {
+    border-radius: 16px;
   }
 
   .next-prayer-banner {
@@ -1424,3 +1444,4 @@ h3 {
     padding-bottom: 72px;
   }
 }
+
