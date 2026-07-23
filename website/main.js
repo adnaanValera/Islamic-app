@@ -14,6 +14,7 @@ const mainQiblaStatus = document.getElementById("main-qibla-status");
 const mainAyahArabic = document.getElementById("main-ayah-arabic");
 const mainAyahEnglish = document.getElementById("main-ayah-english");
 const mainAyahReference = document.getElementById("main-ayah-reference");
+const mainAyahDownload = document.getElementById("main-ayah-download");
 const mainTasbeehButton = document.getElementById("main-tasbeeh-button");
 const mainTasbeehCount = document.getElementById("main-tasbeeh-count");
 const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
@@ -29,6 +30,7 @@ const mainPrayers = [
 let mainPrayerRows = [];
 let mainHeading = null;
 let mainBearing = null;
+let currentAyahOfDay = null;
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -68,7 +70,10 @@ function getMainPrayerWindows() {
     let endMinutes = getMainMinutes(prayer.endTime);
 
     if (endMinutes === null) {
-      endMinutes = index < mainPrayerRows.length - 1 ? getMainMinutes(mainPrayerRows[index + 1].athan) ?? 24 * 60 : 24 * 60;
+      endMinutes =
+        index < mainPrayerRows.length - 1
+          ? getMainMinutes(mainPrayerRows[index + 1].athan) ?? 24 * 60
+          : 24 * 60;
     }
 
     return {
@@ -79,14 +84,6 @@ function getMainPrayerWindows() {
   });
 }
 
-function formatMainCountdown(totalMinutes, prayerLabel) {
-  if (totalMinutes <= 0) return `${prayerLabel} now`;
-  if (totalMinutes < 60) return `${totalMinutes} min until ${prayerLabel}`;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  return minutes === 0 ? `${hours}h until ${prayerLabel}` : `${hours}h ${minutes}m until ${prayerLabel}`;
-}
-
 function renderMainPrayer() {
   if (!mainPrayerRows.length) return;
 
@@ -94,11 +91,14 @@ function renderMainPrayer() {
   const { timeKey } = getMainMalawiParts();
   const currentMinutes = getMainMinutes(timeKey) ?? 0;
 
-  const currentPrayer = windows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
-  const nextPrayer = windows.find((prayer) => prayer.startMinutes > currentMinutes) ?? windows[0] ?? null;
+  const currentPrayer =
+    windows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
+  const nextPrayer =
+    windows.find((prayer) => prayer.startMinutes > currentMinutes) ?? windows[0] ?? null;
   const nextPrayerMinutes =
-    nextPrayer && nextPrayer.startMinutes <= currentMinutes ? nextPrayer.startMinutes + 24 * 60 : nextPrayer?.startMinutes ?? currentMinutes;
-  const minutesUntilNext = nextPrayerMinutes - currentMinutes;
+    nextPrayer && nextPrayer.startMinutes <= currentMinutes
+      ? nextPrayer.startMinutes + 24 * 60
+      : nextPrayer?.startMinutes ?? currentMinutes;
 
   if (mainPrayerLabel) {
     mainPrayerLabel.textContent = currentPrayer ? "Current" : "Next";
@@ -113,10 +113,7 @@ function renderMainPrayer() {
   }
 
   if (mainNextSalah) {
-    const nextSalahMinutes = nextPrayer && nextPrayer.startMinutes <= currentMinutes
-      ? nextPrayer.startMinutes + 24 * 60
-      : nextPrayer?.startMinutes ?? currentMinutes;
-    const minutesUntilNextSalah = nextSalahMinutes - currentMinutes;
+    const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     mainNextSalah.textContent = `Next: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
@@ -155,29 +152,113 @@ async function loadMainPrayer() {
 function getAyahNumberForToday() {
   const { dateKey } = getMainMalawiParts();
   let seed = 0;
+
   for (const character of dateKey) {
     seed = (seed * 31 + character.charCodeAt(0)) % 6236;
   }
+
   return (seed % 6236) + 1;
 }
 
 async function loadMainAyah() {
   try {
     const ayahNumber = getAyahNumberForToday();
-    const response = await fetch(`${mainAyahApiBase}/ayah/${ayahNumber}/editions/quran-uthmani,en.sahih`, { cache: "force-cache" });
+    const response = await fetch(`${mainAyahApiBase}/ayah/${ayahNumber}/editions/quran-uthmani,en.sahih`, {
+      cache: "force-cache",
+    });
     const payload = await response.json();
     const [arabic, english] = payload?.data ?? [];
 
-    if (mainAyahArabic) mainAyahArabic.textContent = arabic?.text ?? "—";
-    if (mainAyahEnglish) mainAyahEnglish.textContent = english?.text ?? "—";
+    currentAyahOfDay = {
+      surahName: english?.surah?.englishName ?? arabic?.surah?.englishName ?? "Quran",
+      ayahInSurah: english?.numberInSurah ?? arabic?.numberInSurah ?? "",
+      arabic: arabic?.text ?? "—",
+      english: english?.text ?? "—",
+    };
+
+    if (mainAyahArabic) mainAyahArabic.textContent = currentAyahOfDay.arabic;
+    if (mainAyahEnglish) mainAyahEnglish.textContent = currentAyahOfDay.english;
     if (mainAyahReference) {
-      const surahName = english?.surah?.englishName ?? arabic?.surah?.englishName ?? "Quran";
-      const ayahInSurah = english?.numberInSurah ?? arabic?.numberInSurah ?? "";
-      mainAyahReference.textContent = `${surahName} ${ayahInSurah}`;
+      mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
   } catch {
     if (mainAyahEnglish) mainAyahEnglish.textContent = "Ayah unavailable right now.";
   }
+}
+
+function sanitizeFileNamePart(value) {
+  return String(value || "Quran").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
+}
+
+function wrapCanvasText(context, text, maxWidth) {
+  const words = String(text || "").split(/\s+/);
+  const lines = [];
+  let currentLine = "";
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    if (context.measureText(testLine).width <= maxWidth || !currentLine) {
+      currentLine = testLine;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
+function drawCenteredLines(context, lines, x, startY, lineHeight) {
+  lines.forEach((line, index) => {
+    context.fillText(line, x, startY + index * lineHeight);
+  });
+}
+
+function downloadAyahCard() {
+  if (!currentAyahOfDay) {
+    return;
+  }
+
+  const image = new Image();
+  image.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      return;
+    }
+
+    context.drawImage(image, 0, 0);
+    context.textAlign = "center";
+    context.fillStyle = "#13221c";
+
+    context.font = "600 54px 'Noto Naskh Arabic', serif";
+    const arabicLines = wrapCanvasText(context, currentAyahOfDay.arabic, 760);
+    drawCenteredLines(context, arabicLines, canvas.width / 2, 410, 78);
+
+    context.font = "500 28px Manrope, sans-serif";
+    context.fillStyle = "#2b352f";
+    const englishLines = wrapCanvasText(context, currentAyahOfDay.english, 700);
+    drawCenteredLines(context, englishLines, canvas.width / 2, 690, 42);
+
+    context.font = "700 24px Manrope, sans-serif";
+    context.fillStyle = "#8e7440";
+    context.fillText(`${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`, canvas.width / 2, 870);
+
+    const link = document.createElement("a");
+    const fileName = `${sanitizeFileNamePart(currentAyahOfDay.surahName)}-${sanitizeFileNamePart(currentAyahOfDay.ayahInSurah)}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.download = fileName;
+    link.click();
+  };
+
+  image.src = "./assets/ayah-card-template.jpeg";
 }
 
 function getMainTasbeehState() {
@@ -288,6 +369,8 @@ function loadMainQibla() {
     },
   );
 }
+
+mainAyahDownload?.addEventListener("click", downloadAyahCard);
 
 loadMainPrayer();
 loadMainAyah();

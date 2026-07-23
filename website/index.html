@@ -95,14 +95,23 @@
             </a>
 
             <section class="main-card main-card-ayah">
-              <div class="main-card-head">
-                <span>Main</span>
-                <strong>Ayah of the day</strong>
+              <div class="main-card-head main-card-head-row">
+                <div>
+                  <span>Main</span>
+                  <strong>Ayah of the day</strong>
+                </div>
+                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Download ayah card">
+                  <span aria-hidden="true">↓</span>
+                </button>
               </div>
-              <div class="main-ayah-body">
-                <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
-                <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
-                <p class="main-mini-copy" id="main-ayah-reference"></p>
+              <div class="main-ayah-card-shell" id="main-ayah-card-shell">
+                <div class="main-ayah-card-art">
+                  <div class="main-ayah-card-inner">
+                    <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                    <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                    <p class="main-mini-copy main-ayah-reference" id="main-ayah-reference"></p>
+                  </div>
+                </div>
               </div>
             </section>
 

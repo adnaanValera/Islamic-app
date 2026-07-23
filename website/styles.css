@@ -4041,6 +4041,11 @@ h3 {
   gap: 2px;
 }
 
+.main-card-head-row {
+  grid-template-columns: 1fr auto;
+  align-items: start;
+}
+
 .main-card-head span {
   color: var(--muted);
   font-size: 0.73rem;
@@ -4096,25 +4101,64 @@ h3 {
   line-height: 1.45;
 }
 
-.main-ayah-body {
+.main-download-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(191, 149, 77, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 252, 246, 0.9);
+  color: var(--gold-soft);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.05);
+}
+
+.main-ayah-card-shell {
   display: grid;
-  gap: 10px;
+}
+
+.main-ayah-card-art {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 251, 245, 0.08), rgba(255, 251, 245, 0.08)),
+    url("./assets/ayah-card-template.jpeg") center/cover no-repeat;
+}
+
+.main-ayah-card-inner {
+  position: absolute;
+  inset: 26% 12% 20% 12%;
+  display: grid;
+  align-content: center;
+  gap: 14px;
 }
 
 .main-ayah-arabic {
   margin: 0;
   color: var(--text-strong);
   font-family: "Noto Naskh Arabic", serif;
-  font-size: 1.55rem;
-  line-height: 1.95;
-  text-align: right;
+  font-size: clamp(1.25rem, 2vw, 1.9rem);
+  line-height: 1.85;
+  text-align: center;
 }
 
 .main-ayah-english {
   margin: 0;
   color: var(--text);
-  font-size: 0.95rem;
-  line-height: 1.65;
+  font-size: clamp(0.84rem, 1.25vw, 1rem);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.main-ayah-reference {
+  color: #8e7440;
+  font-weight: 700;
 }
 
 .main-card-ayah {
@@ -4187,12 +4231,16 @@ h3 {
   }
 
   .main-ayah-arabic {
-    font-size: 1.36rem;
-    line-height: 1.86;
+    line-height: 1.72;
   }
 
   .main-ayah-english {
     font-size: 0.9rem;
+  }
+
+  .main-ayah-card-inner {
+    inset: 24% 11% 19% 11%;
+    gap: 10px;
   }
 
   .main-tasbeeh-button {
