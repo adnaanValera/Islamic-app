@@ -19,11 +19,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   font-family: "Manrope", sans-serif;
   color: var(--text);
   background:
@@ -43,6 +45,7 @@ a {
   width: min(1120px, calc(100% - 32px));
   margin: 0 auto;
   padding: 16px 0 28px;
+  overflow-x: clip;
 }
 
 .site-header,
@@ -4070,7 +4073,10 @@ h3 {
 .main-hero-section #main-greeting {
   animation-delay: 150ms;
   white-space: nowrap;
-  font-size: clamp(1.35rem, 4.8vw, 2.8rem);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(1.1rem, 4vw, 2.5rem);
   line-height: 1.1;
 }
 
@@ -4182,6 +4188,7 @@ h3 {
 .main-prayer-banner {
   min-height: 100%;
   gap: 8px;
+  align-content: start;
 }
 
 .main-prayer-banner .next-prayer-progress-fill {
@@ -4190,14 +4197,14 @@ h3 {
 
 .main-prayer-meta {
   color: var(--text-strong);
-  font-size: 1rem;
+  font-size: 1.08rem;
   font-weight: 700;
 }
 
 .main-next-salah {
   color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.4;
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 .main-qibla-mini {
@@ -4281,12 +4288,12 @@ h3 {
 
 .main-ayah-card-inner {
   position: absolute;
-  inset: 24.5% 11.2% 15.8% 11.2%;
+  inset: 28% 11.2% 14% 11.2%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .main-ayah-arabic {
@@ -4294,7 +4301,7 @@ h3 {
   color: var(--text-strong);
   font-family: "Noto Naskh Arabic", serif;
   width: 100%;
-  max-height: 53%;
+  max-height: 46%;
   overflow: hidden;
   font-size: clamp(1.25rem, 2.05vw, 2rem);
   line-height: 1.72;
@@ -4306,7 +4313,7 @@ h3 {
   margin: 0;
   color: var(--text);
   width: 88%;
-  max-height: 24%;
+  max-height: 20%;
   overflow: hidden;
   font-size: clamp(0.74rem, 1.02vw, 0.92rem);
   line-height: 1.48;
@@ -4330,9 +4337,11 @@ h3 {
 }
 
 .cta-form-message textarea {
-  min-height: 48px;
-  max-height: 120px;
+  min-height: 112px;
+  max-height: 180px;
   resize: vertical;
+  border-radius: 18px;
+  padding-top: 14px;
 }
 
 .main-tasbeeh-button {
@@ -4479,8 +4488,8 @@ h3 {
   }
 
   .main-ayah-card-inner {
-    inset: 23.8% 10.2% 15.4% 10.2%;
-    gap: 10px;
+    inset: 27.5% 10.2% 14.2% 10.2%;
+    gap: 8px;
   }
 
   .main-auth-card {

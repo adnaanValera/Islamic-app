@@ -17,18 +17,6 @@ const mainAyahReference = document.getElementById("main-ayah-reference");
 const mainAyahDownload = document.getElementById("main-ayah-download");
 const mainGreeting = document.getElementById("main-greeting");
 const mainNotificationButton = document.getElementById("main-enable-notifications");
-const mainAuthGate = document.getElementById("main-auth-gate");
-const mainAuthStatus = document.getElementById("main-auth-status");
-const mainShowSignin = document.getElementById("main-show-signin");
-const mainShowRegister = document.getElementById("main-show-register");
-const mainSigninCard = document.getElementById("main-signin-card");
-const mainRegisterCard = document.getElementById("main-register-card");
-const mainSigninFullName = document.getElementById("main-signin-full-name");
-const mainSigninPassword = document.getElementById("main-signin-password");
-const mainRegisterFullName = document.getElementById("main-register-full-name");
-const mainRegisterPassword = document.getElementById("main-register-password");
-const mainSigninButton = document.getElementById("main-signin");
-const mainRegisterButton = document.getElementById("main-register");
 const contactForm = document.getElementById("contact-form");
 const contactName = document.getElementById("contact-name");
 const contactMessage = document.getElementById("contact-message");
@@ -47,8 +35,6 @@ const mainPrayers = [
 const accountSessionStorageKey = "nooriva-account-session";
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
-const registerUrl = "/api/account-register";
-const signinUrl = "/api/account-signin";
 const contactSubmitUrl = "/api/contact-submit";
 
 let mainPrayerRows = [];
@@ -124,24 +110,12 @@ function saveMainSession(session) {
   mainSession = session;
 }
 
-function showMainAuthView(mode) {
-  const signinMode = mode === "signin";
-  mainSigninCard?.classList.toggle("is-hidden", !signinMode);
-  mainRegisterCard?.classList.toggle("is-hidden", signinMode);
-  mainShowSignin?.classList.toggle("is-active", signinMode);
-  mainShowRegister?.classList.toggle("is-active", !signinMode);
-}
-
 function renderMainGreeting() {
   const name = mainSession?.user?.fullName?.trim();
   const salaam = "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064a\u0643\u0645";
 
   if (mainGreeting) {
     mainGreeting.textContent = name ? `${salaam} ${name}` : salaam;
-  }
-
-  if (mainAuthGate) {
-    mainAuthGate.classList.toggle("is-hidden", Boolean(name));
   }
 }
 
@@ -296,8 +270,8 @@ function renderMainPrayer() {
   if (mainNextSalah) {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Next: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`
-      : `Starts in ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Next: ${nextPrayer?.label ?? "--"} • ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`
+      : `Starts ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -397,19 +371,19 @@ function fitAyahCardText() {
   const arabicLength = String(currentAyahOfDay?.arabic || "").length;
   const englishLength = String(currentAyahOfDay?.english || "").length;
 
-  const arabicMax = arabicLength < 70 ? 36 : arabicLength < 120 ? 32 : 28;
-  const englishMax = englishLength < 90 ? 18 : englishLength < 150 ? 15.5 : 13.5;
+  const arabicMax = arabicLength < 70 ? 32 : arabicLength < 120 ? 29 : 26;
+  const englishMax = englishLength < 90 ? 16 : englishLength < 150 ? 14 : 12.5;
 
-  fitElementText(mainAyahArabic, { min: 18, max: arabicMax, step: 1, lineHeight: 1.72 });
-  fitElementText(mainAyahEnglish, { min: 10.5, max: englishMax, step: 0.5, lineHeight: 1.48 });
+  fitElementText(mainAyahArabic, { min: 16, max: arabicMax, step: 1, lineHeight: 1.6 });
+  fitElementText(mainAyahEnglish, { min: 10, max: englishMax, step: 0.5, lineHeight: 1.42 });
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
   const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = window.innerWidth <= 480 ? 24 : 32;
+  const gap = window.innerWidth <= 480 ? 18 : 26;
   const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
   const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
-  const topOffset = Math.max((frameHeight - contentHeight) / 2, 0);
+  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (window.innerWidth <= 480 ? 12 : 18), 0);
 
   if (mainAyahReference?.parentElement) {
     mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
@@ -666,24 +640,6 @@ function loadMainQibla() {
 mainAyahDownload?.addEventListener("click", downloadAyahCard);
 window.addEventListener("resize", fitAyahCardText);
 mainNotificationButton?.addEventListener("click", enableMainNotifications);
-mainShowSignin?.addEventListener("click", () => showMainAuthView("signin"));
-mainShowRegister?.addEventListener("click", () => showMainAuthView("register"));
-mainSigninButton?.addEventListener("click", async () => {
-  try {
-    await submitMainAuth(signinUrl, mainSigninFullName?.value, mainSigninPassword?.value);
-    if (mainAuthStatus) mainAuthStatus.textContent = "Signed in.";
-  } catch (error) {
-    if (mainAuthStatus) mainAuthStatus.textContent = error.message;
-  }
-});
-mainRegisterButton?.addEventListener("click", async () => {
-  try {
-    await submitMainAuth(registerUrl, mainRegisterFullName?.value, mainRegisterPassword?.value);
-    if (mainAuthStatus) mainAuthStatus.textContent = "Account created.";
-  } catch (error) {
-    if (mainAuthStatus) mainAuthStatus.textContent = error.message;
-  }
-});
 contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   try {
@@ -704,7 +660,6 @@ contactForm?.addEventListener("submit", async (event) => {
   }
 });
 
-showMainAuthView("signin");
 renderMainGreeting();
 updateMainNotificationButton();
 loadMainPrayer();
