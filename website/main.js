@@ -79,14 +79,14 @@ function getMainMinutes(value) {
 
 function getMainPrayerWindows() {
   return mainPrayerRows.map((prayer, index) => {
-    const startMinutes = getMainMinutes(prayer.athan) ?? 0;
-    let endMinutes = getMainMinutes(prayer.endTime);
+    const startMinutes = getMainMinutes(prayer.salah) ?? getMainMinutes(prayer.athan) ?? 0;
+    let endMinutes =
+      index < mainPrayerRows.length - 1
+        ? getMainMinutes(mainPrayerRows[index + 1]?.salah) ?? getMainMinutes(mainPrayerRows[index + 1]?.athan)
+        : getMainMinutes(mainPrayerRows[0]?.salah) ?? getMainMinutes(mainPrayerRows[0]?.athan);
 
     if (endMinutes === null) {
-      endMinutes =
-        index < mainPrayerRows.length - 1
-          ? getMainMinutes(mainPrayerRows[index + 1].athan) ?? 24 * 60
-          : getMainMinutes(mainPrayerRows[0]?.athan) ?? 24 * 60;
+      endMinutes = 24 * 60;
     }
 
     return {
@@ -198,6 +198,7 @@ function buildMainActivityEntries() {
       displayTime: entry.salah,
       athan: entry.athan,
       salah: entry.salah,
+      adhanMinutes: getMainMinutes(entry.athan),
       startMinutes,
       endMinutes,
       kind: "prayer",
@@ -251,6 +252,18 @@ function renderMainPrayer() {
       .sort((a, b) => a.effectiveStart - b.effectiveStart)[0] ?? null;
 
   const nextPrayerMinutes = nextPrayer?.effectiveStart ?? currentMinutes;
+  const nextAdhan =
+    windows
+      .filter((prayer) => prayer.kind === "prayer")
+      .map((prayer) => ({
+        ...prayer,
+        effectiveAthan:
+          (prayer.adhanMinutes ?? 0) > currentMinutes
+            ? prayer.adhanMinutes ?? 0
+            : (prayer.adhanMinutes ?? 0) + 24 * 60,
+      }))
+      .sort((a, b) => a.effectiveAthan - b.effectiveAthan)[0] ?? null;
+  const nextAdhanMinutes = nextAdhan?.effectiveAthan ?? currentMinutes;
 
   if (mainPrayerLabel) {
     mainPrayerLabel.textContent = currentPrayer ? "Active now" : "Next";
@@ -274,9 +287,10 @@ function renderMainPrayer() {
 
   if (mainNextSalah) {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
+    const minutesUntilAdhan = nextAdhanMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Next: ${nextPrayer?.label ?? "--"} - ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`
-      : `Starts ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Adhan: ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${Math.max(minutesUntilAdhan, 0)} min`
+      : `Next: ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -673,6 +687,7 @@ loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+
 
 
 

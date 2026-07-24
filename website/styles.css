@@ -1967,26 +1967,26 @@ h3 {
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid var(--line);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(252, 248, 241, 0.96), rgba(245, 236, 223, 0.94));
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255, 252, 246, 0.97), rgba(244, 236, 223, 0.96));
     backdrop-filter: blur(16px);
-    box-shadow: 0 18px 34px rgba(79, 66, 39, 0.12);
+    box-shadow: 0 22px 40px rgba(79, 66, 39, 0.14);
     overflow: hidden;
   }
 
   .mobile-bottom-nav-toggle {
     width: 100%;
-    min-height: 50px;
+    min-height: 56px;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 14px;
-    border: 1px solid rgba(191, 149, 77, 0.22);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
+    padding: 0 16px;
+    border: 1px solid rgba(191, 149, 77, 0.18);
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 243, 233, 0.88));
     color: var(--text-strong);
     font: inherit;
     font-size: 0.9rem;
@@ -2001,13 +2001,13 @@ h3 {
   }
 
   .mobile-bottom-nav-toggle-icon {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     display: grid;
     align-content: center;
-    gap: 4px;
-    padding: 0 8px;
-    border-radius: 999px;
+    gap: 5px;
+    padding: 0 10px;
+    border-radius: 14px;
     background: linear-gradient(180deg, rgba(215, 171, 99, 0.22), rgba(188, 135, 64, 0.14));
     border: 1px solid rgba(191, 149, 77, 0.18);
     flex-shrink: 0;
@@ -2030,13 +2030,13 @@ h3 {
   }
 
   .mobile-bottom-nav-toggle-text strong {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     color: var(--text-strong);
   }
 
   .mobile-bottom-nav-toggle-text small {
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.74rem;
   }
 
   .mobile-bottom-nav-toggle-arrow {
@@ -2056,8 +2056,8 @@ h3 {
   .mobile-bottom-nav-links {
     display: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    padding-top: 4px;
+    gap: 10px;
+    padding-top: 8px;
     max-height: calc(100vh - 180px);
     overflow-y: auto;
   }
@@ -2071,13 +2071,13 @@ h3 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 16px;
+    border-radius: 18px;
     color: var(--muted);
     font-size: 0.86rem;
     font-weight: 700;
     padding: 0 10px;
     border: 1px solid rgba(191, 149, 77, 0.16);
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.72);
   }
 
   .mobile-bottom-nav a[aria-current="page"] {

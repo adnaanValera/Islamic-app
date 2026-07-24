@@ -21,7 +21,7 @@
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Open navigation");
     toggle.innerHTML =
-      '<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>Menu</strong><small>Open sections</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>';
+      '<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>Nooriva</strong><small>Sections</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>';
 
     toggle.addEventListener("click", () => {
       const expanded = nav.getAttribute("data-expanded") === "true";
@@ -31,7 +31,7 @@
       const detail = toggle.querySelector("small");
 
       if (detail) {
-        detail.textContent = expanded ? "Open sections" : "Close sections";
+        detail.textContent = expanded ? "Sections" : "Tap to close";
       }
     });
 
