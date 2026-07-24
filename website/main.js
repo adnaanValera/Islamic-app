@@ -27,11 +27,11 @@ const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
 const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
 
 const mainPrayers = [
-  { athanKey: "fajrAthan", salahKey: "fajrJamaah", label: "Fajr", endKey: "sunrise" },
-  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", label: "Zuhr", endKey: "asrShafi" },
-  { athanKey: "asrAthan", salahKey: "asrJamaah", label: "Asr", endKey: "sunset" },
-  { athanKey: "maghribAthan", salahKey: "maghribJamaah", label: "Maghrib", endKey: "eshaStarts" },
-  { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha", endKey: null },
+  { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
+  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", startKey: "zawaalEnd", label: "Zuhr", endKey: "asrShafi" },
+  { athanKey: "asrAthan", salahKey: "asrJamaah", startKey: "asrShafi", label: "Asr", endKey: "sunset" },
+  { athanKey: "maghribAthan", salahKey: "maghribJamaah", startKey: "sunset", label: "Maghrib", endKey: "eshaStarts" },
+  { athanKey: "eshaAthan", salahKey: "eshaJamaah", startKey: "eshaStarts", label: "Esha", endKey: null },
 ];
 const accountSessionStorageKey = "nooriva-account-session";
 const pushPublicKeyApiUrl = "/api/push-public-key";
@@ -92,11 +92,11 @@ function formatHoursAndMinutes(totalMinutes) {
 
 function getMainPrayerWindows() {
   return mainPrayerRows.map((prayer, index) => {
-    const startMinutes = getMainMinutes(prayer.salah) ?? getMainMinutes(prayer.athan) ?? 0;
+    const startMinutes = getMainMinutes(prayer.startTime) ?? getMainMinutes(prayer.salah) ?? getMainMinutes(prayer.athan) ?? 0;
     let endMinutes =
       index < mainPrayerRows.length - 1
-        ? getMainMinutes(mainPrayerRows[index + 1]?.salah) ?? getMainMinutes(mainPrayerRows[index + 1]?.athan)
-        : getMainMinutes(mainPrayerRows[0]?.salah) ?? getMainMinutes(mainPrayerRows[0]?.athan);
+        ? getMainMinutes(mainPrayerRows[index + 1]?.startTime) ?? getMainMinutes(mainPrayerRows[index + 1]?.salah) ?? getMainMinutes(mainPrayerRows[index + 1]?.athan)
+        : getMainMinutes(mainPrayerRows[0]?.startTime) ?? getMainMinutes(mainPrayerRows[0]?.salah) ?? getMainMinutes(mainPrayerRows[0]?.athan);
 
     if (endMinutes === null) {
       endMinutes = 24 * 60;
@@ -211,6 +211,7 @@ function buildMainActivityEntries() {
       displayTime: entry.salah,
       athan: entry.athan,
       salah: entry.salah,
+      startTime: entry.startTime,
       adhanMinutes: getMainMinutes(entry.athan),
       startMinutes,
       endMinutes,
@@ -342,6 +343,7 @@ async function loadMainPrayer() {
       label: prayer.label,
       athan: data?.[prayer.athanKey] ?? "--:--",
       salah: data?.[prayer.salahKey] ?? "--:--",
+      startTime: data?.[prayer.startKey] ?? data?.[prayer.salahKey] ?? "--:--",
       endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
     }));
     mainSpecialMoments = {
@@ -393,7 +395,7 @@ async function loadMainAyah() {
       mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
     if (mainAyahCardShell) {
-      const isLongAyah = currentAyahOfDay.arabic.length > 170 || currentAyahOfDay.english.length > 220;
+      const isLongAyah = currentAyahOfDay.arabic.length > 120 || currentAyahOfDay.english.length > 150;
       mainAyahCardShell.dataset.cardVariant = isLongAyah ? "tall" : "default";
     }
     fitAyahCardText();
