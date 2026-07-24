@@ -292,7 +292,8 @@ function renderMainPrayer() {
 async function loadMainPrayer() {
   try {
     const response = await fetch(mainPrayerApiUrl, { cache: "no-store" });
-    const data = await response.json();
+    const payload = await response.json();
+    const data = payload?.data ?? {};
 
     mainPrayerRows = mainPrayers.map((prayer) => ({
       label: prayer.label,
