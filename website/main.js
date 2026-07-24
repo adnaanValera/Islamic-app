@@ -165,6 +165,10 @@ async function enableMainNotifications() {
   }
 }
 
+if ("Notification" in window && Notification.permission === "granted") {
+  enableMainNotifications().catch(() => undefined);
+}
+
 function updateMainNotificationButton() {
   if (!mainNotificationButton || !("Notification" in window)) {
     return;
