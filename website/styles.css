@@ -4313,10 +4313,10 @@ h3 {
   margin: 0;
   color: var(--text);
   width: 88%;
-  max-height: 24%;
+  max-height: 26%;
   overflow: hidden;
-  font-size: clamp(0.72rem, 0.98vw, 0.88rem);
-  line-height: 1.42;
+  font-size: clamp(0.7rem, 0.94vw, 0.84rem);
+  line-height: 1.38;
   text-align: center;
   text-wrap: balance;
 }
@@ -4483,7 +4483,7 @@ h3 {
 
   .main-ayah-english {
     width: 90%;
-    max-height: 24%;
+    max-height: 26%;
     line-height: 1.6;
   }
 
@@ -4504,4 +4504,5 @@ h3 {
     padding: 18px 16px;
   }
 }
+
 

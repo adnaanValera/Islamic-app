@@ -195,6 +195,9 @@ function buildMainActivityEntries() {
     return {
       label: entry.label,
       time: entry.salah,
+      displayTime: entry.salah,
+      athan: entry.athan,
+      salah: entry.salah,
       startMinutes,
       endMinutes,
       kind: "prayer",
@@ -207,13 +210,13 @@ function buildMainActivityEntries() {
   const zawaalEnd = getMainMinutes(mainSpecialMoments.zawaalEnd);
 
   if (sunrise !== null) {
-    activities.push({ label: "Sunrise", time: mainSpecialMoments.sunrise, startMinutes: sunrise, endMinutes: sunrise + 20, kind: "special" });
+    activities.push({ label: "Sunrise", time: mainSpecialMoments.sunrise, displayTime: mainSpecialMoments.sunrise, startMinutes: sunrise, endMinutes: sunrise + 20, kind: "special" });
   }
   if (istiwa !== null && zawaalEnd !== null && zawaalEnd > istiwa) {
-    activities.push({ label: "Zawwal", time: mainSpecialMoments.istiwa, startMinutes: istiwa, endMinutes: zawaalEnd, kind: "special" });
+    activities.push({ label: "Zawwal", time: mainSpecialMoments.istiwa, displayTime: mainSpecialMoments.istiwa, startMinutes: istiwa, endMinutes: zawaalEnd, kind: "special" });
   }
   if (sunset !== null) {
-    activities.push({ label: "Sunset", time: mainSpecialMoments.sunset, startMinutes: sunset, endMinutes: sunset + 20, kind: "special" });
+    activities.push({ label: "Sunset", time: mainSpecialMoments.sunset, displayTime: mainSpecialMoments.sunset, startMinutes: sunset, endMinutes: sunset + 20, kind: "special" });
   }
 
   return activities.sort((a, b) => a.startMinutes - b.startMinutes);
@@ -258,14 +261,22 @@ function renderMainPrayer() {
   }
 
   if (mainPrayerTime) {
-    mainPrayerTime.textContent = currentPrayer?.time ?? nextPrayer?.time ?? "--:--";
+    if (currentPrayer?.kind === "prayer") {
+      mainPrayerTime.textContent = `Salah ${currentPrayer.displayTime ?? "--:--"}`;
+    } else if (currentPrayer) {
+      mainPrayerTime.textContent = currentPrayer.displayTime ?? "--:--";
+    } else {
+      mainPrayerTime.textContent = nextPrayer?.kind === "prayer"
+        ? `Salah ${nextPrayer?.displayTime ?? "--:--"}`
+        : nextPrayer?.displayTime ?? "--:--";
+    }
   }
 
   if (mainNextSalah) {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Next: ${nextPrayer?.label ?? "--"} • ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`
-      : `Starts ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Next: ${nextPrayer?.label ?? "--"} - ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`
+      : `Starts ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -662,6 +673,8 @@ loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+
+
 
 
 
