@@ -1,4 +1,4 @@
-const STATIC_CACHE = "nooriva-static-v23";
+const STATIC_CACHE = "nooriva-static-v24";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -27,6 +27,7 @@ const CORE_ASSETS = [
   "/assets/nooriva-app-icon.png",
   "/assets/nooriva-logo-transparent.png",
   "/assets/ayah-card-template.jpeg",
+  "/assets/ayah-card-template-tall.png",
 ];
 
 self.addEventListener("install", (event) => {

@@ -24,6 +24,7 @@ const contactStatus = document.getElementById("contact-status");
 const mainTasbeehButton = document.getElementById("main-tasbeeh-button");
 const mainTasbeehCount = document.getElementById("main-tasbeeh-count");
 const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
+const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", label: "Fajr", endKey: "sunrise" },
@@ -289,8 +290,8 @@ function renderMainPrayer() {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     const minutesUntilAdhan = nextAdhanMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Adhan: ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${Math.max(minutesUntilAdhan, 0)} min`
-      : `Next: ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Adhan ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${Math.max(minutesUntilAdhan, 0)} min`
+      : `Next ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -364,6 +365,10 @@ async function loadMainAyah() {
     if (mainAyahReference) {
       mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
+    if (mainAyahCardShell) {
+      const isLongAyah = currentAyahOfDay.arabic.length > 170 || currentAyahOfDay.english.length > 220;
+      mainAyahCardShell.dataset.cardVariant = isLongAyah ? "tall" : "default";
+    }
     fitAyahCardText();
   } catch {
     if (mainAyahEnglish) mainAyahEnglish.textContent = "Ayah unavailable right now.";
@@ -391,19 +396,24 @@ function fitAyahCardText() {
   const arabicLength = String(currentAyahOfDay?.arabic || "").length;
   const englishLength = String(currentAyahOfDay?.english || "").length;
 
-  const arabicMax = arabicLength < 70 ? 32 : arabicLength < 120 ? 29 : 26;
-  const englishMax = englishLength < 90 ? 16 : englishLength < 150 ? 14 : 12.5;
+  const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
+  const arabicMax = tallVariant
+    ? arabicLength < 120 ? 33 : 29
+    : arabicLength < 70 ? 32 : arabicLength < 120 ? 29 : 26;
+  const englishMax = tallVariant
+    ? englishLength < 140 ? 15 : 13.5
+    : englishLength < 90 ? 16 : englishLength < 150 ? 14 : 12.5;
 
-  fitElementText(mainAyahArabic, { min: 16, max: arabicMax, step: 1, lineHeight: 1.6 });
-  fitElementText(mainAyahEnglish, { min: 10, max: englishMax, step: 0.5, lineHeight: 1.42 });
+  fitElementText(mainAyahArabic, { min: tallVariant ? 17 : 16, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.56 : 1.6 });
+  fitElementText(mainAyahEnglish, { min: 10, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.36 : 1.42 });
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
   const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = window.innerWidth <= 480 ? 18 : 26;
+  const gap = tallVariant ? (window.innerWidth <= 480 ? 14 : 20) : (window.innerWidth <= 480 ? 18 : 26);
   const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
   const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
-  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (window.innerWidth <= 480 ? 12 : 18), 0);
+  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 8 : (window.innerWidth <= 480 ? 12 : 18)), 0);
 
   if (mainAyahReference?.parentElement) {
     mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
@@ -467,6 +477,7 @@ function downloadAyahCard() {
     return;
   }
 
+  const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
   const image = new Image();
   image.onload = () => {
     const canvas = document.createElement("canvas");
@@ -482,26 +493,26 @@ function downloadAyahCard() {
     context.textAlign = "center";
     context.fillStyle = "#13221c";
 
-    const frameLeft = canvas.width * 0.112;
-    const frameTop = canvas.height * 0.245;
-    const frameWidth = canvas.width * 0.776;
-    const frameHeight = canvas.height * 0.596;
+    const frameLeft = tallVariant ? canvas.width * 0.12 : canvas.width * 0.112;
+    const frameTop = tallVariant ? canvas.height * 0.205 : canvas.height * 0.245;
+    const frameWidth = tallVariant ? canvas.width * 0.76 : canvas.width * 0.776;
+    const frameHeight = tallVariant ? canvas.height * 0.67 : canvas.height * 0.596;
     const centerX = frameLeft + frameWidth / 2;
     const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
-      maxFontSize: currentAyahOfDay.arabic.length < 90 ? 72 : 64,
-      minFontSize: 30,
+      maxFontSize: tallVariant ? 58 : currentAyahOfDay.arabic.length < 90 ? 72 : 64,
+      minFontSize: tallVariant ? 26 : 30,
       width: frameWidth * 0.9,
-      maxHeight: frameHeight * 0.48,
-      lineHeightRatio: 1.38,
+      maxHeight: frameHeight * (tallVariant ? 0.42 : 0.48),
+      lineHeightRatio: tallVariant ? 1.3 : 1.38,
       weight: "600",
       family: "'Noto Naskh Arabic', serif",
     });
     const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
-      maxFontSize: currentAyahOfDay.english.length < 110 ? 32 : 28,
-      minFontSize: 17,
+      maxFontSize: tallVariant ? 26 : currentAyahOfDay.english.length < 110 ? 32 : 28,
+      minFontSize: tallVariant ? 15 : 17,
       width: frameWidth * 0.78,
-      maxHeight: frameHeight * 0.18,
-      lineHeightRatio: 1.5,
+      maxHeight: frameHeight * (tallVariant ? 0.24 : 0.18),
+      lineHeightRatio: tallVariant ? 1.38 : 1.5,
       weight: "500",
       family: "Manrope, sans-serif",
     });
@@ -545,7 +556,7 @@ function downloadAyahCard() {
     }, "image/png");
   };
 
-  image.src = "./assets/ayah-card-template.jpeg";
+  image.src = tallVariant ? "./assets/ayah-card-template-tall.png" : "./assets/ayah-card-template.jpeg";
 }
 
 function getMainTasbeehState() {

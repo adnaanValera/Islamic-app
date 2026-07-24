@@ -2055,7 +2055,7 @@ h3 {
 
   .mobile-bottom-nav-links {
     display: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     padding-top: 8px;
     max-height: calc(100vh - 180px);
@@ -4191,6 +4191,11 @@ h3 {
   align-content: start;
 }
 
+.main-prayer-detail-grid {
+  display: grid;
+  gap: 6px;
+}
+
 .main-prayer-banner .next-prayer-progress-fill {
   transition: width 420ms ease, background 220ms ease;
 }
@@ -4281,6 +4286,13 @@ h3 {
   transition: transform 260ms ease, box-shadow 260ms ease;
 }
 
+.main-ayah-card-shell[data-card-variant="tall"] .main-ayah-card-art {
+  aspect-ratio: 4 / 6;
+  background:
+    linear-gradient(rgba(255, 251, 245, 0.08), rgba(255, 251, 245, 0.08)),
+    url("./assets/ayah-card-template-tall.png") center/cover no-repeat;
+}
+
 .main-card-ayah:hover .main-ayah-card-art,
 .main-card-ayah:focus-within .main-ayah-card-art {
   transform: translateY(-2px) scale(1.01);
@@ -4319,6 +4331,19 @@ h3 {
   line-height: 1.38;
   text-align: center;
   text-wrap: balance;
+}
+
+.main-ayah-card-shell[data-card-variant="tall"] .main-ayah-card-inner {
+  inset: 22% 12% 13% 12%;
+  gap: 10px;
+}
+
+.main-ayah-card-shell[data-card-variant="tall"] .main-ayah-arabic {
+  max-height: 42%;
+}
+
+.main-ayah-card-shell[data-card-variant="tall"] .main-ayah-english {
+  max-height: 28%;
 }
 
 .main-ayah-reference {
