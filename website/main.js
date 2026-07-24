@@ -78,6 +78,18 @@ function getMainMinutes(value) {
   return hours * 60 + minutes;
 }
 
+function formatHoursAndMinutes(totalMinutes) {
+  const safeMinutes = Math.max(totalMinutes, 0);
+  const hours = Math.floor(safeMinutes / 60);
+  const minutes = safeMinutes % 60;
+
+  if (hours <= 0) {
+    return `${minutes} min`;
+  }
+
+  return `${hours}h ${minutes}m`;
+}
+
 function getMainPrayerWindows() {
   return mainPrayerRows.map((prayer, index) => {
     const startMinutes = getMainMinutes(prayer.salah) ?? getMainMinutes(prayer.athan) ?? 0;
@@ -265,6 +277,12 @@ function renderMainPrayer() {
       }))
       .sort((a, b) => a.effectiveAthan - b.effectiveAthan)[0] ?? null;
   const nextAdhanMinutes = nextAdhan?.effectiveAthan ?? currentMinutes;
+  const currentAdhanMinutes =
+    currentPrayer?.kind === "prayer" && currentPrayer?.adhanMinutes !== null && currentPrayer?.adhanMinutes !== undefined
+      ? (currentPrayer.adhanMinutes > currentMinutes
+          ? currentPrayer.adhanMinutes
+          : currentPrayer.adhanMinutes + 24 * 60)
+      : null;
 
   if (mainPrayerLabel) {
     mainPrayerLabel.textContent = currentPrayer ? "Active now" : "Next";
@@ -290,12 +308,18 @@ function renderMainPrayer() {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     const minutesUntilAdhan = nextAdhanMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Adhan ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${Math.max(minutesUntilAdhan, 0)} min`
-      : `Next ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Adhan ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${formatHoursAndMinutes(minutesUntilAdhan)}`
+      : `Next ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${formatHoursAndMinutes(minutesUntilNextSalah)}`;
   }
 
   if (mainPrayerProgress) {
-    if (currentPrayer) {
+    if (currentPrayer?.kind === "prayer" && currentAdhanMinutes) {
+      const adhanWait = Math.max(currentAdhanMinutes - currentMinutes, 0);
+      const totalAdhanWindow = Math.max(currentAdhanMinutes - currentPrayer.startMinutes, 1);
+      const elapsedToAdhan = Math.min(Math.max(currentMinutes - currentPrayer.startMinutes, 0), totalAdhanWindow);
+      const progress = adhanWait <= 0 ? 100 : Math.max(8, Math.min((elapsedToAdhan / totalAdhanWindow) * 100, 100));
+      mainPrayerProgress.style.width = `${progress}%`;
+    } else if (currentPrayer) {
       const windowLength = Math.max(currentPrayer.endMinutes - currentPrayer.startMinutes, 1);
       const elapsed = Math.min(Math.max(currentMinutes - currentPrayer.startMinutes, 0), windowLength);
       mainPrayerProgress.style.width = `${Math.max(8, Math.min((elapsed / windowLength) * 100, 100))}%`;
@@ -303,6 +327,9 @@ function renderMainPrayer() {
       mainPrayerProgress.style.width = "0%";
     }
   }
+
+  const prayerBanner = document.querySelector(".main-prayer-banner");
+  prayerBanner?.classList.toggle("is-active", Boolean(currentPrayer));
 }
 
 async function loadMainPrayer() {

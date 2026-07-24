@@ -4189,6 +4189,9 @@ h3 {
   min-height: 100%;
   gap: 8px;
   align-content: start;
+  padding: 4px 2px 2px;
+  border-radius: 20px;
+  transition: box-shadow 220ms ease, background 220ms ease;
 }
 
 .main-prayer-detail-grid {
@@ -4196,8 +4199,18 @@ h3 {
   gap: 6px;
 }
 
+.main-prayer-banner.is-active {
+  background: radial-gradient(circle at top, rgba(212, 180, 118, 0.18), rgba(255, 255, 255, 0));
+  box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.08), 0 0 22px rgba(197, 150, 78, 0.12);
+  animation: mainPrayerPulse 2.8s ease-in-out infinite;
+}
+
 .main-prayer-banner .next-prayer-progress-fill {
   transition: width 420ms ease, background 220ms ease;
+}
+
+.main-prayer-progress-wrap {
+  margin-top: 4px;
 }
 
 .main-prayer-meta {
@@ -4210,6 +4223,17 @@ h3 {
   color: var(--muted);
   font-size: 0.8rem;
   line-height: 1.45;
+}
+
+@keyframes mainPrayerPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.08), 0 0 18px rgba(197, 150, 78, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.12), 0 0 28px rgba(197, 150, 78, 0.18);
+  }
 }
 
 .main-qibla-mini {
