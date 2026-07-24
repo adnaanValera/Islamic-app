@@ -219,32 +219,7 @@ function buildMainActivityEntries() {
   return activities.sort((a, b) => a.startMinutes - b.startMinutes);
 }
 
-function expandMainActivitiesForNow(activities, currentMinutes) {
-  const expanded = [];
 
-  for (const entry of activities) {
-    expanded.push({ ...entry });
-    expanded.push({
-      ...entry,
-      startMinutes: entry.startMinutes + 24 * 60,
-      endMinutes: entry.endMinutes + 24 * 60,
-    });
-  }
-
-  if (currentMinutes < 360) {
-    return expanded.map((entry) =>
-      entry.startMinutes >= 24 * 60
-        ? {
-            ...entry,
-            startMinutes: entry.startMinutes - 24 * 60,
-            endMinutes: entry.endMinutes - 24 * 60,
-          }
-        : entry,
-    );
-  }
-
-  return expanded;
-}
 
 function renderMainPrayer() {
   if (!mainPrayerRows.length) return;
@@ -252,12 +227,27 @@ function renderMainPrayer() {
   const windows = buildMainActivityEntries();
   const { timeKey } = getMainMalawiParts();
   const currentMinutes = getMainMinutes(timeKey) ?? 0;
-  const expandedWindows = expandMainActivitiesForNow(windows, currentMinutes);
 
   const currentPrayer =
-    expandedWindows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
-  const nextPrayer = expandedWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? null;
-  const nextPrayerMinutes = nextPrayer?.startMinutes ?? currentMinutes;
+    windows.find((prayer) => {
+      const wrapsMidnight = prayer.endMinutes > 24 * 60;
+
+      if (wrapsMidnight) {
+        return currentMinutes >= prayer.startMinutes || currentMinutes < prayer.endMinutes - 24 * 60;
+      }
+
+      return currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes;
+    }) ?? null;
+
+  const nextPrayer =
+    windows
+      .map((prayer) => ({
+        ...prayer,
+        effectiveStart: prayer.startMinutes > currentMinutes ? prayer.startMinutes : prayer.startMinutes + 24 * 60,
+      }))
+      .sort((a, b) => a.effectiveStart - b.effectiveStart)[0] ?? null;
+
+  const nextPrayerMinutes = nextPrayer?.effectiveStart ?? currentMinutes;
 
   if (mainPrayerLabel) {
     mainPrayerLabel.textContent = currentPrayer ? "Active now" : "Next";
@@ -274,8 +264,8 @@ function renderMainPrayer() {
   if (mainNextSalah) {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Next: ${nextPrayer?.label ?? "--"} â€¢ ${nextPrayer?.time ?? "--:--"} â€¢ ${Math.max(minutesUntilNextSalah, 0)} min`
-      : `Starts ${nextPrayer?.time ?? "--:--"} â€¢ ${Math.max(minutesUntilNextSalah, 0)} min`;
+      ? `Next: ${nextPrayer?.label ?? "--"} • ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`
+      : `Starts ${nextPrayer?.time ?? "--:--"} • ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -672,5 +662,6 @@ loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+
 
 
