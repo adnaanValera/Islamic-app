@@ -15,6 +15,24 @@ const mainAyahArabic = document.getElementById("main-ayah-arabic");
 const mainAyahEnglish = document.getElementById("main-ayah-english");
 const mainAyahReference = document.getElementById("main-ayah-reference");
 const mainAyahDownload = document.getElementById("main-ayah-download");
+const mainGreeting = document.getElementById("main-greeting");
+const mainNotificationButton = document.getElementById("main-enable-notifications");
+const mainAuthGate = document.getElementById("main-auth-gate");
+const mainAuthStatus = document.getElementById("main-auth-status");
+const mainShowSignin = document.getElementById("main-show-signin");
+const mainShowRegister = document.getElementById("main-show-register");
+const mainSigninCard = document.getElementById("main-signin-card");
+const mainRegisterCard = document.getElementById("main-register-card");
+const mainSigninFullName = document.getElementById("main-signin-full-name");
+const mainSigninPassword = document.getElementById("main-signin-password");
+const mainRegisterFullName = document.getElementById("main-register-full-name");
+const mainRegisterPassword = document.getElementById("main-register-password");
+const mainSigninButton = document.getElementById("main-signin");
+const mainRegisterButton = document.getElementById("main-register");
+const contactForm = document.getElementById("contact-form");
+const contactName = document.getElementById("contact-name");
+const contactMessage = document.getElementById("contact-message");
+const contactStatus = document.getElementById("contact-status");
 const mainTasbeehButton = document.getElementById("main-tasbeeh-button");
 const mainTasbeehCount = document.getElementById("main-tasbeeh-count");
 const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
@@ -26,11 +44,20 @@ const mainPrayers = [
   { athanKey: "maghribAthan", salahKey: "maghribJamaah", label: "Maghrib", endKey: "eshaStarts" },
   { athanKey: "eshaAthan", salahKey: "eshaJamaah", label: "Esha", endKey: null },
 ];
+const accountSessionStorageKey = "nooriva-account-session";
+const pushPublicKeyApiUrl = "/api/push-public-key";
+const pushSubscribeApiUrl = "/api/push-subscribe";
+const registerUrl = "/api/account-register";
+const signinUrl = "/api/account-signin";
+const contactSubmitUrl = "/api/contact-submit";
 
 let mainPrayerRows = [];
 let mainHeading = null;
 let mainBearing = null;
 let currentAyahOfDay = null;
+let mainSession = loadMainSession();
+let mainPushPublicKey = "";
+let mainSpecialMoments = {};
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -73,7 +100,7 @@ function getMainPrayerWindows() {
       endMinutes =
         index < mainPrayerRows.length - 1
           ? getMainMinutes(mainPrayerRows[index + 1].athan) ?? 24 * 60
-          : 24 * 60;
+          : getMainMinutes(mainPrayerRows[0]?.athan) ?? 24 * 60;
     }
 
     return {
@@ -84,12 +111,157 @@ function getMainPrayerWindows() {
   });
 }
 
+function loadMainSession() {
+  try {
+    return JSON.parse(localStorage.getItem(accountSessionStorageKey) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function saveMainSession(session) {
+  localStorage.setItem(accountSessionStorageKey, JSON.stringify(session));
+  mainSession = session;
+}
+
+function showMainAuthView(mode) {
+  const signinMode = mode === "signin";
+  mainSigninCard?.classList.toggle("is-hidden", !signinMode);
+  mainRegisterCard?.classList.toggle("is-hidden", signinMode);
+  mainShowSignin?.classList.toggle("is-active", signinMode);
+  mainShowRegister?.classList.toggle("is-active", !signinMode);
+}
+
+function renderMainGreeting() {
+  const name = mainSession?.user?.fullName?.trim();
+  if (mainGreeting) {
+    mainGreeting.textContent = name ? `السلام عليكم ${name}` : "السلام عليكم";
+  }
+  if (mainAuthGate) {
+    mainAuthGate.classList.toggle("is-hidden", Boolean(name));
+  }
+}
+
+async function submitMainAuth(url, fullName, password) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fullName, password }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload?.error || "Request failed.");
+  }
+  saveMainSession({ token: payload.token, user: payload.user });
+  renderMainGreeting();
+}
+
+function base64UrlToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = window.atob(base64);
+  const output = new Uint8Array(raw.length);
+  for (let index = 0; index < raw.length; index += 1) {
+    output[index] = raw.charCodeAt(index);
+  }
+  return output;
+}
+
+async function loadMainPushPublicKey() {
+  try {
+    const response = await fetch(pushPublicKeyApiUrl, { cache: "no-store" });
+    const payload = await response.json();
+    mainPushPublicKey = payload?.publicKey ?? "";
+  } catch {
+    mainPushPublicKey = "";
+  }
+}
+
+async function enableMainNotifications() {
+  if (!("Notification" in window)) return;
+  await window.noorivaInstall?.registerServiceWorker?.();
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") return;
+  await loadMainPushPublicKey();
+  const registration = await navigator.serviceWorker.ready.catch(() => null);
+  if (!registration || !mainPushPublicKey) return;
+  let subscription = await registration.pushManager.getSubscription();
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: base64UrlToUint8Array(mainPushPublicKey),
+    });
+  }
+  await fetch(pushSubscribeApiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subscription }),
+  }).catch(() => undefined);
+  if (mainNotificationButton) {
+    mainNotificationButton.style.display = "none";
+  }
+}
+
+function updateMainNotificationButton() {
+  if (!mainNotificationButton || !("Notification" in window)) {
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    mainNotificationButton.style.display = "none";
+  } else if (Notification.permission === "denied") {
+    mainNotificationButton.textContent = "Notifications blocked";
+    mainNotificationButton.disabled = true;
+  }
+}
+
+function buildMainActivityEntries() {
+  const windows = getMainPrayerWindows();
+  const activities = windows.map((entry) => {
+    let startMinutes = entry.startMinutes;
+    let endMinutes = entry.endMinutes;
+
+    if (endMinutes !== null && endMinutes <= startMinutes) {
+      endMinutes += 24 * 60;
+    }
+
+    return {
+      label: entry.label,
+      time: entry.salah,
+      startMinutes,
+      endMinutes,
+      kind: "prayer",
+    };
+  });
+
+  const sunrise = getMainMinutes(mainSpecialMoments.sunrise);
+  const sunset = getMainMinutes(mainSpecialMoments.sunset);
+  const istiwa = getMainMinutes(mainSpecialMoments.istiwa);
+  const zawaalEnd = getMainMinutes(mainSpecialMoments.zawaalEnd);
+
+  if (sunrise !== null) {
+    activities.push({ label: "Sunrise", time: mainSpecialMoments.sunrise, startMinutes: sunrise, endMinutes: sunrise + 20, kind: "special" });
+  }
+  if (istiwa !== null && zawaalEnd !== null && zawaalEnd > istiwa) {
+    activities.push({ label: "Zawwal", time: mainSpecialMoments.istiwa, startMinutes: istiwa, endMinutes: zawaalEnd, kind: "special" });
+  }
+  if (sunset !== null) {
+    activities.push({ label: "Sunset", time: mainSpecialMoments.sunset, startMinutes: sunset, endMinutes: sunset + 20, kind: "special" });
+  }
+
+  return activities.sort((a, b) => a.startMinutes - b.startMinutes);
+}
+
 function renderMainPrayer() {
   if (!mainPrayerRows.length) return;
 
-  const windows = getMainPrayerWindows();
+  const windows = buildMainActivityEntries();
   const { timeKey } = getMainMalawiParts();
-  const currentMinutes = getMainMinutes(timeKey) ?? 0;
+  const baseMinutes = getMainMinutes(timeKey) ?? 0;
+  const currentMinutes =
+    windows.some((entry) => entry.endMinutes > 24 * 60 && baseMinutes < (entry.endMinutes % (24 * 60)))
+      ? baseMinutes + 24 * 60
+      : baseMinutes;
 
   const currentPrayer =
     windows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
@@ -109,7 +281,7 @@ function renderMainPrayer() {
   }
 
   if (mainPrayerTime) {
-    mainPrayerTime.textContent = currentPrayer?.salah ?? nextPrayer?.salah ?? "--:--";
+    mainPrayerTime.textContent = currentPrayer?.time ?? nextPrayer?.time ?? "--:--";
   }
 
   if (mainNextSalah) {
@@ -139,6 +311,12 @@ async function loadMainPrayer() {
       salah: data?.[prayer.salahKey] ?? "--:--",
       endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
     }));
+    mainSpecialMoments = {
+      sunrise: data?.sunrise ?? "--:--",
+      sunset: data?.sunset ?? "--:--",
+      istiwa: data?.istiwa ?? "--:--",
+      zawaalEnd: data?.zawaalEnd ?? "--:--",
+    };
 
     renderMainPrayer();
     window.setInterval(renderMainPrayer, 60000);
@@ -217,7 +395,7 @@ function fitAyahCardText() {
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
   const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = 16 * 2;
+  const gap = window.innerWidth <= 480 ? 24 : 32;
   const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
   const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
   const topOffset = Math.max((frameHeight - contentHeight) / 2, 0);
@@ -299,40 +477,67 @@ function downloadAyahCard() {
     context.textAlign = "center";
     context.fillStyle = "#13221c";
 
+    const frameLeft = canvas.width * 0.112;
+    const frameTop = canvas.height * 0.245;
+    const frameWidth = canvas.width * 0.776;
+    const frameHeight = canvas.height * 0.596;
+    const centerX = frameLeft + frameWidth / 2;
     const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
-      maxFontSize: 66,
-      minFontSize: 34,
-      width: 780,
-      maxHeight: 250,
-      lineHeightRatio: 1.42,
+      maxFontSize: currentAyahOfDay.arabic.length < 90 ? 72 : 64,
+      minFontSize: 30,
+      width: frameWidth * 0.9,
+      maxHeight: frameHeight * 0.48,
+      lineHeightRatio: 1.38,
       weight: "600",
       family: "'Noto Naskh Arabic', serif",
     });
-    context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
-    drawCenteredLines(context, arabicLayout.lines, canvas.width / 2, 370, arabicLayout.lineHeight);
-
-    context.fillStyle = "#2b352f";
     const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
-      maxFontSize: 30,
-      minFontSize: 20,
-      width: 670,
-      maxHeight: 120,
-      lineHeightRatio: 1.48,
+      maxFontSize: currentAyahOfDay.english.length < 110 ? 32 : 28,
+      minFontSize: 17,
+      width: frameWidth * 0.78,
+      maxHeight: frameHeight * 0.18,
+      lineHeightRatio: 1.5,
       weight: "500",
       family: "Manrope, sans-serif",
     });
+    const referenceHeight = 34;
+    const totalHeight = arabicLayout.totalHeight + 34 + englishLayout.totalHeight + 26 + referenceHeight;
+    const startY = frameTop + Math.max((frameHeight - totalHeight) / 2, 20);
+
+    context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
+    drawCenteredLines(context, arabicLayout.lines, centerX, startY, arabicLayout.lineHeight);
+
+    context.fillStyle = "#2b352f";
     context.font = `500 ${englishLayout.size}px Manrope, sans-serif`;
-    drawCenteredLines(context, englishLayout.lines, canvas.width / 2, 660, englishLayout.lineHeight);
+    drawCenteredLines(
+      context,
+      englishLayout.lines,
+      centerX,
+      startY + arabicLayout.totalHeight + 34,
+      englishLayout.lineHeight,
+    );
 
     context.font = "700 23px Manrope, sans-serif";
     context.fillStyle = "#8e7440";
-    context.fillText(`${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`, canvas.width / 2, 878);
+    context.fillText(
+      `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`,
+      centerX,
+      startY + arabicLayout.totalHeight + 34 + englishLayout.totalHeight + 26,
+    );
 
     const link = document.createElement("a");
     const fileName = `${sanitizeFileNamePart(currentAyahOfDay.surahName)}-${sanitizeFileNamePart(currentAyahOfDay.ayahInSurah)}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.download = fileName;
-    link.click();
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        return;
+      }
+
+      const objectUrl = URL.createObjectURL(blob);
+      link.href = objectUrl;
+      link.download = fileName;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    }, "image/png");
   };
 
   image.src = "./assets/ayah-card-template.jpeg";
@@ -449,8 +654,50 @@ function loadMainQibla() {
 
 mainAyahDownload?.addEventListener("click", downloadAyahCard);
 window.addEventListener("resize", fitAyahCardText);
+mainNotificationButton?.addEventListener("click", enableMainNotifications);
+mainShowSignin?.addEventListener("click", () => showMainAuthView("signin"));
+mainShowRegister?.addEventListener("click", () => showMainAuthView("register"));
+mainSigninButton?.addEventListener("click", async () => {
+  try {
+    await submitMainAuth(signinUrl, mainSigninFullName?.value, mainSigninPassword?.value);
+    if (mainAuthStatus) mainAuthStatus.textContent = "Signed in.";
+  } catch (error) {
+    if (mainAuthStatus) mainAuthStatus.textContent = error.message;
+  }
+});
+mainRegisterButton?.addEventListener("click", async () => {
+  try {
+    await submitMainAuth(registerUrl, mainRegisterFullName?.value, mainRegisterPassword?.value);
+    if (mainAuthStatus) mainAuthStatus.textContent = "Account created.";
+  } catch (error) {
+    if (mainAuthStatus) mainAuthStatus.textContent = error.message;
+  }
+});
+contactForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch(contactSubmitUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: contactName?.value, message: contactMessage?.value }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload?.error || "Message failed.");
+    }
+    if (contactStatus) contactStatus.textContent = "Message sent.";
+    if (contactName) contactName.value = "";
+    if (contactMessage) contactMessage.value = "";
+  } catch (error) {
+    if (contactStatus) contactStatus.textContent = error.message;
+  }
+});
 
+showMainAuthView("signin");
+renderMainGreeting();
+updateMainNotificationButton();
 loadMainPrayer();
 loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
+loadMainPushPublicKey();

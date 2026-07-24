@@ -46,10 +46,13 @@
         <section class="hero-section hero-section-simple hero-section-clean main-hero-section">
           <div class="hero-copy">
             <p class="eyebrow">Main</p>
-            <h1>Your daily Nooriva essentials.</h1>
+            <h1 id="main-greeting">&#x627;&#x644;&#x633;&#x644;&#x627;&#x645; &#x639;&#x644;&#x64A;&#x643;&#x645;</h1>
             <div class="hero-actions" id="home-install-actions">
               <button class="button button-primary" id="home-download-app" type="button">
                 Download app
+              </button>
+              <button class="button button-secondary" id="main-enable-notifications" type="button">
+                Allow notifications
               </button>
               <a class="button button-secondary" href="./prayer.html">Open prayer</a>
             </div>
@@ -57,11 +60,36 @@
           </div>
         </section>
 
+        <section class="main-auth-gate is-hidden" id="main-auth-gate">
+          <div class="prayer-table-card main-auth-card">
+            <p class="status-line" id="main-auth-status">Please log in or sign up.</p>
+            <div class="account-switch">
+              <button class="account-switch-button is-active" id="main-show-signin" type="button">Log in</button>
+              <button class="account-switch-button" id="main-show-register" type="button">Sign up</button>
+            </div>
+            <div class="account-form-stack">
+              <div class="account-form-card" id="main-signin-card">
+                <div class="account-fields">
+                  <input id="main-signin-full-name" class="quran-search-input" type="text" placeholder="Full name" autocomplete="name" />
+                  <input id="main-signin-password" class="quran-search-input" type="password" placeholder="Password" autocomplete="current-password" />
+                  <button class="button button-primary" id="main-signin" type="button">Log in</button>
+                </div>
+              </div>
+              <div class="account-form-card is-hidden" id="main-register-card">
+                <div class="account-fields">
+                  <input id="main-register-full-name" class="quran-search-input" type="text" placeholder="Full name" autocomplete="name" />
+                  <input id="main-register-password" class="quran-search-input" type="password" placeholder="Password" autocomplete="new-password" />
+                  <button class="button button-secondary" id="main-register" type="button">Sign up</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="main-dashboard-section">
           <div class="main-dashboard-grid">
             <a class="main-card main-card-prayer" href="./prayer.html">
               <div class="main-card-head">
-                <span>Main</span>
                 <strong>Prayer</strong>
               </div>
               <div class="next-prayer-banner main-prayer-banner">
@@ -77,7 +105,6 @@
 
             <a class="main-card main-card-qibla" href="./qibla.html">
               <div class="main-card-head">
-                <span>Main</span>
                 <strong>Qibla</strong>
               </div>
               <div class="main-qibla-mini">
@@ -97,7 +124,6 @@
             <section class="main-card main-card-ayah">
               <div class="main-card-head main-card-head-row">
                 <div>
-                  <span>Main</span>
                   <strong>Ayah of the day</strong>
                 </div>
                 <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Download ayah card">
@@ -117,7 +143,6 @@
 
             <section class="main-card main-card-tasbeeh">
               <div class="main-card-head">
-                <span>Main</span>
                 <strong>Tasbeeh</strong>
               </div>
               <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
@@ -135,10 +160,12 @@
               <p class="eyebrow">Contact us</p>
               <h2>Stay connected to Nooriva.</h2>
             </div>
-            <form class="cta-form">
-              <input type="email" placeholder="Enter your email" />
-              <button type="button" class="button button-primary">Contact us</button>
+            <form class="cta-form cta-form-message" id="contact-form">
+              <input id="contact-name" type="text" placeholder="Enter your name" />
+              <textarea id="contact-message" placeholder="Enter your message"></textarea>
+              <button type="submit" class="button button-primary">Send</button>
             </form>
+            <p class="install-status" id="contact-status"></p>
           </div>
         </section>
 

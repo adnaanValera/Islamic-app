@@ -48,12 +48,12 @@
                 <strong id="account-signed-in-name">Nooriva user</strong>
               </div>
 
-              <div class="account-switch">
+              <div class="account-switch" id="account-switch">
                 <button class="account-switch-button is-active" id="account-show-signin" type="button">Log in</button>
                 <button class="account-switch-button" id="account-show-register" type="button">Sign up</button>
               </div>
 
-              <div class="account-form-stack">
+              <div class="account-form-stack" id="account-form-stack">
                 <div class="account-form-card" id="account-signin-card">
                   <div class="account-fields">
                     <input id="signin-full-name" class="quran-search-input" type="text" placeholder="Full name" autocomplete="name" />
@@ -72,6 +72,27 @@
 
               <div class="tasbeeh-actions-grid">
                 <button class="button button-secondary" id="account-signout" type="button">Sign out</button>
+              </div>
+
+              <div class="admin-panel is-hidden" id="admin-panel">
+                <div class="section-heading">
+                  <div>
+                    <p class="eyebrow">Admin</p>
+                    <h2>Dashboard</h2>
+                  </div>
+                </div>
+                <div class="feature-grid settings-grid">
+                  <article class="feature-card feature-card-rich">
+                    <p>01</p>
+                    <h3>Users</h3>
+                    <div class="timings-list" id="admin-users-list"></div>
+                  </article>
+                  <article class="feature-card feature-card-rich">
+                    <p>02</p>
+                    <h3>Messages</h3>
+                    <div class="timings-list" id="admin-messages-list"></div>
+                  </article>
+                </div>
               </div>
             </div>
           </div>

@@ -17,7 +17,13 @@ const signinCard = document.getElementById("account-signin-card");
 const registerCard = document.getElementById("account-register-card");
 const signedInCard = document.getElementById("account-signed-in-card");
 const signedInName = document.getElementById("account-signed-in-name");
+const accountSwitch = document.getElementById("account-switch");
+const accountFormStack = document.getElementById("account-form-stack");
+const adminPanel = document.getElementById("admin-panel");
+const adminUsersList = document.getElementById("admin-users-list");
+const adminMessagesList = document.getElementById("admin-messages-list");
 const accountButtons = [registerButton, signinButton];
+const adminOverviewUrl = "/api/admin-overview";
 
 function loadSession() {
   try {
@@ -51,6 +57,7 @@ function setView(mode) {
 
 function renderSession() {
   const signedIn = Boolean(session?.user?.fullName);
+  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
 
   if (statusLine) {
     statusLine.textContent = signedIn
@@ -70,8 +77,16 @@ function renderSession() {
     signedInName.textContent = session?.user?.fullName ?? "Nooriva user";
   }
 
-  if (signinCard) {
-    signinCard.style.opacity = signedIn && !signinCard.classList.contains("is-hidden") ? "0.96" : "1";
+  if (accountSwitch) {
+    accountSwitch.style.display = signedIn ? "none" : "";
+  }
+
+  if (accountFormStack) {
+    accountFormStack.style.display = signedIn ? "none" : "";
+  }
+
+  if (adminPanel) {
+    adminPanel.classList.toggle("is-hidden", !(signedIn && isAdmin));
   }
 }
 
@@ -105,7 +120,56 @@ async function submitAuth(url, fullName, password) {
   };
   saveSession(session);
   renderSession();
+  loadAdminOverview();
   setButtonsDisabled(false);
+}
+
+async function loadAdminOverview() {
+  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
+  if (!isAdmin || !session?.token) {
+    return;
+  }
+
+  try {
+    const response = await fetch(adminOverviewUrl, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    if (!response.ok) {
+      return;
+    }
+
+    const payload = await response.json();
+
+    if (adminUsersList) {
+      adminUsersList.innerHTML = payload.users
+        .map(
+          (user) => `
+            <div class="timing-row">
+              <span>${user.fullName}</span>
+              <strong>${new Date(user.createdAt).toLocaleDateString("en-GB")}</strong>
+            </div>
+          `,
+        )
+        .join("");
+    }
+
+    if (adminMessagesList) {
+      adminMessagesList.innerHTML = payload.messages.length
+        ? payload.messages
+            .map(
+              (message) => `
+                <div class="timing-row">
+                  <span>${message.name}: ${message.message}</span>
+                  <strong>${new Date(message.createdAt).toLocaleDateString("en-GB")}</strong>
+                </div>
+              `,
+            )
+            .join("")
+        : `<div class="timing-row"><span>No messages yet</span><strong>—</strong></div>`;
+    }
+  } catch {}
 }
 
 registerButton?.addEventListener("click", async () => {
@@ -158,3 +222,4 @@ registerPassword?.addEventListener("keydown", async (event) => {
 
 setView("signin");
 renderSession();
+loadAdminOverview();

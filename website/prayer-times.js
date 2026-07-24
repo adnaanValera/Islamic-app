@@ -143,8 +143,12 @@ function getPrayerWindows() {
       if (index < latestPrayerTimes.length - 1) {
         endMinutes = getMinutesFromTimeString(latestPrayerTimes[index + 1].athan) ?? 24 * 60;
       } else {
-        endMinutes = 24 * 60;
+        endMinutes = getMinutesFromTimeString(latestPrayerTimes[0]?.athan) ?? 24 * 60;
       }
+    }
+
+    if (endMinutes <= startMinutes) {
+      endMinutes += 24 * 60;
     }
 
     return {
@@ -162,8 +166,12 @@ function renderPrayerTimes() {
 
   const { timeKey } = getMalawiDateParts();
   const checklist = getChecklistState();
-  const currentMinutes = getMinutesFromTimeString(timeKey) ?? 0;
+  const baseMinutes = getMinutesFromTimeString(timeKey) ?? 0;
   const prayerWindows = getPrayerWindows();
+  const currentMinutes =
+    prayerWindows.some((prayer) => prayer.endMinutes > 24 * 60 && baseMinutes < (prayer.endMinutes % (24 * 60)))
+      ? baseMinutes + 24 * 60
+      : baseMinutes;
 
   const currentPrayer =
     prayerWindows.find(
@@ -411,7 +419,7 @@ async function subscribeToBackendPush() {
 
 async function showPrayerNotification(prayer) {
   const title = `${prayer.label} time`;
-  const body = `It is now time for ${prayer.label} in Malawi.`;
+  const body = "The Messenger of Allah (ﷺ) said: ‘The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.’";
   const tag = `prayer-${prayer.label.toLowerCase()}`;
 
   if ("serviceWorker" in navigator) {

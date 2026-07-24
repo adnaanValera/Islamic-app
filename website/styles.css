@@ -1970,6 +1970,7 @@ h3 {
     background: linear-gradient(180deg, rgba(252, 248, 241, 0.96), rgba(245, 236, 223, 0.94));
     backdrop-filter: blur(16px);
     box-shadow: 0 18px 34px rgba(79, 66, 39, 0.12);
+    overflow: hidden;
   }
 
   .mobile-bottom-nav-toggle {
@@ -2054,6 +2055,8 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     padding-top: 4px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
   }
 
   .mobile-bottom-nav[data-expanded="true"] .mobile-bottom-nav-links {
@@ -2061,11 +2064,11 @@ h3 {
   }
 
   .mobile-bottom-nav a {
-    min-height: 42px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: 16px;
     color: var(--muted);
     font-size: 0.86rem;
     font-weight: 700;
@@ -4010,12 +4013,22 @@ h3 {
 }
 
 .main-hero-section {
-  padding-bottom: 10px;
+  padding-bottom: 6px;
 }
 
 .main-dashboard-section {
   display: grid;
-  gap: 18px;
+  gap: 14px;
+}
+
+.main-auth-gate {
+  display: grid;
+}
+
+.main-auth-card {
+  padding: 18px;
+  display: grid;
+  gap: 14px;
 }
 
 .main-dashboard-grid {
@@ -4026,8 +4039,8 @@ h3 {
 
 .main-card {
   display: grid;
-  gap: 14px;
-  padding: 16px;
+  gap: 12px;
+  padding: 14px;
   border-radius: 26px;
   border: 1px solid rgba(191, 149, 77, 0.14);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(250, 244, 236, 0.95));
@@ -4041,9 +4054,19 @@ h3 {
   gap: 2px;
 }
 
+.main-card-head > strong {
+  line-height: 1.2;
+}
+
 .main-card-head-row {
   grid-template-columns: 1fr auto;
   align-items: start;
+}
+
+.admin-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 10px;
 }
 
 .main-card-head span {
@@ -4190,6 +4213,16 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.cta-form-message {
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr) auto;
+}
+
+.cta-form-message textarea {
+  min-height: 48px;
+  max-height: 120px;
+  resize: vertical;
+}
+
 .main-tasbeeh-button {
   position: relative;
   display: grid;
@@ -4247,12 +4280,24 @@ h3 {
     width: 120px;
     height: 120px;
   }
+
+  .cta-form-message {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
+  .main-hero-section {
+    padding-top: 8px;
+  }
+
+  .main-dashboard-section {
+    padding-top: 4px;
+  }
+
   .main-card {
-    padding: 14px;
-    border-radius: 22px;
+    padding: 12px;
+    border-radius: 20px;
   }
 
   .main-ayah-arabic {
@@ -4271,8 +4316,16 @@ h3 {
     gap: 10px;
   }
 
+  .main-auth-card {
+    padding: 14px;
+  }
+
   .main-tasbeeh-button {
     width: 156px;
+  }
+
+  .cta-card-compact {
+    padding: 18px 16px;
   }
 }
 

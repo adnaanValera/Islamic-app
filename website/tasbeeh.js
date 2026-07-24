@@ -4,7 +4,8 @@ const dhikrModes = [
   { key: "subhanallah", label: "SubhanAllah", arabic: "SubhanAllah", defaultTarget: 33 },
   { key: "alhamdulillah", label: "Alhamdulillah", arabic: "Alhamdulillah", defaultTarget: 33 },
   { key: "allahuakbar", label: "Allahu Akbar", arabic: "Allahu Akbar", defaultTarget: 34 },
-  { key: "custom", label: "General Dhikr", arabic: "General Dhikr", defaultTarget: 100 },
+  { key: "astaghfirullah", label: "Astaghfirullah", arabic: "Astaghfirullah", defaultTarget: 100 },
+  { key: "custom", label: "Custom Dhikr", arabic: "Custom Dhikr", defaultTarget: 100 },
 ];
 
 const tasbeehCount = document.getElementById("tasbeeh-count");
@@ -26,6 +27,7 @@ const tasbeehStreak = document.getElementById("tasbeeh-streak");
 const tasbeehBestDhikr = document.getElementById("tasbeeh-best-dhikr");
 const tasbeehCompletedRounds = document.getElementById("tasbeeh-completed-rounds");
 const tasbeehHistoryList = document.getElementById("tasbeeh-history-list");
+const addCustomButton = document.getElementById("tasbeeh-add-custom");
 
 function getDateKey(offsetDays = 0) {
   const baseDate = new Date();
@@ -59,6 +61,7 @@ function defaultState() {
     dateKey: getDateKey(),
     activeDhikr: dhikrModes[0].key,
     lastResetLabel: "Today",
+    customDhikrLabel: "Custom Dhikr",
     history: [],
     dhikr: createDefaultDhikrState(),
   };
@@ -103,6 +106,7 @@ function loadState() {
       return {
         ...initial,
         activeDhikr: parsed.activeDhikr || initial.activeDhikr,
+        customDhikrLabel: parsed.customDhikrLabel || initial.customDhikrLabel,
         lastResetLabel: "Today",
         history: [yesterdaySummary, ...normalizeHistory(parsed.history)].slice(0, 14),
         dhikr: Object.fromEntries(
@@ -121,6 +125,7 @@ function loadState() {
     return {
       ...initial,
       activeDhikr: parsed.activeDhikr || initial.activeDhikr,
+      customDhikrLabel: parsed.customDhikrLabel || initial.customDhikrLabel,
       lastResetLabel: parsed.lastResetLabel || "Today",
       history: normalizeHistory(parsed.history),
       dhikr: mergedDhikr,
@@ -137,7 +142,16 @@ function saveState() {
 }
 
 function getActiveMode() {
-  return dhikrModes.find((mode) => mode.key === tasbeehState.activeDhikr) ?? dhikrModes[0];
+  const mode = dhikrModes.find((entry) => entry.key === tasbeehState.activeDhikr) ?? dhikrModes[0];
+  if (mode.key !== "custom") {
+    return mode;
+  }
+
+  return {
+    ...mode,
+    label: tasbeehState.customDhikrLabel || mode.label,
+    arabic: tasbeehState.customDhikrLabel || mode.arabic,
+  };
 }
 
 function getActiveEntry() {
@@ -329,6 +343,18 @@ function setDhikrMode(modeKey) {
   renderTasbeeh();
 }
 
+function addCustomDhikr() {
+  const label = window.prompt("Enter your custom dhikr name");
+  if (!label) {
+    return;
+  }
+
+  tasbeehState.customDhikrLabel = label.trim();
+  tasbeehState.activeDhikr = "custom";
+  tasbeehStatus.textContent = `${tasbeehState.customDhikrLabel} added.`;
+  renderTasbeeh();
+}
+
 tapButton?.addEventListener("click", () => addCount(1));
 targetButtons.forEach((button) => {
   button.addEventListener("click", () => setTarget(Number(button.dataset.target)));
@@ -336,5 +362,6 @@ targetButtons.forEach((button) => {
 dhikrButtons.forEach((button) => {
   button.addEventListener("click", () => setDhikrMode(button.dataset.dhikr));
 });
+addCustomButton?.addEventListener("click", addCustomDhikr);
 
 renderTasbeeh();

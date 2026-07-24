@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/push-send-prayer-reminders",
+      "schedule": "* * * * *"
+    },
+    {
       "path": "/api/push-send-ayah-of-day",
       "schedule": "0 9 * * *"
     }
