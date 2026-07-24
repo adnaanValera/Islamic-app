@@ -546,7 +546,8 @@ function downloadAyahCard() {
       family: "Manrope, sans-serif",
     });
     const referenceHeight = 34;
-    const totalHeight = arabicLayout.totalHeight + 34 + englishLayout.totalHeight + 26 + referenceHeight;
+    const referenceGap = tallVariant ? 18 : 10;
+    const totalHeight = arabicLayout.totalHeight + 34 + englishLayout.totalHeight + referenceGap + referenceHeight;
     const startY = frameTop + Math.max((frameHeight - totalHeight) / 2, 20);
 
     context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
@@ -567,7 +568,7 @@ function downloadAyahCard() {
     context.fillText(
       `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`,
       centerX,
-      startY + arabicLayout.totalHeight + 34 + englishLayout.totalHeight + 26,
+      startY + arabicLayout.totalHeight + 34 + englishLayout.totalHeight + referenceGap,
     );
 
     const link = document.createElement("a");
