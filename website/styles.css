@@ -3135,6 +3135,47 @@ h3 {
   width: 100%;
 }
 
+.admin-dropdown {
+  padding: 0;
+  overflow: hidden;
+}
+
+.admin-dropdown-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 18px 12px;
+}
+
+.admin-dropdown-summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-dropdown-summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-dropdown-summary > div::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--gold-soft);
+  border-bottom: 2px solid var(--gold-soft);
+  transform: rotate(45deg);
+  transition: transform 180ms ease;
+  flex-shrink: 0;
+}
+
+.admin-dropdown[open] .admin-dropdown-summary > div::after {
+  transform: rotate(-135deg) translateY(-1px);
+}
+
+.admin-dropdown .timings-list {
+  padding: 0 18px 18px;
+}
+
 @media (max-width: 480px) {
   .tasbeeh-counter-button {
     width: min(100%, 248px);
@@ -4028,6 +4069,9 @@ h3 {
 
 .main-hero-section #main-greeting {
   animation-delay: 150ms;
+  white-space: nowrap;
+  font-size: clamp(1.35rem, 4.8vw, 2.8rem);
+  line-height: 1.1;
 }
 
 .main-hero-section .hero-actions {
@@ -4252,8 +4296,8 @@ h3 {
   width: 100%;
   max-height: 53%;
   overflow: hidden;
-  font-size: clamp(1.5rem, 2.55vw, 2.55rem);
-  line-height: 1.9;
+  font-size: clamp(1.25rem, 2.05vw, 2rem);
+  line-height: 1.72;
   text-align: center;
   text-wrap: balance;
 }
@@ -4264,8 +4308,8 @@ h3 {
   width: 88%;
   max-height: 24%;
   overflow: hidden;
-  font-size: clamp(0.9rem, 1.28vw, 1.08rem);
-  line-height: 1.68;
+  font-size: clamp(0.74rem, 1.02vw, 0.92rem);
+  line-height: 1.48;
   text-align: center;
   text-wrap: balance;
 }

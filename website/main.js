@@ -134,26 +134,15 @@ function showMainAuthView(mode) {
 
 function renderMainGreeting() {
   const name = mainSession?.user?.fullName?.trim();
+  const salaam = "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064a\u0643\u0645";
+
   if (mainGreeting) {
-    mainGreeting.textContent = name ? `السلام عليكم ${name}` : "السلام عليكم";
+    mainGreeting.textContent = name ? `${salaam} ${name}` : salaam;
   }
+
   if (mainAuthGate) {
     mainAuthGate.classList.toggle("is-hidden", Boolean(name));
   }
-}
-
-async function submitMainAuth(url, fullName, password) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fullName, password }),
-  });
-  const payload = await response.json();
-  if (!response.ok) {
-    throw new Error(payload?.error || "Request failed.");
-  }
-  saveMainSession({ token: payload.token, user: payload.user });
-  renderMainGreeting();
 }
 
 function base64UrlToUint8Array(base64String) {
@@ -252,28 +241,48 @@ function buildMainActivityEntries() {
   return activities.sort((a, b) => a.startMinutes - b.startMinutes);
 }
 
+function expandMainActivitiesForNow(activities, currentMinutes) {
+  const expanded = [];
+
+  for (const entry of activities) {
+    expanded.push({ ...entry });
+    expanded.push({
+      ...entry,
+      startMinutes: entry.startMinutes + 24 * 60,
+      endMinutes: entry.endMinutes + 24 * 60,
+    });
+  }
+
+  if (currentMinutes < 360) {
+    return expanded.map((entry) =>
+      entry.startMinutes >= 24 * 60
+        ? {
+            ...entry,
+            startMinutes: entry.startMinutes - 24 * 60,
+            endMinutes: entry.endMinutes - 24 * 60,
+          }
+        : entry,
+    );
+  }
+
+  return expanded;
+}
+
 function renderMainPrayer() {
   if (!mainPrayerRows.length) return;
 
   const windows = buildMainActivityEntries();
   const { timeKey } = getMainMalawiParts();
-  const baseMinutes = getMainMinutes(timeKey) ?? 0;
-  const currentMinutes =
-    windows.some((entry) => entry.endMinutes > 24 * 60 && baseMinutes < (entry.endMinutes % (24 * 60)))
-      ? baseMinutes + 24 * 60
-      : baseMinutes;
+  const currentMinutes = getMainMinutes(timeKey) ?? 0;
+  const expandedWindows = expandMainActivitiesForNow(windows, currentMinutes);
 
   const currentPrayer =
-    windows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
-  const nextPrayer =
-    windows.find((prayer) => prayer.startMinutes > currentMinutes) ?? windows[0] ?? null;
-  const nextPrayerMinutes =
-    nextPrayer && nextPrayer.startMinutes <= currentMinutes
-      ? nextPrayer.startMinutes + 24 * 60
-      : nextPrayer?.startMinutes ?? currentMinutes;
+    expandedWindows.find((prayer) => currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes) ?? null;
+  const nextPrayer = expandedWindows.find((prayer) => prayer.startMinutes > currentMinutes) ?? null;
+  const nextPrayerMinutes = nextPrayer?.startMinutes ?? currentMinutes;
 
   if (mainPrayerLabel) {
-    mainPrayerLabel.textContent = currentPrayer ? "Current" : "Next";
+    mainPrayerLabel.textContent = currentPrayer ? "Active now" : "Next";
   }
 
   if (mainPrayerName) {
@@ -286,7 +295,9 @@ function renderMainPrayer() {
 
   if (mainNextSalah) {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
-    mainNextSalah.textContent = `Next: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`;
+    mainNextSalah.textContent = currentPrayer
+      ? `Next: ${nextPrayer?.label ?? "--"} in ${Math.max(minutesUntilNextSalah, 0)} min`
+      : `Starts in ${Math.max(minutesUntilNextSalah, 0)} min`;
   }
 
   if (mainPrayerProgress) {
@@ -386,11 +397,11 @@ function fitAyahCardText() {
   const arabicLength = String(currentAyahOfDay?.arabic || "").length;
   const englishLength = String(currentAyahOfDay?.english || "").length;
 
-  const arabicMax = arabicLength < 80 ? 42 : arabicLength < 140 ? 38 : 34;
-  const englishMax = englishLength < 110 ? 21 : englishLength < 180 ? 18 : 16;
+  const arabicMax = arabicLength < 70 ? 36 : arabicLength < 120 ? 32 : 28;
+  const englishMax = englishLength < 90 ? 18 : englishLength < 150 ? 15.5 : 13.5;
 
-  fitElementText(mainAyahArabic, { min: 20, max: arabicMax, step: 1, lineHeight: 1.82 });
-  fitElementText(mainAyahEnglish, { min: 12, max: englishMax, step: 0.5, lineHeight: 1.62 });
+  fitElementText(mainAyahArabic, { min: 18, max: arabicMax, step: 1, lineHeight: 1.72 });
+  fitElementText(mainAyahEnglish, { min: 10.5, max: englishMax, step: 0.5, lineHeight: 1.48 });
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
@@ -701,3 +712,5 @@ loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+
+

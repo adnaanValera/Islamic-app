@@ -88,6 +88,10 @@ function renderSession() {
   if (adminPanel) {
     adminPanel.classList.toggle("is-hidden", !(signedIn && isAdmin));
   }
+
+  if (!signedIn) {
+    setView("signin");
+  }
 }
 
 function setButtonsDisabled(disabled) {
