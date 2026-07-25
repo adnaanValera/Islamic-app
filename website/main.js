@@ -93,10 +93,14 @@ function formatHoursAndMinutes(totalMinutes) {
 function getMainPrayerWindows() {
   return mainPrayerRows.map((prayer, index) => {
     const startMinutes = getMainMinutes(prayer.startTime) ?? getMainMinutes(prayer.salah) ?? getMainMinutes(prayer.athan) ?? 0;
-    let endMinutes =
-      index < mainPrayerRows.length - 1
-        ? getMainMinutes(mainPrayerRows[index + 1]?.startTime) ?? getMainMinutes(mainPrayerRows[index + 1]?.salah) ?? getMainMinutes(mainPrayerRows[index + 1]?.athan)
-        : getMainMinutes(mainPrayerRows[0]?.startTime) ?? getMainMinutes(mainPrayerRows[0]?.salah) ?? getMainMinutes(mainPrayerRows[0]?.athan);
+    let endMinutes = getMainMinutes(prayer.endTime);
+
+    if (endMinutes === null) {
+      endMinutes =
+        index < mainPrayerRows.length - 1
+          ? getMainMinutes(mainPrayerRows[index + 1]?.startTime) ?? getMainMinutes(mainPrayerRows[index + 1]?.salah) ?? getMainMinutes(mainPrayerRows[index + 1]?.athan)
+          : getMainMinutes(mainPrayerRows[0]?.startTime) ?? getMainMinutes(mainPrayerRows[0]?.salah) ?? getMainMinutes(mainPrayerRows[0]?.athan);
+    }
 
     if (endMinutes === null) {
       endMinutes = 24 * 60;
@@ -248,13 +252,17 @@ function renderMainPrayer() {
 
   const currentPrayer =
     windows.find((prayer) => {
-      const wrapsMidnight = prayer.endMinutes > 24 * 60;
+      const adjustedCurrentMinutes =
+        prayer.endMinutes !== null && prayer.endMinutes <= prayer.startMinutes && currentMinutes < prayer.startMinutes
+          ? currentMinutes + 24 * 60
+          : currentMinutes;
+      const wrapsMidnight = prayer.endMinutes <= prayer.startMinutes || prayer.endMinutes > 24 * 60;
 
       if (wrapsMidnight) {
-        return currentMinutes >= prayer.startMinutes || currentMinutes < prayer.endMinutes - 24 * 60;
+        return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
       }
 
-      return currentMinutes >= prayer.startMinutes && currentMinutes < prayer.endMinutes;
+      return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
     }) ?? null;
 
   const nextPrayer =
