@@ -878,7 +878,405 @@ const categoryLabels = {
   family: "Family",
   protection: "Protection",
   healing: "Healing",
+  marriage: "Marriage",
+  qurbani: "Qurbani",
+  janazah: "Janazah",
+  quran: "Quran",
+  special: "Special",
 };
+
+function buildBookPages(start, end = start) {
+  const pages = [];
+
+  for (let page = start; page <= end; page += 1) {
+    pages.push(page);
+  }
+
+  return pages;
+}
+
+const fullBookEntries = [
+  {
+    id: "islamic-months",
+    title: "Islamic months",
+    category: "daily",
+    keywords: ["islamic months", "hijri months"],
+    bookPages: buildBookPages(24),
+  },
+  {
+    id: "durood-e-wali",
+    title: "Durood-e-Wali",
+    category: "salah",
+    keywords: ["durood", "wali", "salawat"],
+    bookPages: buildBookPages(25),
+  },
+  {
+    id: "durood-e-noor",
+    title: "Durood-e-Noor",
+    category: "salah",
+    keywords: ["durood", "noor", "salawat"],
+    bookPages: buildBookPages(30),
+  },
+  {
+    id: "azaan",
+    title: "Azaan",
+    category: "masjid",
+    keywords: ["azaan", "adhan", "call to prayer"],
+    bookPages: buildBookPages(65),
+  },
+  {
+    id: "iqaamah",
+    title: "Iqaamah",
+    category: "masjid",
+    keywords: ["iqaamah", "iqamah", "call to prayer"],
+    bookPages: buildBookPages(66),
+  },
+  {
+    id: "replying-azaan-iqaamah",
+    title: "Replying to Azaan and Iqaamah",
+    category: "masjid",
+    keywords: ["azaan", "adhan", "iqamah", "reply"],
+    bookPages: buildBookPages(67, 68),
+  },
+  {
+    id: "niyyah-fardh-salah",
+    title: "Niyyah for Fardh salah",
+    category: "salah",
+    keywords: ["niyyah", "fardh", "salah", "prayer intention"],
+    bookPages: buildBookPages(50, 52),
+  },
+  {
+    id: "niyyah-sunnah-nafl-salah",
+    title: "Niyyah for Sunnah and Nafl salah",
+    category: "salah",
+    keywords: ["niyyah", "sunnah", "nafl", "salah"],
+    bookPages: buildBookPages(52, 54),
+  },
+  {
+    id: "niyyah-jumuah-witr-eid",
+    title: "Niyyah for Jumu'ah, Witr, Eid al-Fitr and Eid al-Adha salah",
+    category: "salah",
+    keywords: ["niyyah", "jumuah", "witr", "eid", "salah"],
+    bookPages: buildBookPages(54, 56),
+  },
+  {
+    id: "arrival-of-bride",
+    title: "Dua at the arrival of a bride",
+    category: "marriage",
+    keywords: ["bride", "marriage", "nikah"],
+    bookPages: buildBookPages(57),
+  },
+  {
+    id: "evil-thought",
+    title: "Dua when an evil thought comes to mind",
+    category: "protection",
+    keywords: ["evil thought", "waswasa", "mind"],
+    bookPages: buildBookPages(57),
+  },
+  {
+    id: "bodily-pain",
+    title: "Dua when in bodily pain",
+    category: "healing",
+    keywords: ["pain", "body", "healing"],
+    bookPages: buildBookPages(57),
+  },
+  {
+    id: "excessive-downpour",
+    title: "Dua when there is an excessive downpour",
+    category: "protection",
+    keywords: ["rain", "storm", "downpour"],
+    bookPages: buildBookPages(58),
+  },
+  {
+    id: "barakah-increase-wealth",
+    title: "Dua for barakah and increase in wealth",
+    category: "daily",
+    keywords: ["barakah", "wealth", "rizq"],
+    bookPages: buildBookPages(58),
+  },
+  {
+    id: "entering-market-place",
+    title: "Dua when entering the market place",
+    category: "daily",
+    keywords: ["market", "bazaar", "shop"],
+    bookPages: buildBookPages(58),
+  },
+  {
+    id: "after-fardh-salah-duas",
+    title: "Duas to be recited after Fardh salah",
+    category: "salah",
+    keywords: ["after fardh", "after prayer", "salah"],
+    bookPages: buildBookPages(59),
+  },
+  {
+    id: "tasbeeh-fatimah",
+    title: "Tasbeeh-e-Fatimah",
+    category: "daily",
+    keywords: ["tasbeeh", "fatimah", "dhikr"],
+    bookPages: buildBookPages(60),
+  },
+  {
+    id: "some-prophetic-duas",
+    title: "Some Prophetic duas",
+    category: "special",
+    keywords: ["prophetic duas", "dua collection"],
+    bookPages: buildBookPages(61, 63),
+  },
+  {
+    id: "beautiful-names-allah",
+    title: "99 Beautiful Names of Allah",
+    category: "iman",
+    keywords: ["asma ul husna", "99 names of allah"],
+    bookPages: buildBookPages(64, 67),
+  },
+  {
+    id: "sayyidul-istighfaar",
+    title: "Sayyidul Istighfaar",
+    category: "protection",
+    keywords: ["istighfar", "forgiveness"],
+    bookPages: buildBookPages(68),
+  },
+  {
+    id: "durood-e-nabi",
+    title: "Durood-e-Nabi",
+    category: "salah",
+    keywords: ["durood", "salawat", "nabi"],
+    bookPages: buildBookPages(68),
+  },
+  {
+    id: "upon-seeing-person-in-difficulty",
+    title: "Dua upon seeing a person in difficulty",
+    category: "protection",
+    keywords: ["difficulty", "hardship"],
+    bookPages: buildBookPages(69),
+  },
+  {
+    id: "before-slaughtering-qurbani",
+    title: "Dua before slaughtering a Qurbani animal",
+    category: "qurbani",
+    keywords: ["qurbani", "slaughter", "udhiyah"],
+    bookPages: buildBookPages(69),
+  },
+  {
+    id: "after-slaughtering-qurbani",
+    title: "Dua after slaughtering a Qurbani animal",
+    category: "qurbani",
+    keywords: ["qurbani", "slaughter", "udhiyah"],
+    bookPages: buildBookPages(70),
+  },
+  {
+    id: "aqeeqah",
+    title: "Dua-e-Aqeeqah",
+    category: "family",
+    keywords: ["aqeeqah", "child", "newborn"],
+    bookPages: buildBookPages(70),
+  },
+  {
+    id: "time-of-death",
+    title: "Dua at the time of death",
+    category: "janazah",
+    keywords: ["death", "dying"],
+    bookPages: buildBookPages(71),
+  },
+  {
+    id: "talqeen-dying-person",
+    title: "Talqeen for a dying person",
+    category: "janazah",
+    keywords: ["talqeen", "dying person"],
+    bookPages: buildBookPages(71),
+  },
+  {
+    id: "thana-janazah-salah",
+    title: "Thana in Janazah salah",
+    category: "janazah",
+    keywords: ["janazah", "thana"],
+    bookPages: buildBookPages(71),
+  },
+  {
+    id: "entering-qabrastan",
+    title: "Dua when entering the Qabrastan",
+    category: "janazah",
+    keywords: ["graveyard", "qabrastan"],
+    bookPages: buildBookPages(72),
+  },
+  {
+    id: "dua-janazah",
+    title: "Dua-e-Janazah",
+    category: "janazah",
+    keywords: ["janazah", "funeral"],
+    bookPages: buildBookPages(72),
+  },
+  {
+    id: "dua-janazah-boy",
+    title: "Dua-e-Janazah for a boy child",
+    category: "janazah",
+    keywords: ["janazah", "boy child"],
+    bookPages: buildBookPages(72),
+  },
+  {
+    id: "dua-janazah-girl",
+    title: "Dua-e-Janazah for a girl child",
+    category: "janazah",
+    keywords: ["janazah", "girl child"],
+    bookPages: buildBookPages(73),
+  },
+  {
+    id: "isaal-e-thawaab",
+    title: "Dua for Isaal-e-Thawaab",
+    category: "janazah",
+    keywords: ["isaal e thawaab", "reward"],
+    bookPages: buildBookPages(73),
+  },
+  {
+    id: "laying-deceased-in-qabr",
+    title: "Dua while laying the deceased in Qabr",
+    category: "janazah",
+    keywords: ["qabr", "grave", "deceased"],
+    bookPages: buildBookPages(74),
+  },
+  {
+    id: "filling-qabr-with-soil",
+    title: "Dua when filling the Qabr with soil",
+    category: "janazah",
+    keywords: ["grave", "soil", "qabr"],
+    bookPages: buildBookPages(75),
+  },
+  {
+    id: "excellence-of-durood-shareef",
+    title: "Excellence of praying Durood Shareef",
+    category: "salah",
+    keywords: ["durood", "salawat"],
+    bookPages: buildBookPages(75),
+  },
+  {
+    id: "save-yourself-from-fitnah",
+    title: "To save yourself from fitnah",
+    category: "protection",
+    keywords: ["fitnah", "temptation"],
+    bookPages: buildBookPages(76),
+  },
+  {
+    id: "relief-from-worries-debts",
+    title: "Dua for relief from worries and debts",
+    category: "protection",
+    keywords: ["worries", "debts", "anxiety"],
+    bookPages: buildBookPages(76),
+  },
+  {
+    id: "durood-razwiyyah",
+    title: "Durood-e-Razwiyyah",
+    category: "salah",
+    keywords: ["durood", "razwiyyah", "salawat"],
+    bookPages: buildBookPages(76),
+  },
+  {
+    id: "beautiful-names-prophet",
+    title: "99 Beautiful Names of Prophet Muhammad ﷺ",
+    category: "salah",
+    keywords: ["99 names", "prophet muhammad", "asma"],
+    bookPages: buildBookPages(77, 80),
+  },
+  {
+    id: "istikharah",
+    title: "Dua-e-Istikharah",
+    category: "protection",
+    keywords: ["istikharah", "guidance", "decision"],
+    bookPages: buildBookPages(81),
+  },
+  {
+    id: "lawh-e-quran",
+    title: "Lawh-e-Quran",
+    category: "quran",
+    keywords: ["quran", "lawh"],
+    bookPages: buildBookPages(82),
+  },
+  {
+    id: "hajj-umrah",
+    title: "Dua for Hajj and Umrah",
+    category: "travel",
+    keywords: ["hajj", "umrah", "travel"],
+    bookPages: buildBookPages(83, 85),
+  },
+  {
+    id: "dua-e-mathoorah",
+    title: "Dua-e-Ma'thoorah",
+    category: "daily",
+    keywords: ["ma'thoorah", "morning", "evening"],
+    bookPages: buildBookPages(86),
+  },
+  {
+    id: "protection-from-accidents",
+    title: "Dua for protection from accidents",
+    category: "protection",
+    keywords: ["accidents", "safety"],
+    bookPages: buildBookPages(87),
+  },
+  {
+    id: "method-isaal-e-thawaab",
+    title: "Method of making Isaal-e-Thawaab",
+    category: "janazah",
+    keywords: ["isaal e thawaab", "method"],
+    bookPages: buildBookPages(88),
+  },
+  {
+    id: "extra-morning-evening-duas",
+    title: "Extra duas in the morning and evening",
+    category: "daily",
+    keywords: ["morning", "evening", "adhkar"],
+    bookPages: buildBookPages(90, 94),
+  },
+  {
+    id: "munajaat",
+    title: "Munajaat",
+    category: "special",
+    keywords: ["munajaat", "supplication"],
+    bookPages: buildBookPages(95),
+  },
+  {
+    id: "durood-taaj",
+    title: "Durood-e-Taaj",
+    category: "salah",
+    keywords: ["durood", "taaj", "salawat"],
+    bookPages: buildBookPages(96, 97),
+  },
+  {
+    id: "salami-arabic",
+    title: "Salami (Arabic)",
+    category: "salah",
+    keywords: ["salami", "arabic"],
+    bookPages: buildBookPages(98),
+  },
+  {
+    id: "salami-urdu",
+    title: "Salami (Urdu)",
+    category: "salah",
+    keywords: ["salami", "urdu"],
+    bookPages: buildBookPages(99),
+  },
+  {
+    id: "qaseedah-burdah-shareef",
+    title: "Qaseedah Burdah Shareef",
+    category: "salah",
+    keywords: ["burdah", "qaseedah", "salawat"],
+    bookPages: buildBookPages(100),
+  },
+  {
+    id: "dua-e-jameelah",
+    title: "Dua-e-Jameelah",
+    category: "special",
+    keywords: ["jameelah", "dua"],
+    bookPages: buildBookPages(101, 104),
+  },
+  {
+    id: "khatm-e-qadiriah",
+    title: "Khatm-e-Qadiriah",
+    category: "special",
+    keywords: ["qadiriah", "khatm"],
+    bookPages: buildBookPages(105),
+  },
+];
+
+duas.push(...fullBookEntries);
 
 let currentSearch = "";
 let currentCategory = "all";
@@ -925,6 +1323,42 @@ function escapeHtml(value) {
 
 function normalizeText(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function getBookPageImage(pageNumber) {
+  return `./assets/dua-book/page-${String(pageNumber).padStart(3, "0")}.jpg`;
+}
+
+function renderBookPreview(dua) {
+  if (!Array.isArray(dua.bookPages) || !dua.bookPages.length) {
+    return "";
+  }
+
+  const pageLabel =
+    dua.bookPages.length === 1
+      ? `Book page ${dua.bookPages[0]}`
+      : `Book pages ${dua.bookPages[0]}-${dua.bookPages[dua.bookPages.length - 1]}`;
+
+  return `
+    <div class="dua-book-preview">
+      <p class="dua-book-preview-label">${escapeHtml(pageLabel)}</p>
+      <div class="dua-book-preview-stack">
+        ${dua.bookPages
+          .map(
+            (pageNumber) => `
+              <img
+                class="dua-book-preview-image"
+                src="${escapeHtml(getBookPageImage(pageNumber))}"
+                alt="${escapeHtml(`${dua.title} - page ${pageNumber}`)}"
+                loading="lazy"
+                decoding="async"
+              />
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
 }
 
 function getFilteredDuas() {
@@ -1053,9 +1487,10 @@ function renderDuas() {
             </span>
           </summary>
           <div class="dua-card-body">
-            <p class="dua-card-arabic" dir="rtl" lang="ar">${escapeHtml(decodeMojibake(dua.arabic))}</p>
-            <p class="dua-card-transliteration">${escapeHtml(dua.transliteration)}</p>
-            <p class="dua-card-english">${escapeHtml(dua.english)}</p>
+            ${dua.arabic ? `<p class="dua-card-arabic" dir="rtl" lang="ar">${escapeHtml(decodeMojibake(dua.arabic))}</p>` : ""}
+            ${dua.transliteration ? `<p class="dua-card-transliteration">${escapeHtml(dua.transliteration)}</p>` : ""}
+            ${dua.english ? `<p class="dua-card-english">${escapeHtml(dua.english)}</p>` : ""}
+            ${renderBookPreview(dua)}
           </div>
         </details>
       `;

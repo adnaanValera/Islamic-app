@@ -4596,7 +4596,6 @@ h3 {
 
 .dua-category-chip,
 .dua-favorites-toggle,
-.dua-audio-button,
 .dua-favorite-button {
   border: 1px solid rgba(191, 149, 77, 0.18);
   background: rgba(255, 255, 255, 0.9);
@@ -4710,16 +4709,6 @@ h3 {
   gap: 14px;
 }
 
-.dua-card-audio-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.dua-audio-button {
-  padding: 9px 13px;
-}
-
 .dua-card-arabic {
   margin: 0;
   color: var(--text-strong);
@@ -4744,6 +4733,33 @@ h3 {
   line-height: 1.7;
 }
 
+.dua-book-preview {
+  display: grid;
+  gap: 12px;
+}
+
+.dua-book-preview-label {
+  margin: 0;
+  color: #8b7a5d;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dua-book-preview-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.dua-book-preview-image {
+  width: 100%;
+  display: block;
+  border-radius: 20px;
+  border: 1px solid rgba(191, 149, 77, 0.16);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 24px rgba(79, 66, 39, 0.08);
+}
+
 .dua-empty-state {
   padding: 28px 22px;
   border-radius: 24px;
@@ -4763,6 +4779,16 @@ h3 {
 }
 
 @media (max-width: 720px) {
+  .dua-toolbar-top {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: -2px -2px 0;
+    padding: 10px 2px 4px;
+    background: linear-gradient(180deg, rgba(248, 243, 234, 0.96), rgba(248, 243, 234, 0.78), transparent);
+    backdrop-filter: blur(10px);
+  }
+
   .dua-card-summary,
   .dua-card-body {
     padding-left: 16px;
@@ -4775,6 +4801,19 @@ h3 {
 }
 
 @media (max-width: 480px) {
+  .dua-shell {
+    gap: 14px;
+  }
+
+  .dua-heading-block {
+    gap: 4px;
+  }
+
+  .dua-heading-block .prayer-hero-title {
+    font-size: 1.4rem;
+    line-height: 1.15;
+  }
+
   .dua-list {
     gap: 12px;
   }
@@ -4792,22 +4831,52 @@ h3 {
     padding: 0 15px 16px;
   }
 
+  .dua-card-title-wrap strong {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
   .dua-card-arabic {
-    font-size: 1.38rem;
-    line-height: 1.9;
+    font-size: 1.26rem;
+    line-height: 1.82;
   }
 
   .dua-card-english {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    line-height: 1.62;
   }
 
   .dua-toolbar-bottom {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
+  }
+
+  .dua-category-row {
+    gap: 8px;
+    padding-bottom: 0;
+  }
+
+  .dua-category-chip,
+  .dua-favorites-toggle {
+    padding: 9px 12px;
+    font-size: 0.88rem;
   }
 
   .dua-favorites-toggle {
     width: 100%;
+  }
+
+  .dua-book-preview {
+    gap: 10px;
+  }
+
+  .dua-book-preview-stack {
+    gap: 10px;
+  }
+
+  .dua-book-preview-image {
+    border-radius: 16px;
   }
 }
 
