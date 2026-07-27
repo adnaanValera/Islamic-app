@@ -31,7 +31,7 @@ function getMinutes(timeValue) {
 }
 
 function getDuePrayers(prayers, currentMinutes, windowMinutes) {
-  const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1) + 1, 0);
+  const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1), 0);
 
   return prayers.filter((prayer) => {
     const prayerMinutes = getMinutes(prayer.athan);
@@ -116,6 +116,7 @@ export default async function handler(request, response) {
   }
 
   let sent = 0;
+  let failed = 0;
   const removed = [];
 
   for (const prayer of pendingPrayers) {
@@ -134,6 +135,8 @@ export default async function handler(request, response) {
 
         if (statusCode === 404 || statusCode === 410) {
           removed.push(subscription.endpoint);
+        } else {
+          failed += 1;
         }
       }
     }
@@ -150,6 +153,7 @@ export default async function handler(request, response) {
   response.status(200).json({
     ok: true,
     sent,
+    failed,
     removed: removed.length,
     due: pendingPrayers.map((prayer) => prayer.label),
     windowMinutes,
