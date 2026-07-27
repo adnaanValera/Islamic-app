@@ -58,9 +58,9 @@
       ]
     },
     {
-      "name": "Tasbeeh",
-      "short_name": "Tasbeeh",
-      "url": "/tasbeeh.html",
+      "name": "Dua",
+      "short_name": "Dua",
+      "url": "/dua.html",
       "icons": [
         {
           "src": "./assets/icon-192.png",
@@ -70,9 +70,9 @@
       ]
     },
     {
-      "name": "Dhikr",
-      "short_name": "Dhikr",
-      "url": "/dhikr.html",
+      "name": "Tasbeeh",
+      "short_name": "Tasbeeh",
+      "url": "/tasbeeh.html",
       "icons": [
         {
           "src": "./assets/icon-192.png",

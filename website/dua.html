@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nooriva | Quran</title>
+    <title>Nooriva | Dua</title>
     <meta
       name="description"
-      content="Read the Quran in Arabic, English, or both with a simple Nooriva web reader."
+      content="Search Nooriva duas in Arabic and English with a clean mobile reading layout."
     />
     <meta name="theme-color" content="#f8f3ea" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -32,8 +32,8 @@
           <a href="./index.html">Home</a>
           <a href="./prayer.html">Prayer</a>
           <a href="./qibla.html">Qibla</a>
-          <a href="./quran.html" aria-current="page">Quran</a>
-          <a href="./dua.html">Dua</a>
+          <a href="./quran.html">Quran</a>
+          <a href="./dua.html" aria-current="page">Dua</a>
           <a href="./tasbeeh.html">Tasbeeh</a>
           <a href="./account.html">Account</a>
           <a href="./settings.html">Help</a>
@@ -41,59 +41,40 @@
       </header>
 
       <main class="prayer-page">
-        <section class="prayer-table-card prayer-table-card-hero quran-reader-shell quran-reader-shell-premium">
-          <div class="quran-reader-toolbar">
-            <div class="quran-reader-toolbar-top">
-              <div class="quran-language-toggle" id="quran-language-toggle">
-                <button class="quran-language-button is-active" data-quran-view="both" type="button">Both</button>
-                <button class="quran-language-button" data-quran-view="arabic" type="button">Arabic</button>
-                <button class="quran-language-button" data-quran-view="english" type="button">English</button>
-              </div>
-
-              <div class="quran-reader-nav">
-                <button class="quran-nav-button" id="quran-prev-surah" type="button">Previous surah</button>
-                <button class="quran-nav-button" id="quran-next-surah" type="button">Next surah</button>
+        <section class="prayer-table-card prayer-table-card-hero quran-reader-shell quran-reader-shell-premium dua-shell">
+          <div class="quran-reader-toolbar dua-toolbar">
+            <div class="quran-reader-toolbar-top dua-toolbar-top">
+              <div class="dua-heading-block">
+                <p class="eyebrow">Dua</p>
+                <h1 class="prayer-hero-title">Search daily duas.</h1>
               </div>
             </div>
 
-            <div class="quran-reader-toolbar-bottom">
+            <div class="quran-reader-toolbar-bottom dua-toolbar-bottom">
               <div class="quran-toolbar-search">
                 <input
                   class="quran-search-input"
-                  id="quran-search"
+                  id="dua-search"
                   type="search"
-                  placeholder="Search surah name or number"
+                  placeholder="Search dua name or keyword"
                   autocomplete="off"
                 />
               </div>
-
-              <details class="quran-surah-dropdown" id="quran-surah-dropdown">
-                <summary>
-                  <span>Surah</span>
-                  <strong id="quran-current-surah">Jump to surah</strong>
-                </summary>
-                <div class="quran-surah-dropdown-list" id="quran-surah-grid"></div>
-              </details>
             </div>
           </div>
 
-          <div class="quran-reader-header quran-reader-header-premium quran-reader-header-minimal">
+          <div class="quran-reader-header quran-reader-header-premium quran-reader-header-minimal dua-header">
             <div class="status-stack">
-              <p class="status-line" id="quran-status">Loading Quran...</p>
+              <p class="status-line" id="dua-status">Loading duas...</p>
             </div>
           </div>
 
-          <div class="quran-reading-stage">
-            <div class="quran-ayah-list" id="quran-ayah-list">
-              <article class="quran-ayah-card">
-                <div class="quran-ayah-topline">
-                  <span>Loading</span>
-                </div>
-                <p class="quran-ayah-translation">Please wait.</p>
-              </article>
-            </div>
-
-            <div class="quran-page-indicators" id="quran-page-indicators" aria-label="Quran page navigation"></div>
+          <div class="dua-list" id="dua-list">
+            <article class="dua-card">
+              <div class="dua-card-summary">
+                <strong>Loading</strong>
+              </div>
+            </article>
           </div>
         </section>
 
@@ -101,8 +82,8 @@
           <a href="./index.html">Home</a>
           <a href="./prayer.html">Prayer</a>
           <a href="./qibla.html">Qibla</a>
-          <a href="./quran.html" aria-current="page">Quran</a>
-          <a href="./dua.html">Dua</a>
+          <a href="./quran.html">Quran</a>
+          <a href="./dua.html" aria-current="page">Dua</a>
           <a href="./tasbeeh.html">Tasbeeh</a>
           <a href="./account.html">Account</a>
           <a href="./settings.html">Help</a>
@@ -112,6 +93,6 @@
 
     <script src="./install-app.js"></script>
     <script src="./mobile-nav.js"></script>
-    <script src="./quran.js"></script>
+    <script src="./dua.js"></script>
   </body>
 </html>

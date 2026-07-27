@@ -1,10 +1,11 @@
-const STATIC_CACHE = "nooriva-static-v24";
+const STATIC_CACHE = "nooriva-static-v25";
 const CORE_ASSETS = [
   "/",
   "/index.html",
   "/prayer.html",
   "/qibla.html",
   "/quran.html",
+  "/dua.html",
   "/tasbeeh.html",
   "/dhikr.html",
   "/account.html",
@@ -16,6 +17,7 @@ const CORE_ASSETS = [
   "/prayer-times.js",
   "/qibla.js",
   "/quran.js",
+  "/dua.js",
   "/tasbeeh.js",
   "/account.js",
   "/settings.js",
