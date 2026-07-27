@@ -544,8 +544,323 @@ const duas = [
     category: "salah",
     keywords: ["forgiveness", "salah", "prayer"],
     arabic: "اَللّٰهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا وَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ وَارْحَمْنِي إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ",
-    transliteration: "Allahumma inni zalamtu nafsi zulman kathira wa innahu la yaghfirudh-dhunuba illa anta, faghfir li maghfiratan min 'indika وارحمني innaka antal-Ghafurur-Rahim.",
+    transliteration: "Allahumma inni zalamtu nafsi zulman kathira wa innahu la yaghfirudh-dhunuba illa anta, faghfir li maghfiratan min 'indika warhamni innaka antal-Ghafurur-Rahim.",
     english: "O Allah, I have wronged myself greatly and nobody forgives sins except You. Forgive me and have mercy upon me. Surely, You are the Most Forgiver and the Most Merciful.",
+  },
+  {
+    id: "after-adhan",
+    title: "Dua after adhan",
+    category: "masjid",
+    keywords: ["adhan", "azaan", "call to prayer"],
+    arabic: "اللهم رب هذه الدعوة التامة والصلاة القائمة آت سيدنا محمداً الوسيلة والفضيلة والدرجة الرفيعة وابعثه مقاماً محموداً الذي وعدته وارزقنا شفاعته يوم القيامة إنك لا تخلف الميعاد",
+    transliteration: "Allahumma rabba hadhihid-da'watit-tammah was-salatil-qa'imah ati sayyidina Muhammadanil-wasilata wal-fadilah wad-darajatar-rafi'ah wab'athhu maqamam mahmudanilladhi wa'adtah warzuqna shafa'atahu yawmal-qiyamah innaka la tukhliful-mi'ad.",
+    english: "O Allah, Lord of this perfect call and established prayer, grant our Master Muhammad the Waseelah, excellence and the highest rank, raise him to the praised station You promised him, and grant us his intercession on the Day of Judgement. Surely You do not break Your promise.",
+  },
+  {
+    id: "before-niyyah-salah",
+    title: "Before making niyyah for salah",
+    category: "salah",
+    keywords: ["niyyah", "intention", "salah"],
+    arabic: "إني وجهت وجهي للذي فطر السموات والأرض حنيفاً وما أنا من المشركين",
+    transliteration: "Inni wajjahtu wajhiya lilladhi fataras-samawati wal-arda hanifan wa ma ana minal-mushrikin.",
+    english: "Verily, I have firmly turned my face towards Him Who created the heavens and the earth, and I am not among those who associate partners with Allah.",
+  },
+  {
+    id: "after-salam",
+    title: "Dua after salam",
+    category: "salah",
+    keywords: ["after prayer", "salam", "salah"],
+    arabic: "اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام",
+    transliteration: "Allahumma antas-salam wa minkas-salam tabarakta ya dhal-jalali wal-ikram.",
+    english: "O Allah, You are Peace and from You comes peace. Blessed are You, O Lord of Majesty and Generosity.",
+  },
+  {
+    id: "dua-qunoot",
+    title: "Dua-e-Qunoot",
+    category: "salah",
+    keywords: ["qunoot", "witr", "salah"],
+    arabic: "اللهم إنا نستعينك ونستغفرك ونؤمن بك ونتوكل عليك ونثني عليك الخير ونشكرك ولا نكفرك ونخلع ونترك من يفجرك اللهم إياك نعبد ولك نصلي ونسجد وإليك نسعى ونحفد ونرجو رحمتك ونخشى عذابك إن عذابك بالكفار ملحق",
+    transliteration: "Allahumma inna nasta'inuka wa nastaghfiruka wa nu'minu bika wa natawakkalu 'alayka wa nuthni 'alaykal-khayr wa nashkuruka wa la nakfuruk wa nakhla'u wa natruku man yafjuruk. Allahumma iyyaka na'budu wa laka nusalli wa nasjudu wa ilayka nas'a wa nahfid wa narju rahmataka wa nakhsha 'adhabaka inna 'adhabaka bil-kuffari mulhiq.",
+    english: "O Allah, we seek help from You, seek forgiveness from You, believe in You and rely on You. We praise You in the best way, thank You and do not show ingratitude. We separate ourselves from those who disobey You. O Allah, You alone we worship, to You we pray and prostrate, towards You we strive and hasten. We hope for Your mercy and fear Your punishment. Surely Your punishment overtakes the disbelievers.",
+  },
+  {
+    id: "dua-for-fasting",
+    title: "Dua for fasting",
+    category: "daily",
+    keywords: ["fasting", "sawm", "roza", "sehri"],
+    arabic: "اللهم أصوم غداً لك فاغفر لي ما قدمت وما أخرت",
+    transliteration: "Allahumma asumu ghadan laka faghfir li ma qaddamtu wa ma akhkhartu.",
+    english: "O Allah, I am fasting for You in the coming day, so forgive my past and future sins.",
+  },
+  {
+    id: "when-breaking-fast",
+    title: "Dua when breaking fast",
+    category: "daily",
+    keywords: ["iftar", "fasting", "roza"],
+    arabic: "اللهم لك صمت وبك آمنت وعلى رزقك أفطرت فتقبل مني",
+    transliteration: "Allahumma laka sumtu wa bika amantu wa 'ala rizqika aftartu fataqabbal minni.",
+    english: "O Allah, I fasted for You, believed in You, and with the provision You gave me I break my fast. Accept it from me.",
+  },
+  {
+    id: "when-seeing-masjid",
+    title: "When you see a masjid",
+    category: "masjid",
+    keywords: ["masjid", "mosque", "durood"],
+    arabic: "الصلاة والسلام عليك يا رسول الله",
+    transliteration: "As-salatu was-salamu 'alayka ya Rasulallah.",
+    english: "O Messenger of Allah, blessings and peace be upon you.",
+  },
+  {
+    id: "signs-of-infidelity",
+    title: "When we see the signs of infidelity",
+    category: "iman",
+    keywords: ["faith", "kufr", "iman"],
+    arabic: "أشهد أن لا إله إلا الله وحده لا شريك له إلهاً واحداً لا نعبد إلا إياه",
+    transliteration: "Ashhadu an la ilaha illallahu wahdahu la sharika lah ilahan wahidan la na'budu illa iyyah.",
+    english: "I bear witness that there is none worthy of worship besides Allah alone. He has no partner. We worship none besides Him.",
+  },
+  {
+    id: "boarding-transport",
+    title: "Dua on boarding a car or other transport",
+    category: "travel",
+    keywords: ["car", "transport", "travel", "journey"],
+    arabic: "الحمد لله سبحان الذي سخر لنا هذا وما كنا له مقرنين وإنا إلى ربنا لمنقلبون",
+    transliteration: "Alhamdulillah. Subhanalladhi sakhkhara lana hadha wa ma kunna lahu muqrinin wa inna ila Rabbina lamunqalibun.",
+    english: "All praise is due to Allah. Glory be to Him Who has subjected this to us, though we could not have controlled it ourselves. Surely to our Lord we will return.",
+  },
+  {
+    id: "boarding-ship-plane",
+    title: "Dua while boarding a ship or aeroplane",
+    category: "travel",
+    keywords: ["ship", "plane", "aeroplane", "travel"],
+    arabic: "بسم الله مجراها ومرساها إن ربي لغفور رحيم",
+    transliteration: "Bismillahi majraha wa mursaha inna Rabbi laghafurun rahim.",
+    english: "In the name of Allah is its movement and its stillness. Surely my Lord is Most Forgiving, Most Merciful.",
+  },
+  {
+    id: "return-from-journey",
+    title: "Dua when we return from a journey",
+    category: "travel",
+    keywords: ["journey", "return", "travel"],
+    arabic: "آيبون تائبون لربنا حامدون",
+    transliteration: "Ayibuna ta'ibuna li Rabbina hamidun.",
+    english: "We return, repenting, worshipping and praising our Lord.",
+  },
+  {
+    id: "new-muslim-dua",
+    title: "Dua to be taught to a new Muslim",
+    category: "iman",
+    keywords: ["new muslim", "guidance", "sustenance"],
+    arabic: "اللهم اغفر لي وارحمني واهدني وارزقني",
+    transliteration: "Allahummaghfir li warhamni wahdini warzuqni.",
+    english: "O Allah, forgive me, have mercy on me, guide me and grant me sustenance.",
+  },
+  {
+    id: "heavy-rainfall",
+    title: "Dua at the time of heavy rainfall",
+    category: "protection",
+    keywords: ["rain", "weather", "storm"],
+    arabic: "اللهم صيباً نافعاً",
+    transliteration: "Allahumma sayyiban nafi'an.",
+    english: "O Allah, let this be a beneficial rain.",
+  },
+  {
+    id: "when-afflicted-by-nazr",
+    title: "Dua when afflicted with nazr",
+    category: "protection",
+    keywords: ["nazr", "evil eye", "healing"],
+    arabic: "بسم الله اللهم أذهب حرها وبردها ووصبها",
+    transliteration: "Bismillah Allahumma adhhib harraha wa bardaha wa wasabaha.",
+    english: "In the name of Allah. O Allah, remove its heat, its cold and its pain.",
+  },
+  {
+    id: "protection-from-calamities",
+    title: "Dua for protection from calamities",
+    category: "protection",
+    keywords: ["calamity", "protection", "family", "wealth"],
+    arabic: "بسم الله على ديني ونفسي وولدي وأهلي ومالي",
+    transliteration: "Bismillahi 'ala dini wa nafsi wa waladi wa ahli wa mali.",
+    english: "In the name of Allah, I seek protection for my religion, my life, my children, my family and my wealth.",
+  },
+  {
+    id: "protection-day-of-qiyamah",
+    title: "Dua for protection on the Day of Qiyamah",
+    category: "protection",
+    keywords: ["qiyamah", "akhirah", "protection"],
+    arabic: "رضيت بالله رباً وبالإسلام ديناً وبمحمد صلى الله عليه وسلم نبياً ورسولاً",
+    transliteration: "Raditu billahi Rabba wa bil-Islami dinan wa bi Muhammadin sallallahu 'alayhi wa sallama nabiyyan wa rasula.",
+    english: "I am pleased with Allah as my Lord, Islam as my religion, and Muhammad ﷺ as my Prophet and Messenger.",
+  },
+  {
+    id: "durood-muqaddas",
+    title: "Durood-e-Muqaddas",
+    category: "salah",
+    keywords: ["durood", "salawat"],
+    arabic: "اللهم صل على سيدنا محمد النبي الأمي وعلى آله وسلم تسليماً",
+    transliteration: "Allahumma salli 'ala sayyidina Muhammadin-nabiyyil-ummiyyi wa 'ala alihi wa sallim taslima.",
+    english: "O Allah, send blessings upon our Master Muhammad, the unlettered Prophet, and upon his family, and send complete peace.",
+  },
+  {
+    id: "after-witr-salah",
+    title: "Dua after Witr salah",
+    category: "salah",
+    keywords: ["witr", "after prayer", "salah"],
+    arabic: "سبوح قدوس رب الملائكة والروح",
+    transliteration: "Subbuhun Quddusun Rabbul-mala'ikati war-ruh.",
+    english: "Most Glorious, Most Holy, Lord of the angels and the Spirit.",
+  },
+  {
+    id: "eating-at-someones-house",
+    title: "Dua when eating at someone's house",
+    category: "social",
+    keywords: ["guest", "food", "host"],
+    arabic: "اللهم بارك لهم فيما رزقتهم واغفر لهم وارحمهم",
+    transliteration: "Allahumma barik lahum fima razaqtahum waghfir lahum warhamhum.",
+    english: "O Allah, bless for them what You have provided them, forgive them and have mercy on them.",
+  },
+  {
+    id: "breaking-fast-at-someones-house",
+    title: "Dua for breaking fast at someone's house",
+    category: "social",
+    keywords: ["iftar", "guest", "fasting"],
+    arabic: "أفطر عندكم الصائمون وأكل طعامكم الأبرار وتنزلت عليكم الملائكة",
+    transliteration: "Aftara 'indakumus-sa'imun wa akala ta'amakumul-abrar wa tanazzalat 'alaykumul-mala'ikah.",
+    english: "May the fasting people break their fast with you, may the righteous eat your food, and may the angels descend upon you.",
+  },
+  {
+    id: "new-moon",
+    title: "Dua on sighting the new moon",
+    category: "daily",
+    keywords: ["moon", "hilal", "month"],
+    arabic: "اللهم أهله علينا بالأمن والإيمان والسلامة والإسلام والتوفيق لما تحب وترضى",
+    transliteration: "Allahumma ahillahu 'alayna bil-amni wal-iman was-salamati wal-Islam wat-tawfiqi lima tuhibbu wa tarda.",
+    english: "O Allah, let this moon rise over us with safety, faith, peace, Islam and ability to do what You love and are pleased with.",
+  },
+  {
+    id: "taking-off-clothes",
+    title: "Dua while taking off clothes",
+    category: "home",
+    keywords: ["clothes", "dress", "undress"],
+    arabic: "بسم الله",
+    transliteration: "Bismillah.",
+    english: "In the name of Allah.",
+  },
+  {
+    id: "wearing-new-clothes",
+    title: "Dua on wearing new clothes",
+    category: "daily",
+    keywords: ["clothes", "new clothes", "dress"],
+    arabic: "اللهم لك الحمد أنت كسوتنيه أسألك خيره وخير ما صنع له وأعوذ بك من شره وشر ما صنع له",
+    transliteration: "Allahumma lakal-hamd anta kasawtanihi as'aluka khayrahu wa khayra ma suni'a lahu wa a'udhu bika min sharrihi wa sharri ma suni'a lahu.",
+    english: "O Allah, all praise is for You. You clothed me with this. I ask You for its good and the good for which it was made, and I seek refuge in You from its evil and the evil for which it was made.",
+  },
+  {
+    id: "wearing-clothes",
+    title: "Dua on wearing clothes",
+    category: "daily",
+    keywords: ["clothes", "dress"],
+    arabic: "الحمد لله الذي كساني هذا ورزقنيه من غير حول مني ولا قوة",
+    transliteration: "Alhamdulillahil-ladhi kasani hadha wa razaqanihi min ghayri hawlin minni wa la quwwah.",
+    english: "All praise is for Allah Who clothed me with this and provided it to me without any power or strength from me.",
+  },
+  {
+    id: "expressing-love",
+    title: "Expressing one's love to another",
+    category: "social",
+    keywords: ["love", "brotherhood", "friend"],
+    arabic: "إني أحبك في الله",
+    transliteration: "Inni uhibbuka fillah.",
+    english: "Indeed, I love you for the sake of Allah.",
+  },
+  {
+    id: "reply-to-love",
+    title: "Reply to someone expressing love",
+    category: "social",
+    keywords: ["love", "reply", "friend"],
+    arabic: "أحبك الذي أحببتني له",
+    transliteration: "Ahabbakalladhi ahbabtani lah.",
+    english: "May Allah love you for whose sake you loved me.",
+  },
+  {
+    id: "seeing-muslim-cheerful",
+    title: "When seeing another Muslim cheerful",
+    category: "social",
+    keywords: ["muslim", "cheerful", "joy"],
+    arabic: "الحمد لله الذي بنعمته تتم الصالحات",
+    transliteration: "Alhamdulillahil-ladhi bi ni'matihi tatimmus-salihat.",
+    english: "All praise is for Allah by Whose blessing righteous deeds are completed.",
+  },
+  {
+    id: "when-loss-occurs",
+    title: "When a loss occurs",
+    category: "protection",
+    keywords: ["loss", "grief", "patience"],
+    arabic: "إنا لله وإنا إليه راجعون",
+    transliteration: "Inna lillahi wa inna ilayhi raji'un.",
+    english: "Surely we belong to Allah and to Him we will return.",
+  },
+  {
+    id: "visiting-sick-person",
+    title: "Dua when visiting a sick person",
+    category: "healing",
+    keywords: ["sick", "illness", "healing", "visit"],
+    arabic: "لا بأس طهور إن شاء الله",
+    transliteration: "La ba'sa tahurun in sha' Allah.",
+    english: "No harm. It is a purification, if Allah wills.",
+  },
+  {
+    id: "at-sunrise",
+    title: "Dua at the time of sunrise",
+    category: "daily",
+    keywords: ["sunrise", "morning"],
+    arabic: "أصبحنا وأصبح الملك لله",
+    transliteration: "Asbahna wa asbahal-mulku lillah.",
+    english: "We have entered the morning and the dominion belongs to Allah.",
+  },
+  {
+    id: "at-sunset",
+    title: "Dua at the time of sunset",
+    category: "daily",
+    keywords: ["sunset", "evening"],
+    arabic: "أمسينا وأمسى الملك لله",
+    transliteration: "Amsayna wa amsal-mulku lillah.",
+    english: "We have entered the evening and the dominion belongs to Allah.",
+  },
+  {
+    id: "travel-undertaking",
+    title: "Dua at the time of undertaking a journey",
+    category: "travel",
+    keywords: ["journey", "travel", "walk"],
+    arabic: "اللهم بك أصول وبك أجول وبك أسير",
+    transliteration: "Allahumma bika asulu wa bika ajulu wa bika asir.",
+    english: "O Allah, with Your help I travel, with Your help I move and with Your help I walk.",
+  },
+  {
+    id: "leaving-meeting-place",
+    title: "When one leaves any meeting place",
+    category: "social",
+    keywords: ["meeting", "gathering", "leaving"],
+    arabic: "سبحانك اللهم وبحمدك أشهد أن لا إله إلا أنت أستغفرك وأتوب إليك",
+    transliteration: "Subhanaka Allahumma wa bihamdika ashhadu an la ilaha illa anta astaghfiruka wa atubu ilayk.",
+    english: "Glory be to You, O Allah, and all praise is Yours. I bear witness that there is none worthy of worship except You. I seek Your forgiveness and repent to You.",
+  },
+  {
+    id: "thunder-lightning",
+    title: "Dua when thunder or lightning strike",
+    category: "protection",
+    keywords: ["thunder", "lightning", "storm"],
+    arabic: "اللهم لا تقتلنا بغضبك ولا تهلكنا بعذابك وعافنا قبل ذلك",
+    transliteration: "Allahumma la taqtulna bighadabika wa la tuhlikna bi'adhabika wa 'afina qabla dhalik.",
+    english: "O Allah, do not slay us with Your wrath, do not destroy us with Your punishment, and protect us before that.",
+  },
+  {
+    id: "debt-financial-difficulty",
+    title: "Dua when in debt or financial difficulty",
+    category: "protection",
+    keywords: ["debt", "money", "financial difficulty", "rizq"],
+    arabic: "اللهم اكفني بحلالك عن حرامك وأغنني بفضلك عمن سواك",
+    transliteration: "Allahummakfini bihalalika 'an haramika wa aghnini bifadlika 'amman siwak.",
+    english: "O Allah, suffice me with what You have made lawful instead of what You have made unlawful, and make me independent by Your grace from all besides You.",
   },
 ];
 
@@ -673,26 +988,6 @@ function renderCategoryChips() {
   });
 }
 
-function stopSpeech() {
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-}
-
-function speakText(text, lang) {
-  const cleanText = decodeMojibake(text);
-
-  if (!("speechSynthesis" in window) || !cleanText) {
-    return;
-  }
-
-  stopSpeech();
-  const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.lang = lang;
-  utterance.rate = lang.startsWith("ar") ? 0.9 : 0.95;
-  window.speechSynthesis.speak(utterance);
-}
-
 function bindDuaActions() {
   duaList.querySelectorAll("[data-dua-favorite]").forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -708,20 +1003,6 @@ function bindDuaActions() {
 
       saveFavorites();
       renderDuas();
-    });
-  });
-
-  duaList.querySelectorAll("[data-dua-audio-ar]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const dua = duas.find((item) => item.id === button.dataset.duaAudioAr);
-      speakText(dua?.arabic, "ar-SA");
-    });
-  });
-
-  duaList.querySelectorAll("[data-dua-audio-en]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const dua = duas.find((item) => item.id === button.dataset.duaAudioEn);
-      speakText(dua?.english, "en-US");
     });
   });
 }
@@ -772,10 +1053,6 @@ function renderDuas() {
             </span>
           </summary>
           <div class="dua-card-body">
-            <div class="dua-card-audio-row">
-              <button class="dua-audio-button" data-dua-audio-ar="${escapeHtml(dua.id)}" type="button">Play Arabic</button>
-              <button class="dua-audio-button" data-dua-audio-en="${escapeHtml(dua.id)}" type="button">Play English</button>
-            </div>
             <p class="dua-card-arabic" dir="rtl" lang="ar">${escapeHtml(decodeMojibake(dua.arabic))}</p>
             <p class="dua-card-transliteration">${escapeHtml(dua.transliteration)}</p>
             <p class="dua-card-english">${escapeHtml(dua.english)}</p>
