@@ -4564,6 +4564,10 @@ h3 {
   align-items: center;
 }
 
+.dua-toolbar-bottom {
+  gap: 12px;
+}
+
 .dua-heading-block {
   display: flex;
   flex-direction: column;
@@ -4576,6 +4580,41 @@ h3 {
 
 .dua-header {
   padding-top: 0;
+}
+
+.dua-category-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 2px 2px;
+  scrollbar-width: none;
+}
+
+.dua-category-row::-webkit-scrollbar {
+  display: none;
+}
+
+.dua-category-chip,
+.dua-favorites-toggle,
+.dua-audio-button,
+.dua-favorite-button {
+  border: 1px solid rgba(191, 149, 77, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-strong);
+  border-radius: 999px;
+  font: inherit;
+}
+
+.dua-category-chip,
+.dua-favorites-toggle {
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+
+.dua-category-chip.is-active,
+.dua-favorites-toggle.is-active {
+  background: linear-gradient(180deg, rgba(212, 180, 118, 0.22), rgba(255, 255, 255, 0.96));
+  border-color: rgba(191, 149, 77, 0.34);
 }
 
 .dua-list {
@@ -4629,6 +4668,27 @@ h3 {
   text-transform: capitalize;
 }
 
+.dua-card-summary-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dua-favorite-button {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.dua-favorite-button.is-active {
+  background: rgba(212, 180, 118, 0.18);
+  color: #9b7b38;
+  border-color: rgba(191, 149, 77, 0.34);
+}
+
 .dua-card-arrow {
   width: 12px;
   height: 12px;
@@ -4650,6 +4710,16 @@ h3 {
   gap: 14px;
 }
 
+.dua-card-audio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dua-audio-button {
+  padding: 9px 13px;
+}
+
 .dua-card-arabic {
   margin: 0;
   color: var(--text-strong);
@@ -4657,6 +4727,14 @@ h3 {
   font-size: clamp(1.5rem, 2.7vw, 2rem);
   line-height: 1.95;
   text-align: right;
+}
+
+.dua-card-transliteration {
+  margin: 0;
+  color: #7c6b4e;
+  font-size: 0.92rem;
+  line-height: 1.72;
+  font-style: italic;
 }
 
 .dua-card-english {
@@ -4721,6 +4799,15 @@ h3 {
 
   .dua-card-english {
     font-size: 0.9rem;
+  }
+
+  .dua-toolbar-bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dua-favorites-toggle {
+    width: 100%;
   }
 }
 
