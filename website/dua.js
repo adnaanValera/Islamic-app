@@ -1428,9 +1428,7 @@ function renderDuas() {
   const filteredDuas = getFilteredDuas();
 
   if (duaStatus) {
-    duaStatus.textContent = filteredDuas.length
-      ? `${filteredDuas.length} duas`
-      : "No duas found.";
+    duaStatus.textContent = filteredDuas.length ? "" : "No duas found.";
   }
 
   if (!filteredDuas.length) {
@@ -1491,7 +1489,7 @@ duaFavoritesToggle?.addEventListener("click", () => {
 });
 
 if (duaStatus) {
-  duaStatus.textContent = "Loading duas...";
+  duaStatus.textContent = "";
 }
 
 renderCategoryChips();
