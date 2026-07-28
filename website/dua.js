@@ -1061,7 +1061,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["istighfar", "istigfar", "forgiveness", "sayyidul istighfar", "allahumma anta rabbi"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø£ÙŽÙ†Ù’ØªÙŽ Ø±ÙŽØ¨Ù‘ÙÙŠ Ù„ÙŽØ§ Ø¥ÙÙ„Ù°Ù‡ÙŽ Ø¥ÙÙ„Ù‘ÙŽØ§ Ø£ÙŽÙ†Ù’ØªÙŽØŒ Ø®ÙŽÙ„ÙŽÙ‚Ù’ØªÙŽÙ†ÙÙŠ ÙˆÙŽØ£ÙŽÙ†ÙŽØ§ Ø¹ÙŽØ¨Ù’Ø¯ÙÙƒÙŽØŒ ÙˆÙŽØ£ÙŽÙ†ÙŽØ§ Ø¹ÙŽÙ„ÙŽÙ‰ Ø¹ÙŽÙ‡Ù’Ø¯ÙÙƒÙŽ ÙˆÙŽÙˆÙŽØ¹Ù’Ø¯ÙÙƒÙŽ Ù…ÙŽØ§ Ø§Ø³Ù’ØªÙŽØ·ÙŽØ¹Ù’ØªÙØŒ Ø£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†Ù’ Ø´ÙŽØ±Ù‘Ù Ù…ÙŽØ§ ØµÙŽÙ†ÙŽØ¹Ù’ØªÙØŒ Ø£ÙŽØ¨ÙÙˆØ¡Ù Ù„ÙŽÙƒÙŽ Ø¨ÙÙ†ÙØ¹Ù’Ù…ÙŽØªÙÙƒÙŽ Ø¹ÙŽÙ„ÙŽÙŠÙ‘ÙŽØŒ ÙˆÙŽØ£ÙŽØ¨ÙÙˆØ¡Ù Ø¨ÙØ°ÙŽÙ†Ù’Ø¨ÙÙŠØŒ ÙÙŽØ§ØºÙ’ÙÙØ±Ù’ Ù„ÙÙŠØŒ ÙÙŽØ¥ÙÙ†Ù‘ÙŽÙ‡Ù Ù„ÙŽØ§ ÙŠÙŽØºÙ’ÙÙØ±Ù Ø§Ù„Ø°Ù‘ÙÙ†ÙÙˆØ¨ÙŽ Ø¥ÙÙ„Ù‘ÙŽØ§ Ø£ÙŽÙ†Ù’ØªÙŽ",
+      "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي، فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
     english:
       "O Allah, You are my Lord. There is none worthy of worship besides You. You created me and I am Your servant, and I remain upon Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge before You Your favor upon me, and I acknowledge my sin, so forgive me, for surely none forgives sins except You.",
     bookPages: buildBookPages(68),
@@ -1072,7 +1072,7 @@ const fullBookEntries = [
     category: "salah",
     keywords: ["durood", "salawat", "nabi"],
     arabic:
-      "ØµÙŽÙ„Ù‘ÙŽÙ‰ Ø§Ù„Ù„Ù‘Ù°Ù‡Ù Ø¹ÙŽÙ„ÙŽÙ‰ Ø§Ù„Ù†Ù‘ÙŽØ¨ÙÙŠÙ‘Ù Ø§Ù„Ù’Ø£ÙÙ…Ù‘ÙÙŠÙ‘Ù ÙˆÙŽØ¢Ù„ÙÙ‡Ù ÙˆÙŽØ³ÙŽÙ„Ù‘ÙŽÙ…ÙŽ ØªÙŽØ³Ù’Ù„ÙÙŠÙ…Ù‹Ø§",
+      "صَلَّى اللَّهُ عَلَى النَّبِيِّ الْأُمِّيِّ وَآلِهِ وَسَلَّمَ تَسْلِيمًا",
     english:
       "May Allah send blessings upon the unlettered Prophet, upon his family, and grant them peace.",
     bookPages: buildBookPages(68),
@@ -1083,7 +1083,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["difficulty", "hardship"],
     arabic:
-      "Ø§ÙŽÙ„Ù’Ø­ÙŽÙ…Ù’Ø¯Ù Ù„ÙÙ„Ù‘Ù°Ù‡Ù Ø§Ù„Ù‘ÙŽØ°ÙÙŠ Ø¹ÙŽØ§ÙÙŽØ§Ù†ÙÙŠ Ù…ÙÙ…Ù‘ÙŽØ§ Ø§Ø¨Ù’ØªÙŽÙ„ÙŽØ§ÙƒÙŽ Ø¨ÙÙ‡Ù ÙˆÙŽÙÙŽØ¶Ù‘ÙŽÙ„ÙŽÙ†ÙÙŠ Ø¹ÙŽÙ„ÙŽÙ‰ ÙƒÙŽØ«ÙÙŠØ±Ù Ù…Ù‘ÙÙ…Ù‘ÙŽÙ†Ù’ Ø®ÙŽÙ„ÙŽÙ‚ÙŽ ØªÙŽÙÙ’Ø¶ÙÙŠÙ„Ù‹Ø§",
+      "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي مِمَّا ابْتَلَاكَ بِهِ وَفَضَّلَنِي عَلَىٰ كَثِيرٍ مِمَّنْ خَلَقَ تَفْضِيلًا",
     english:
       "All praise is due to Allah Who has kept me safe from that with which He tested you and preferred me greatly over many of His creation.",
     bookPages: buildBookPages(69),
@@ -1143,7 +1143,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "thana"],
     arabic:
-      "Ø³ÙØ¨Ù’Ø­ÙŽØ§Ù†ÙŽÙƒÙŽ Ø§Ù„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ ÙˆÙŽØ¨ÙØ­ÙŽÙ…Ù’Ø¯ÙÙƒÙŽ ÙˆÙŽØªÙŽØ¨ÙŽØ§Ø±ÙŽÙƒÙŽ Ø§Ø³Ù’Ù…ÙÙƒÙŽ ÙˆÙŽØªÙŽØ¹ÙŽØ§Ù„ÙŽÙ‰ Ø¬ÙŽØ¯Ù‘ÙÙƒÙŽ ÙˆÙŽØ¬ÙŽÙ„Ù‘ÙŽ Ø«ÙŽÙ†ÙŽØ§Ø¤ÙÙƒÙŽ ÙˆÙŽÙ„ÙŽØ§ Ø¥ÙÙ„Ù°Ù‡ÙŽ ØºÙŽÙŠÙ’Ø±ÙÙƒÙŽ",
+      "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَىٰ جَدُّكَ وَجَلَّ ثَنَاؤُكَ وَلَا إِلٰهَ غَيْرُكَ",
     english:
       "Glory be to You, O Allah, and all praise is due to You. Blessed is Your name, exalted is Your majesty, glorious is Your praise, and there is none worthy of worship besides You.",
     bookPages: buildBookPages(71),
@@ -1154,7 +1154,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["graveyard", "qabrastan"],
     arabic:
-      "Ø§ÙŽÙ„Ø³Ù‘ÙŽÙ„ÙŽØ§Ù…Ù Ø¹ÙŽÙ„ÙŽÙŠÙ’ÙƒÙÙ…Ù’ Ø£ÙŽÙ‡Ù’Ù„ÙŽ Ø§Ù„Ø¯Ù‘ÙÙŠÙŽØ§Ø±Ù Ù…ÙÙ†ÙŽ Ø§Ù„Ù’Ù…ÙØ¤Ù’Ù…ÙÙ†ÙÙŠÙ†ÙŽ ÙˆÙŽØ§Ù„Ù’Ù…ÙØ³Ù’Ù„ÙÙ…ÙÙŠÙ†ÙŽØŒ ÙˆÙŽØ¥ÙÙ†Ù‘ÙŽØ§ Ø¥ÙÙ†Ù’ Ø´ÙŽØ§Ø¡ÙŽ Ø§Ù„Ù„Ù‘Ù°Ù‡Ù Ø¨ÙÙƒÙÙ…Ù’ Ù„ÙŽÙ„ÙŽØ§Ø­ÙÙ‚ÙÙˆÙ†ÙŽØŒ Ù†ÙŽØ³Ù’Ø£ÙŽÙ„Ù Ø§Ù„Ù„Ù‘Ù°Ù‡ÙŽ Ù„ÙŽÙ†ÙŽØ§ ÙˆÙŽÙ„ÙŽÙƒÙÙ…Ù Ø§Ù„Ù’Ø¹ÙŽØ§ÙÙÙŠÙŽØ©ÙŽ",
+      "السَّلَامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ، وَإِنَّا إِنْ شَاءَ اللَّهُ بِكُمْ لَلَاحِقُونَ، نَسْأَلُ اللَّهَ لَنَا وَلَكُمُ الْعَافِيَةَ",
     english:
       "Peace be upon you, dwellers of these abodes, from among the believers and Muslims. If Allah wills, we will surely join you. We ask Allah for wellbeing for us and for you.",
     bookPages: buildBookPages(72),
@@ -1165,7 +1165,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "funeral"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø§ØºÙ’ÙÙØ±Ù’ Ù„ÙØ­ÙŽÙŠÙ‘ÙÙ†ÙŽØ§ ÙˆÙŽÙ…ÙŽÙŠÙ‘ÙØªÙÙ†ÙŽØ§ ÙˆÙŽØ´ÙŽØ§Ù‡ÙØ¯ÙÙ†ÙŽØ§ ÙˆÙŽØºÙŽØ§Ø¦ÙØ¨ÙÙ†ÙŽØ§ ÙˆÙŽØµÙŽØºÙÙŠØ±ÙÙ†ÙŽØ§ ÙˆÙŽÙƒÙŽØ¨ÙÙŠØ±ÙÙ†ÙŽØ§ ÙˆÙŽØ°ÙŽÙƒÙŽØ±ÙÙ†ÙŽØ§ ÙˆÙŽØ£ÙÙ†Ù’Ø«ÙŽØ§Ù†ÙŽØ§. Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ù…ÙŽÙ†Ù’ Ø£ÙŽØ­Ù’ÙŠÙŽÙŠÙ’ØªÙŽÙ‡Ù Ù…ÙÙ†Ù‘ÙŽØ§ ÙÙŽØ£ÙŽØ­Ù’ÙŠÙÙ‡Ù Ø¹ÙŽÙ„ÙŽÙ‰ Ø§Ù„Ù’Ø¥ÙØ³Ù’Ù„ÙŽØ§Ù…Ù ÙˆÙŽÙ…ÙŽÙ†Ù’ ØªÙŽÙˆÙŽÙÙ‘ÙŽÙŠÙ’ØªÙŽÙ‡Ù Ù…ÙÙ†Ù‘ÙŽØ§ ÙÙŽØªÙŽÙˆÙŽÙÙ‘ÙŽÙ‡Ù Ø¹ÙŽÙ„ÙŽÙ‰ Ø§Ù„Ù’Ø¥ÙÙŠÙ…ÙŽØ§Ù†Ù",
+      "اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَائِبِنَا وَصَغِيرِنَا وَكَبِيرِنَا وَذَكَرِنَا وَأُنْثَانَا. اللَّهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَحْيِهِ عَلَى الْإِسْلَامِ وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوَفَّهُ عَلَى الْإِيمَانِ",
     english:
       "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our male and our female. O Allah, whoever You keep alive from among us, keep him alive upon Islam, and whoever You cause to die, cause him to die upon faith.",
     bookPages: buildBookPages(72),
@@ -1176,7 +1176,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "boy child"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡Ù Ù„ÙŽÙ†ÙŽØ§ ÙÙŽØ±ÙŽØ·Ù‹Ø§ ÙˆÙŽØ§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡Ù Ù„ÙŽÙ†ÙŽØ§ Ø£ÙŽØ¬Ù’Ø±Ù‹Ø§ ÙˆÙŽØ°ÙØ®Ù’Ø±Ù‹Ø§ ÙˆÙŽØ§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡Ù Ù„ÙŽÙ†ÙŽØ§ Ø´ÙŽØ§ÙÙØ¹Ù‹Ø§ ÙˆÙŽÙ…ÙØ´ÙŽÙÙ‘ÙŽØ¹Ù‹Ø§",
+      "اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا",
     english:
       "O Allah, make him a forerunner for us, a reward and a treasure for us, and make him an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(72),
@@ -1187,7 +1187,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "girl child"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡ÙŽØ§ Ù„ÙŽÙ†ÙŽØ§ ÙÙŽØ±ÙŽØ·Ù‹Ø§ ÙˆÙŽØ§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡ÙŽØ§ Ù„ÙŽÙ†ÙŽØ§ Ø£ÙŽØ¬Ù’Ø±Ù‹Ø§ ÙˆÙŽØ°ÙØ®Ù’Ø±Ù‹Ø§ ÙˆÙŽØ§Ø¬Ù’Ø¹ÙŽÙ„Ù’Ù‡ÙŽØ§ Ù„ÙŽÙ†ÙŽØ§ Ø´ÙŽØ§ÙÙØ¹ÙŽØ©Ù‹ ÙˆÙŽÙ…ÙØ´ÙŽÙÙ‘ÙŽØ¹ÙŽØ©Ù‹",
+      "اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً",
     english:
       "O Allah, make her a forerunner for us, a reward and a treasure for us, and make her an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(73),
@@ -1218,7 +1218,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["fitnah", "temptation"],
     arabic:
-      "Ø±ÙŽØ¨Ù‘Ù Ø£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†Ù’ Ù‡ÙŽÙ…ÙŽØ²ÙŽØ§ØªÙ Ø§Ù„Ø´Ù‘ÙŽÙŠÙŽØ§Ø·ÙÙŠÙ†Ù ÙˆÙŽØ£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ø±ÙŽØ¨Ù‘Ù Ø£ÙŽÙ†Ù’ ÙŠÙŽØ­Ù’Ø¶ÙØ±ÙÙˆÙ†Ù",
+      "رَبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَعُوذُ بِكَ رَبِّ أَنْ يَحْضُرُونِ",
     english:
       "My Lord, I seek refuge in You from the whispers of the devils, and I seek refuge in You, my Lord, lest they come near me.",
     bookPages: buildBookPages(76),
@@ -1229,7 +1229,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["worries", "debts", "anxiety"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø¥ÙÙ†Ù‘ÙÙŠ Ø£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†ÙŽ Ø§Ù„Ù’Ù‡ÙŽÙ…Ù‘Ù ÙˆÙŽØ§Ù„Ù’Ø­ÙŽØ²ÙŽÙ†Ù ÙˆÙŽØ£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†ÙŽ Ø§Ù„Ù’Ø¹ÙŽØ¬Ù’Ø²Ù ÙˆÙŽØ§Ù„Ù’ÙƒÙŽØ³ÙŽÙ„Ù ÙˆÙŽØ£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†ÙŽ Ø§Ù„Ù’Ø¬ÙØ¨Ù’Ù†Ù ÙˆÙŽØ§Ù„Ù’Ø¨ÙØ®Ù’Ù„Ù ÙˆÙŽØ£ÙŽØ¹ÙÙˆØ°Ù Ø¨ÙÙƒÙŽ Ù…ÙÙ†Ù’ ØºÙŽÙ„ÙŽØ¨ÙŽØ©Ù Ø§Ù„Ø¯Ù‘ÙŽÙŠÙ’Ù†Ù ÙˆÙŽÙ‚ÙŽÙ‡Ù’Ø±Ù Ø§Ù„Ø±Ù‘ÙØ¬ÙŽØ§Ù„Ù",
+      "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
     english:
       "O Allah, I seek refuge in You from worry and grief, from weakness and laziness, from cowardice and miserliness, and from being overcome by debt and overpowered by people.",
     bookPages: buildBookPages(76),
@@ -1240,9 +1240,9 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["istikharah", "guidance", "decision"],
     arabic:
-      "Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø¥ÙÙ†Ù‘ÙÙŠ Ø£ÙŽØ³Ù’ØªÙŽØ®ÙÙŠØ±ÙÙƒÙŽ Ø¨ÙØ¹ÙÙ„Ù’Ù…ÙÙƒÙŽ ÙˆÙŽØ£ÙŽØ³Ù’ØªÙŽÙ‚Ù’Ø¯ÙØ±ÙÙƒÙŽ Ø¨ÙÙ‚ÙØ¯Ù’Ø±ÙŽØªÙÙƒÙŽ ÙˆÙŽØ£ÙŽØ³Ù’Ø£ÙŽÙ„ÙÙƒÙŽ Ù…ÙÙ†Ù’ ÙÙŽØ¶Ù’Ù„ÙÙƒÙŽ Ø§Ù„Ù’Ø¹ÙŽØ¸ÙÙŠÙ…Ù ÙÙŽØ¥ÙÙ†Ù‘ÙŽÙƒÙŽ ØªÙŽÙ‚Ù’Ø¯ÙØ±Ù ÙˆÙŽÙ„ÙŽØ§ Ø£ÙŽÙ‚Ù’Ø¯ÙØ±Ù ÙˆÙŽØªÙŽØ¹Ù’Ù„ÙŽÙ…Ù ÙˆÙŽÙ„ÙŽØ§ Ø£ÙŽØ¹Ù’Ù„ÙŽÙ…Ù ÙˆÙŽØ£ÙŽÙ†Ù’ØªÙŽ Ø¹ÙŽÙ„Ù‘ÙŽØ§Ù…Ù Ø§Ù„Ù’ØºÙÙŠÙÙˆØ¨Ù. Ø§ÙŽÙ„Ù„Ù‘Ù°Ù‡ÙÙ…Ù‘ÙŽ Ø¥ÙÙ†Ù’ ÙƒÙÙ†Ù’ØªÙŽ ØªÙŽØ¹Ù’Ù„ÙŽÙ…Ù Ø£ÙŽÙ†Ù‘ÙŽ Ù‡Ù°Ø°ÙŽØ§ Ø§Ù„Ù’Ø£ÙŽÙ…Ù’Ø±ÙŽ Ø®ÙŽÙŠÙ’Ø±ÙŒ Ù„ÙÙŠ ÙÙÙŠ Ø¯ÙÙŠÙ†ÙÙŠ ÙˆÙŽÙ…ÙŽØ¹ÙŽØ§Ø´ÙÙŠ ÙˆÙŽØ¹ÙŽØ§Ù‚ÙØ¨ÙŽØ©Ù Ø£ÙŽÙ…Ù’Ø±ÙÙŠ ÙÙŽØ§Ù‚Ù’Ø¯ÙØ±Ù’Ù‡Ù Ù„ÙÙŠ ÙˆÙŽÙŠÙŽØ³Ù‘ÙØ±Ù’Ù‡Ù Ù„ÙÙŠ Ø«ÙÙ…Ù‘ÙŽ Ø¨ÙŽØ§Ø±ÙÙƒÙ’ Ù„ÙÙŠ ÙÙÙŠÙ‡Ù. ÙˆÙŽØ¥ÙÙ†Ù’ ÙƒÙÙ†Ù’ØªÙŽ ØªÙŽØ¹Ù’Ù„ÙŽÙ…Ù Ø£ÙŽÙ†Ù‘ÙŽ Ù‡Ù°Ø°ÙŽØ§ Ø§Ù„Ù’Ø£ÙŽÙ…Ù’Ø±ÙŽ Ø´ÙŽØ±Ù‘ÙŒ Ù„ÙÙŠ ÙÙÙŠ Ø¯ÙÙŠÙ†ÙÙŠ ÙˆÙŽÙ…ÙŽØ¹ÙŽØ§Ø´ÙÙŠ ÙˆÙŽØ¹ÙŽØ§Ù‚ÙØ¨ÙŽØ©Ù Ø£ÙŽÙ…Ù’Ø±ÙÙŠ ÙÙŽØ§ØµÙ’Ø±ÙÙÙ’Ù‡Ù Ø¹ÙŽÙ†Ù‘ÙÙŠ ÙˆÙŽØ§ØµÙ’Ø±ÙÙÙ’Ù†ÙÙŠ Ø¹ÙŽÙ†Ù’Ù‡Ù ÙˆÙŽØ§Ù‚Ù’Ø¯ÙØ±Ù’ Ù„ÙÙŠÙŽ Ø§Ù„Ù’Ø®ÙŽÙŠÙ’Ø±ÙŽ Ø­ÙŽÙŠÙ’Ø«Ù ÙƒÙŽØ§Ù†ÙŽ Ø«ÙÙ…Ù‘ÙŽ Ø£ÙŽØ±Ù’Ø¶ÙÙ†ÙÙŠ Ø¨ÙÙ‡Ù",
+      "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ، فَإِنَّكَ تَقْدِرُ وَلَا أَقْدِرُ، وَتَعْلَمُ وَلَا أَعْلَمُ، وَأَنْتَ عَلَّامُ الْغُيُوبِ. اللَّهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ. وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ",
     english:
-      "O Allah, I seek the good from Your knowledge and seek ability from Your power, and I ask You from Your immense bounty. You have power and I do not. You know and I do not. You are the Knower of the unseen. O Allah, if You know this matter to be good for my religion, my livelihood and the outcome of my affairs, then decree it for me, make it easy for me and bless me in it. And if You know this matter to be bad for my religion, my livelihood and the outcome of my affairs, then turn it away from me and turn me away from it, and decree Ø§Ù„Ø®ÙŠØ± for me wherever it may be, then make me content with it.",
+      "O Allah, I seek goodness from Your knowledge and seek ability from Your power, and I ask You from Your immense bounty. You have power and I do not. You know and I do not. You are the Knower of the unseen. O Allah, if You know this matter to be good for my religion, my livelihood, and the outcome of my affairs, then decree it for me, make it easy for me, and bless me in it. And if You know this matter to be bad for my religion, my livelihood, and the outcome of my affairs, then turn it away from me and turn me away from it, and decree what is good for me wherever it may be, then make me content with it.",
     bookPages: buildBookPages(81),
   },
   {
@@ -1262,7 +1262,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["accidents", "safety"],
     arabic:
-      "Ø¨ÙØ³Ù’Ù…Ù Ø§Ù„Ù„Ù‘Ù°Ù‡Ù Ø§Ù„Ù‘ÙŽØ°ÙÙŠ Ù„ÙŽØ§ ÙŠÙŽØ¶ÙØ±Ù‘Ù Ù…ÙŽØ¹ÙŽ Ø§Ø³Ù’Ù…ÙÙ‡Ù Ø´ÙŽÙŠÙ’Ø¡ÙŒ ÙÙÙŠ Ø§Ù„Ù’Ø£ÙŽØ±Ù’Ø¶Ù ÙˆÙŽÙ„ÙŽØ§ ÙÙÙŠ Ø§Ù„Ø³Ù‘ÙŽÙ…ÙŽØ§Ø¡Ù ÙˆÙŽÙ‡ÙÙˆÙŽ Ø§Ù„Ø³Ù‘ÙŽÙ…ÙÙŠØ¹Ù Ø§Ù„Ù’Ø¹ÙŽÙ„ÙÙŠÙ…Ù",
+      "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
     english:
       "In the name of Allah, with whose name nothing in the earth or the sky can cause harm, and He is the All-Hearing, the All-Knowing.",
     bookPages: buildBookPages(87),
