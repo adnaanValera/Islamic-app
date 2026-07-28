@@ -1061,7 +1061,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["istighfar", "istigfar", "forgiveness", "sayyidul istighfar", "allahumma anta rabbi"],
     arabic:
-      "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي، فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+      "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي، فاغفر لي، فإنه لا يغفر الذنوب إلا أنت",
     english:
       "O Allah, You are my Lord. There is none worthy of worship besides You. You created me and I am Your servant, and I remain upon Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge before You Your favor upon me, and I acknowledge my sin, so forgive me, for surely none forgives sins except You.",
     bookPages: buildBookPages(68),
@@ -1072,7 +1072,7 @@ const fullBookEntries = [
     category: "salah",
     keywords: ["durood", "salawat", "nabi"],
     arabic:
-      "صَلَّى اللَّهُ عَلَى النَّبِيِّ الْأُمِّيِّ وَآلِهِ وَسَلَّمَ تَسْلِيمًا",
+      "صلى الله على النبي الأمي وآله وسلم تسليما",
     english:
       "May Allah send blessings upon the unlettered Prophet, upon his family, and grant them peace.",
     bookPages: buildBookPages(68),
@@ -1083,7 +1083,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["difficulty", "hardship"],
     arabic:
-      "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي مِمَّا ابْتَلَاكَ بِهِ وَفَضَّلَنِي عَلَىٰ كَثِيرٍ مِمَّنْ خَلَقَ تَفْضِيلًا",
+      "الحمد لله الذي عافاني مما ابتلاك به وفضلني على كثير ممن خلق تفضيلا",
     english:
       "All praise is due to Allah Who has kept me safe from that with which He tested you and preferred me greatly over many of His creation.",
     bookPages: buildBookPages(69),
@@ -1143,7 +1143,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "thana"],
     arabic:
-      "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَىٰ جَدُّكَ وَجَلَّ ثَنَاؤُكَ وَلَا إِلٰهَ غَيْرُكَ",
+      "سبحانك اللهم وبحمدك وتبارك اسمك وتعالى جدك وجل ثناؤك ولا إله غيرك",
     english:
       "Glory be to You, O Allah, and all praise is due to You. Blessed is Your name, exalted is Your majesty, glorious is Your praise, and there is none worthy of worship besides You.",
     bookPages: buildBookPages(71),
@@ -1154,7 +1154,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["graveyard", "qabrastan"],
     arabic:
-      "السَّلَامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ، وَإِنَّا إِنْ شَاءَ اللَّهُ بِكُمْ لَلَاحِقُونَ، نَسْأَلُ اللَّهَ لَنَا وَلَكُمُ الْعَافِيَةَ",
+      "السلام عليكم أهل الديار من المؤمنين والمسلمين، وإنا إن شاء الله بكم للاحقون، نسأل الله لنا ولكم العافية",
     english:
       "Peace be upon you, dwellers of these abodes, from among the believers and Muslims. If Allah wills, we will surely join you. We ask Allah for wellbeing for us and for you.",
     bookPages: buildBookPages(72),
@@ -1165,7 +1165,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "funeral"],
     arabic:
-      "اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَائِبِنَا وَصَغِيرِنَا وَكَبِيرِنَا وَذَكَرِنَا وَأُنْثَانَا. اللَّهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَحْيِهِ عَلَى الْإِسْلَامِ وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوَفَّهُ عَلَى الْإِيمَانِ",
+      "اللهم اغفر لحينا وميتنا وشاهدنا وغائبنا وصغيرنا وكبيرنا وذكرنا وأنثانا. اللهم من أحييته منا فأحيه على الإسلام ومن توفيته منا فتوفه على الإيمان",
     english:
       "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our male and our female. O Allah, whoever You keep alive from among us, keep him alive upon Islam, and whoever You cause to die, cause him to die upon faith.",
     bookPages: buildBookPages(72),
@@ -1176,7 +1176,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "boy child"],
     arabic:
-      "اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا",
+      "اللهم اجعله لنا فرطا واجعله لنا أجرا وذخرا واجعله لنا شافعا ومشفعا",
     english:
       "O Allah, make him a forerunner for us, a reward and a treasure for us, and make him an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(72),
@@ -1187,7 +1187,7 @@ const fullBookEntries = [
     category: "janazah",
     keywords: ["janazah", "girl child"],
     arabic:
-      "اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً",
+      "اللهم اجعلها لنا فرطا واجعلها لنا أجرا وذخرا واجعلها لنا شافعة ومشفعة",
     english:
       "O Allah, make her a forerunner for us, a reward and a treasure for us, and make her an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(73),
@@ -1218,7 +1218,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["fitnah", "temptation"],
     arabic:
-      "رَبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَعُوذُ بِكَ رَبِّ أَنْ يَحْضُرُونِ",
+      "رب أعوذ بك من همزات الشياطين وأعوذ بك رب أن يحضرون",
     english:
       "My Lord, I seek refuge in You from the whispers of the devils, and I seek refuge in You, my Lord, lest they come near me.",
     bookPages: buildBookPages(76),
@@ -1229,7 +1229,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["worries", "debts", "anxiety"],
     arabic:
-      "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
+      "اللهم إني أعوذ بك من الهم والحزن وأعوذ بك من العجز والكسل وأعوذ بك من الجبن والبخل وأعوذ بك من غلبة الدين وقهر الرجال",
     english:
       "O Allah, I seek refuge in You from worry and grief, from weakness and laziness, from cowardice and miserliness, and from being overcome by debt and overpowered by people.",
     bookPages: buildBookPages(76),
@@ -1240,7 +1240,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["istikharah", "guidance", "decision"],
     arabic:
-      "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ، فَإِنَّكَ تَقْدِرُ وَلَا أَقْدِرُ، وَتَعْلَمُ وَلَا أَعْلَمُ، وَأَنْتَ عَلَّامُ الْغُيُوبِ. اللَّهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ. وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ",
+      "اللهم إني أستخيرك بعلمك وأستقدرك بقدرتك وأسألك من فضلك العظيم، فإنك تقدر ولا أقدر، وتعلم ولا أعلم، وأنت علام الغيوب. اللهم إن كنت تعلم أن هذا الأمر خير لي في ديني ومعاشي وعاقبة أمري فاقدره لي ويسره لي ثم بارك لي فيه. وإن كنت تعلم أن هذا الأمر شر لي في ديني ومعاشي وعاقبة أمري فاصرفه عني واصرفني عنه واقدر لي الخير حيث كان ثم أرضني به",
     english:
       "O Allah, I seek goodness from Your knowledge and seek ability from Your power, and I ask You from Your immense bounty. You have power and I do not. You know and I do not. You are the Knower of the unseen. O Allah, if You know this matter to be good for my religion, my livelihood, and the outcome of my affairs, then decree it for me, make it easy for me, and bless me in it. And if You know this matter to be bad for my religion, my livelihood, and the outcome of my affairs, then turn it away from me and turn me away from it, and decree what is good for me wherever it may be, then make me content with it.",
     bookPages: buildBookPages(81),
@@ -1251,7 +1251,7 @@ const fullBookEntries = [
     category: "daily",
     keywords: ["ma'thoorah", "morning", "evening"],
     arabic:
-      "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+      "يا حي يا قيوم برحمتك أستغيث، أصلح لي شأني كله، ولا تكلني إلى نفسي طرفة عين",
     english:
       "O Ever-Living, O Sustainer, in Your mercy I seek relief. Set right all of my affairs and do not leave me to myself even for the blink of an eye.",
     bookPages: buildBookPages(86),
@@ -1262,7 +1262,7 @@ const fullBookEntries = [
     category: "protection",
     keywords: ["accidents", "safety"],
     arabic:
-      "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+      "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم",
     english:
       "In the name of Allah, with whose name nothing in the earth or the sky can cause harm, and He is the All-Hearing, the All-Knowing.",
     bookPages: buildBookPages(87),
