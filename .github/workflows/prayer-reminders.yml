@@ -12,14 +12,37 @@ jobs:
       - name: Trigger Nooriva prayer reminders
         env:
           REMINDER_URL: ${{ secrets.NOORIVA_PRAYER_REMINDER_URL }}
+          SITE_URL: ${{ secrets.NOORIVA_SITE_URL }}
           CRON_SECRET: ${{ secrets.NOORIVA_CRON_SECRET }}
         run: |
-          if [ -z "$REMINDER_URL" ]; then
-            echo "NOORIVA_PRAYER_REMINDER_URL is missing"
+          TARGET_URL="$REMINDER_URL"
+
+          if [ -z "$TARGET_URL" ] && [ -n "$SITE_URL" ]; then
+            TARGET_URL="${SITE_URL%/}/api/push-send?mode=prayer"
+          fi
+
+          if [ -z "$TARGET_URL" ]; then
+            echo "Set NOORIVA_PRAYER_REMINDER_URL or NOORIVA_SITE_URL"
             exit 1
           fi
+
+          TARGET_URL="$(printf '%s' "$TARGET_URL" | sed 's#/api/push-send-prayer-reminders#/api/push-send?mode=prayer#')"
+
+          case "$TARGET_URL" in
+            *"mode=prayer"*) ;;
+            *\?*) TARGET_URL="${TARGET_URL}&mode=prayer" ;;
+            *) TARGET_URL="${TARGET_URL}?mode=prayer" ;;
+          esac
+
+          case "$TARGET_URL" in
+            *"window="*) ;;
+            *\?*) TARGET_URL="${TARGET_URL}&window=30" ;;
+            *) TARGET_URL="${TARGET_URL}?window=30" ;;
+          esac
+
+          echo "Triggering $TARGET_URL"
 
           curl --fail-with-body \
             -X POST \
             -H "x-cron-secret: $CRON_SECRET" \
-            "$REMINDER_URL?window=30"
+            "$TARGET_URL"
