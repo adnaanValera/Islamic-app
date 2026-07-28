@@ -1288,12 +1288,19 @@ let favoritesOnly = false;
 function decodeMojibake(value) {
   const raw = String(value || "");
 
-  if (!/[ØÙÚÛÃ]/.test(raw)) {
+  if (/[\u0600-\u06FF]/.test(raw) || !/[ØÙÚÛÃ]/.test(raw)) {
     return raw;
   }
 
   try {
-    return decodeURIComponent(escape(raw));
+    const bytes = Uint8Array.from([...raw].map((character) => character.charCodeAt(0) & 0xff));
+    const decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+
+    if (/[\u0600-\u06FF]/.test(decoded)) {
+      return decoded;
+    }
+
+    return raw;
   } catch {
     return raw;
   }
