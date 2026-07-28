@@ -10,7 +10,7 @@ const settingsTestStatus = document.getElementById("settings-test-status");
 
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
-const pushSendTestApiUrl = "/api/push-send-test";
+const pushSendTestApiUrl = "/api/push-send?mode=test";
 
 function base64UrlToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);

@@ -1,3 +1,4 @@
+import { fetchAyahOfTheDay } from "./_lib/ayah-of-day.js";
 import { loadChecklistStateMap, pruneChecklistStateMap } from "./_lib/prayer-checklist-state.js";
 import { fetchPrayerBoard, getMalawiTimeParts, getPrayerTimesFromPayload } from "./_lib/prayer-data.js";
 import { loadSubscriptions, removeSubscription } from "./_lib/push-store.js";
@@ -17,6 +18,14 @@ function isAuthorized(request) {
   const bearer = request.headers.authorization?.replace(/^Bearer\s+/i, "");
   const headerSecret = request.headers["x-cron-secret"];
   return bearer === expected || headerSecret === expected;
+}
+
+function isValidSubscription(subscription) {
+  return Boolean(
+    subscription?.endpoint &&
+      subscription?.keys?.p256dh &&
+      subscription?.keys?.auth,
+  );
 }
 
 function getMinutes(timeValue) {
@@ -56,7 +65,8 @@ function getDuePrayers(prayers, currentMinutes, windowMinutes) {
       return false;
     }
 
-    const normalizedPrayerMinutes = prayerMinutes < lowerBound && currentMinutes > 24 * 60 ? prayerMinutes + 24 * 60 : prayerMinutes;
+    const normalizedPrayerMinutes =
+      prayerMinutes < lowerBound && currentMinutes > 24 * 60 ? prayerMinutes + 24 * 60 : prayerMinutes;
     return normalizedPrayerMinutes >= lowerBound && normalizedPrayerMinutes <= currentMinutes;
   });
 }
@@ -123,20 +133,89 @@ function isPrayerChecked(checklistStates, endpoint, dateKey, prayerLabel) {
   return Boolean(state?.dateKey === dateKey && state?.checked?.[prayerLabel]);
 }
 
-export default async function handler(request, response) {
-  if (request.method !== "GET" && request.method !== "POST") {
-    response.setHeader("Allow", "GET, POST");
-    response.status(405).json({ ok: false, error: "Method not allowed." });
+async function handleTest(request, response) {
+  const subscription = request.body?.subscription;
+
+  if (!isValidSubscription(subscription)) {
+    response.status(400).json({ ok: false, error: "A valid subscription is required." });
     return;
   }
 
+  try {
+    await sendPushNotification(subscription, {
+      title: "Nooriva test notification",
+      body: "Notifications are working on this device.",
+      url: "/settings.html",
+      prayer: "test",
+    });
+
+    response.status(200).json({ ok: true });
+  } catch (error) {
+    response.status(500).json({
+      ok: false,
+      error: error?.body || error?.message || "Unable to send test notification.",
+    });
+  }
+}
+
+async function handleAyah(request, response) {
   if (!isAuthorized(request)) {
     response.status(401).json({ ok: false, error: "Unauthorized." });
     return;
   }
 
-  if (!isPushConfigured()) {
-    response.status(503).json({ ok: false, error: "Push notifications are not configured." });
+  const { dateKey, timeKey } = getMalawiTimeParts();
+
+  if (timeKey !== "11:00") {
+    response.status(200).json({
+      ok: true,
+      sent: 0,
+      message: `No ayah notification due at ${timeKey} on ${dateKey}.`,
+    });
+    return;
+  }
+
+  const ayah = await fetchAyahOfTheDay();
+  const subscriptions = await loadSubscriptions();
+  const removed = [];
+  let sent = 0;
+
+  for (const subscription of subscriptions) {
+    try {
+      await sendPushNotification(subscription, {
+        title: "Ayah of the day",
+        body: `${ayah.surahName} ${ayah.ayahInSurah}: ${ayah.english}`,
+        arabic: ayah.arabic,
+        reference: `${ayah.surahName} ${ayah.ayahInSurah}`,
+        url: "/index.html",
+      });
+      sent += 1;
+    } catch (error) {
+      const statusCode = error?.statusCode ?? error?.status ?? 0;
+
+      if (statusCode === 404 || statusCode === 410) {
+        removed.push(subscription.endpoint);
+      }
+    }
+  }
+
+  for (const endpoint of removed) {
+    await removeSubscription(endpoint);
+  }
+
+  response.status(200).json({
+    ok: true,
+    sent,
+    removed: removed.length,
+    dateKey,
+    timeKey,
+    reference: `${ayah.surahName} ${ayah.ayahInSurah}`,
+  });
+}
+
+async function handlePrayer(request, response) {
+  if (!isAuthorized(request)) {
+    response.status(401).json({ ok: false, error: "Unauthorized." });
     return;
   }
 
@@ -289,5 +368,52 @@ export default async function handler(request, response) {
     windowMinutes,
     timeKey,
     dateKey,
+  });
+}
+
+export default async function handler(request, response) {
+  if (!isPushConfigured()) {
+    response.status(503).json({ ok: false, error: "Push notifications are not configured." });
+    return;
+  }
+
+  const mode = String(request.query?.mode || request.body?.mode || "").toLowerCase();
+
+  if (mode === "test") {
+    if (request.method !== "POST") {
+      response.setHeader("Allow", "POST");
+      response.status(405).json({ ok: false, error: "Method not allowed." });
+      return;
+    }
+
+    await handleTest(request, response);
+    return;
+  }
+
+  if (mode === "ayah") {
+    if (request.method !== "GET" && request.method !== "POST") {
+      response.setHeader("Allow", "GET, POST");
+      response.status(405).json({ ok: false, error: "Method not allowed." });
+      return;
+    }
+
+    await handleAyah(request, response);
+    return;
+  }
+
+  if (mode === "prayer") {
+    if (request.method !== "GET" && request.method !== "POST") {
+      response.setHeader("Allow", "GET, POST");
+      response.status(405).json({ ok: false, error: "Method not allowed." });
+      return;
+    }
+
+    await handlePrayer(request, response);
+    return;
+  }
+
+  response.status(400).json({
+    ok: false,
+    error: "Unknown push mode.",
   });
 }
