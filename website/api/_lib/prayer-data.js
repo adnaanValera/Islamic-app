@@ -1,11 +1,11 @@
 const MALAWI_TIME_ZONE = "Africa/Blantyre";
 
 export const PRAYER_DEFINITIONS = [
-  { key: "fajrAthan", label: "Fajr" },
-  { key: "dhuhrAthan", label: "Zuhr" },
-  { key: "asrAthan", label: "Asr" },
-  { key: "maghribAthan", label: "Maghrib" },
-  { key: "eshaAthan", label: "Esha" },
+  { athanKey: "fajrAthan", salahKey: "fajrJamaah", endKey: "sunrise", label: "Fajr" },
+  { athanKey: "dhuhrAthan", salahKey: "dhuhrJamaah", endKey: "asrShafi", label: "Zuhr" },
+  { athanKey: "asrAthan", salahKey: "asrJamaah", endKey: "sunset", label: "Asr" },
+  { athanKey: "maghribAthan", salahKey: "maghribJamaah", endKey: "eshaStarts", label: "Maghrib" },
+  { athanKey: "eshaAthan", salahKey: "eshaJamaah", endKey: null, label: "Esha" },
 ];
 
 export async function fetchPrayerBoard() {
@@ -25,9 +25,12 @@ export async function fetchPrayerBoard() {
 export function getPrayerTimesFromPayload(payload) {
   const data = payload?.data ?? {};
 
-  return PRAYER_DEFINITIONS.map((prayer) => ({
+  return PRAYER_DEFINITIONS.map((prayer, index) => ({
     label: prayer.label,
-    athan: data?.[prayer.key] ?? "--:--",
+    athan: data?.[prayer.athanKey] ?? "--:--",
+    salah: data?.[prayer.salahKey] ?? "--:--",
+    endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
+    index,
   }));
 }
 

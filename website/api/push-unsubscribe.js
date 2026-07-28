@@ -1,4 +1,5 @@
 import { isPushStorageConfigured, removeSubscription } from "./_lib/push-store.js";
+import { removeChecklistState } from "./_lib/prayer-checklist-state.js";
 
 export default async function handler(request, response) {
   if (request.method !== "POST") {
@@ -20,5 +21,6 @@ export default async function handler(request, response) {
   }
 
   const count = await removeSubscription(endpoint);
+  await removeChecklistState(endpoint);
   response.status(200).json({ ok: true, subscriptions: count });
 }

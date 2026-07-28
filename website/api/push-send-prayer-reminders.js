@@ -1,3 +1,4 @@
+import { loadChecklistStateMap, pruneChecklistStateMap } from "./_lib/prayer-checklist-state.js";
 import { fetchPrayerBoard, getMalawiTimeParts, getPrayerTimesFromPayload } from "./_lib/prayer-data.js";
 import { loadSubscriptions, removeSubscription } from "./_lib/push-store.js";
 import { loadReminderState, pruneReminderState, saveReminderState } from "./_lib/reminder-state.js";
@@ -30,6 +31,21 @@ function getMinutes(timeValue) {
   return hours * 60 + minutes;
 }
 
+function normalizeCurrentMinutes(prayers, currentMinutes) {
+  const hasOvernightPrayer = prayers.some((prayer) => {
+    const startMinutes = getMinutes(prayer.salah);
+    const endMinutes = getMinutes(prayer.endTime);
+    return startMinutes !== null && endMinutes !== null && endMinutes <= startMinutes;
+  });
+
+  if (!hasOvernightPrayer) {
+    return currentMinutes;
+  }
+
+  const earlyMorningCutoff = 6 * 60;
+  return currentMinutes < earlyMorningCutoff ? currentMinutes + 24 * 60 : currentMinutes;
+}
+
 function getDuePrayers(prayers, currentMinutes, windowMinutes) {
   const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1), 0);
 
@@ -40,8 +56,71 @@ function getDuePrayers(prayers, currentMinutes, windowMinutes) {
       return false;
     }
 
-    return prayerMinutes >= lowerBound && prayerMinutes <= currentMinutes;
+    const normalizedPrayerMinutes = prayerMinutes < lowerBound && currentMinutes > 24 * 60 ? prayerMinutes + 24 * 60 : prayerMinutes;
+    return normalizedPrayerMinutes >= lowerBound && normalizedPrayerMinutes <= currentMinutes;
   });
+}
+
+function getPrayerWindows(prayers) {
+  return prayers
+    .map((prayer, index) => {
+      const startMinutes = getMinutes(prayer.salah);
+      let endMinutes = getMinutes(prayer.endTime);
+
+      if (startMinutes === null) {
+        return null;
+      }
+
+      if (endMinutes === null) {
+        if (index < prayers.length - 1) {
+          endMinutes = getMinutes(prayers[index + 1]?.salah);
+        } else {
+          endMinutes = getMinutes(prayers[0]?.salah);
+        }
+      }
+
+      if (endMinutes === null) {
+        return null;
+      }
+
+      if (endMinutes <= startMinutes) {
+        endMinutes += 24 * 60;
+      }
+
+      return {
+        ...prayer,
+        startMinutes,
+        endMinutes,
+      };
+    })
+    .filter(Boolean);
+}
+
+function getDueRunningOutReminders(prayers, currentMinutes, windowMinutes) {
+  const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1), 0);
+
+  return getPrayerWindows(prayers).flatMap((prayer) => {
+    const checkpoints = [];
+    let checkpointMinutes = prayer.startMinutes + 30;
+
+    while (checkpointMinutes < prayer.endMinutes) {
+      if (checkpointMinutes >= lowerBound && checkpointMinutes <= currentMinutes) {
+        checkpoints.push({
+          ...prayer,
+          checkpointMinutes,
+        });
+      }
+
+      checkpointMinutes += 30;
+    }
+
+    return checkpoints;
+  });
+}
+
+function isPrayerChecked(checklistStates, endpoint, dateKey, prayerLabel) {
+  const state = checklistStates[endpoint];
+  return Boolean(state?.dateKey === dateKey && state?.checked?.[prayerLabel]);
 }
 
 export default async function handler(request, response) {
@@ -64,22 +143,25 @@ export default async function handler(request, response) {
   const payload = await fetchPrayerBoard();
   const prayers = getPrayerTimesFromPayload(payload);
   const { dateKey, timeKey } = getMalawiTimeParts();
-  const currentMinutes = getMinutes(timeKey);
+  const rawCurrentMinutes = getMinutes(timeKey);
   const requestedWindow = Number.parseInt(request.query?.window ?? request.headers["x-window-minutes"], 10);
-  const windowMinutes = Number.isFinite(requestedWindow) ? Math.min(Math.max(requestedWindow, 1), 15) : 1;
+  const windowMinutes = Number.isFinite(requestedWindow) ? Math.min(Math.max(requestedWindow, 1), 30) : 5;
 
-  if (currentMinutes === null) {
+  if (rawCurrentMinutes === null) {
     response.status(500).json({ ok: false, error: "Unable to resolve current Malawi time." });
     return;
   }
 
+  const currentMinutes = normalizeCurrentMinutes(prayers, rawCurrentMinutes);
   const duePrayers = getDuePrayers(prayers, currentMinutes, windowMinutes);
+  const dueRunningOut = getDueRunningOutReminders(prayers, currentMinutes, windowMinutes);
 
-  if (duePrayers.length === 0) {
+  if (duePrayers.length === 0 && dueRunningOut.length === 0) {
     response.status(200).json({
       ok: true,
       sent: 0,
       due: [],
+      runningOut: [],
       windowMinutes,
       message: `No prayer reminders due at ${timeKey} on ${dateKey}.`,
     });
@@ -87,10 +169,12 @@ export default async function handler(request, response) {
   }
 
   const subscriptions = await loadSubscriptions();
+  const checklistStates = pruneChecklistStateMap(await loadChecklistStateMap(), dateKey);
   const reminderState = pruneReminderState(await loadReminderState(), dateKey);
   const alreadySent = [];
+
   const pendingPrayers = duePrayers.filter((prayer) => {
-    const slotKey = `${dateKey}:${prayer.label}:${prayer.athan}`;
+    const slotKey = `${dateKey}:start:${prayer.label}:${prayer.athan}`;
     const hasSent = reminderState[slotKey] === dateKey;
 
     if (hasSent) {
@@ -100,12 +184,24 @@ export default async function handler(request, response) {
     return !hasSent;
   });
 
-  if (pendingPrayers.length === 0) {
+  const pendingRunningOut = dueRunningOut.filter((prayer) => {
+    const slotKey = `${dateKey}:running:${prayer.label}:${prayer.checkpointMinutes}`;
+    const hasSent = reminderState[slotKey] === dateKey;
+
+    if (hasSent) {
+      alreadySent.push(slotKey);
+    }
+
+    return !hasSent;
+  });
+
+  if (pendingPrayers.length === 0 && pendingRunningOut.length === 0) {
     response.status(200).json({
       ok: true,
       sent: 0,
       removed: 0,
       due: duePrayers.map((prayer) => prayer.label),
+      runningOut: dueRunningOut.map((prayer) => prayer.label),
       skipped: alreadySent.length,
       windowMinutes,
       timeKey,
@@ -117,10 +213,14 @@ export default async function handler(request, response) {
 
   let sent = 0;
   let failed = 0;
-  const removed = [];
+  const removed = new Set();
 
   for (const prayer of pendingPrayers) {
     for (const subscription of subscriptions) {
+      if (isPrayerChecked(checklistStates, subscription.endpoint, dateKey, prayer.label)) {
+        continue;
+      }
+
       try {
         await sendPushNotification(subscription, {
           title: `${prayer.label} time`,
@@ -134,14 +234,43 @@ export default async function handler(request, response) {
         const statusCode = error?.statusCode ?? error?.status ?? 0;
 
         if (statusCode === 404 || statusCode === 410) {
-          removed.push(subscription.endpoint);
+          removed.add(subscription.endpoint);
         } else {
           failed += 1;
         }
       }
     }
 
-    reminderState[`${dateKey}:${prayer.label}:${prayer.athan}`] = dateKey;
+    reminderState[`${dateKey}:start:${prayer.label}:${prayer.athan}`] = dateKey;
+  }
+
+  for (const prayer of pendingRunningOut) {
+    for (const subscription of subscriptions) {
+      if (isPrayerChecked(checklistStates, subscription.endpoint, dateKey, prayer.label)) {
+        continue;
+      }
+
+      try {
+        await sendPushNotification(subscription, {
+          title: `${prayer.label} time is running out!!!`,
+          body: `${prayer.label} time is running out!!!`,
+          prayer: prayer.label,
+          time: prayer.salah,
+          url: "/prayer.html",
+        });
+        sent += 1;
+      } catch (error) {
+        const statusCode = error?.statusCode ?? error?.status ?? 0;
+
+        if (statusCode === 404 || statusCode === 410) {
+          removed.add(subscription.endpoint);
+        } else {
+          failed += 1;
+        }
+      }
+    }
+
+    reminderState[`${dateKey}:running:${prayer.label}:${prayer.checkpointMinutes}`] = dateKey;
   }
 
   for (const endpoint of removed) {
@@ -154,8 +283,9 @@ export default async function handler(request, response) {
     ok: true,
     sent,
     failed,
-    removed: removed.length,
+    removed: removed.size,
     due: pendingPrayers.map((prayer) => prayer.label),
+    runningOut: pendingRunningOut.map((prayer) => prayer.label),
     windowMinutes,
     timeKey,
     dateKey,

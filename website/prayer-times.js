@@ -2,6 +2,7 @@ const prayerApiUrl = "/api/prayer-times";
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
 const pushUnsubscribeApiUrl = "/api/push-unsubscribe";
+const pushSyncPrayerChecklistApiUrl = "/api/push-sync-prayer-checklist";
 const malawiTimeZone = "Africa/Blantyre";
 
 const prayers = [
@@ -31,6 +32,7 @@ let nextPrayerNotificationTimeout = null;
 let serviceWorkerRegistration = null;
 let pushPublicKey = "";
 let backendPushReady = false;
+let lastChecklistSyncKey = "";
 const notificationIcon = "./assets/icon-192.png";
 const notificationBadge = "./assets/favicon-32.png";
 
@@ -127,6 +129,58 @@ function saveChecklistState(checked) {
       checked,
     }),
   );
+}
+
+async function getCurrentPushSubscription() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    return null;
+  }
+
+  const registration = serviceWorkerRegistration ?? (await navigator.serviceWorker.ready.catch(() => null));
+  if (!registration) {
+    return null;
+  }
+
+  return registration.pushManager.getSubscription();
+}
+
+async function syncPrayerChecklistToBackend() {
+  if (Notification.permission !== "granted") {
+    return false;
+  }
+
+  const subscription = await getCurrentPushSubscription();
+  if (!subscription?.endpoint) {
+    return false;
+  }
+
+  const checklist = getChecklistState();
+  const syncKey = `${subscription.endpoint}:${checklist.dateKey}:${JSON.stringify(checklist.checked)}`;
+
+  if (syncKey === lastChecklistSyncKey) {
+    return true;
+  }
+
+  try {
+    const response = await fetch(pushSyncPrayerChecklistApiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        endpoint: subscription.endpoint,
+        dateKey: checklist.dateKey,
+        checked: checklist.checked,
+      }),
+    });
+
+    if (!response.ok) {
+      return false;
+    }
+
+    lastChecklistSyncKey = syncKey;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function resetChecklistIfNeeded() {
@@ -238,6 +292,7 @@ function renderPrayerTimes() {
       const current = getChecklistState();
       current.checked[event.target.dataset.prayerCheck] = event.target.checked;
       saveChecklistState(current.checked);
+      syncPrayerChecklistToBackend().catch(() => undefined);
       renderPrayerTimes();
     });
   });
@@ -410,6 +465,10 @@ async function subscribeToBackendPush() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ subscription }),
     });
+
+    if (response.ok) {
+      await syncPrayerChecklistToBackend().catch(() => undefined);
+    }
 
     return response.ok;
   } catch (error) {
@@ -589,7 +648,9 @@ updateNotificationStatus();
 updateActionVisibility();
 registerServiceWorker().then(() => {
   if (Notification.permission === "granted") {
-    subscribeToBackendPush().catch(() => undefined);
+    subscribeToBackendPush()
+      .then(() => syncPrayerChecklistToBackend().catch(() => undefined))
+      .catch(() => undefined);
   }
 });
 loadPushPublicKey();
@@ -608,7 +669,9 @@ window.addEventListener("nooriva:installed", () => {
   }
   updateActionVisibility();
   if (Notification.permission === "granted") {
-    subscribeToBackendPush().catch(() => undefined);
+    subscribeToBackendPush()
+      .then(() => syncPrayerChecklistToBackend().catch(() => undefined))
+      .catch(() => undefined);
   }
   scheduleNextPrayerNotification();
 });
@@ -617,6 +680,7 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
     maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
+    syncPrayerChecklistToBackend().catch(() => undefined);
     loadPrayerTimes();
   }
 });
@@ -633,6 +697,7 @@ function maybeRefreshOnPrayerSchedule() {
 
 setInterval(() => {
   resetChecklistIfNeeded();
+  syncPrayerChecklistToBackend().catch(() => undefined);
   maybeRefreshOnPrayerSchedule();
   if (latestPrayerTimes.length > 0) {
     renderPrayerTimes();
