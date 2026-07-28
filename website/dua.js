@@ -11,7 +11,7 @@ const duas = [
     id: "taawwuz",
     title: "Ta'awwuz",
     category: "daily",
-    keywords: ["quran", "protection", "shaytan"],
+    keywords: ["quran", "protection", "shaytan", "audhubillah", "auzubillah", "aoodhubillah", "taawuz", "taawwuz"],
     arabic: "أَعُوذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
     transliteration: "A'udhu billahi minash-shaytanir-rajim.",
     english: "I seek protection in Allah from Shaytan, the rejected one.",
@@ -20,7 +20,7 @@ const duas = [
     id: "tasmiyah",
     title: "Tasmiyah",
     category: "daily",
-    keywords: ["bismillah", "mercy", "beginning"],
+    keywords: ["bismillah", "bismilah", "basmala", "mercy", "beginning"],
     arabic: "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ",
     transliteration: "Bismillahir Rahmanir Rahim.",
     english: "In the name of Allah, the Most Affectionate, the Most Merciful.",
@@ -173,7 +173,7 @@ const duas = [
     id: "kalimah-shahadah",
     title: "Kalimah Shahadah",
     category: "iman",
-    keywords: ["faith", "declaration", "shahadah"],
+    keywords: ["faith", "declaration", "shahadah", "ashhadu", "la ilaha illallah"],
     arabic: "أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
     transliteration: "Ashhadu an la ilaha illallahu wahdahu la sharika lahu wa ashhadu anna Muhammadan 'abduhu wa rasuluh.",
     english: "I bear witness that there is none worthy of worship besides Allah alone. He has no partner and I bear witness that Muhammad is His servant and Messenger.",
@@ -272,7 +272,7 @@ const duas = [
     id: "seek-forgiveness",
     title: "When seeking Allah's forgiveness",
     category: "protection",
-    keywords: ["astaghfirullah", "forgiveness"],
+    keywords: ["astaghfirullah", "astagfirullah", "istighfar", "istigfar", "forgiveness"],
     arabic: "أَسْتَغْفِرُ اللّٰهَ",
     transliteration: "Astaghfirullah.",
     english: "I seek Allah's forgiveness.",
@@ -290,7 +290,7 @@ const duas = [
     id: "kalimah-tawheed",
     title: "Kalimah Tawheed",
     category: "iman",
-    keywords: ["faith", "tawheed"],
+    keywords: ["faith", "tawheed", "la ilaha illallah"],
     arabic: "لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
     transliteration: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamd, yuhyi wa yumit, biyadihil-khayr, wa huwa 'ala kulli shay'in qadir.",
     english: "There is none worthy of worship besides Allah alone. He has no partner. His is the kingdom and for Him is all praise. He gives life and causes death. In His hand is all good and He has power over everything.",
@@ -578,7 +578,7 @@ const duas = [
     id: "dua-qunoot",
     title: "Dua-e-Qunoot",
     category: "salah",
-    keywords: ["qunoot", "witr", "salah"],
+    keywords: ["qunoot", "witr", "salah", "allahumma inna nasta inuka", "nastaeenuka", "nasta inuka"],
     arabic: "اللهم إنا نستعينك ونستغفرك ونؤمن بك ونتوكل عليك ونثني عليك الخير ونشكرك ولا نكفرك ونخلع ونترك من يفجرك اللهم إياك نعبد ولك نصلي ونسجد وإليك نسعى ونحفد ونرجو رحمتك ونخشى عذابك إن عذابك بالكفار ملحق",
     transliteration: "Allahumma inna nasta'inuka wa nastaghfiruka wa nu'minu bika wa natawakkalu 'alayka wa nuthni 'alaykal-khayr wa nashkuruka wa la nakfuruk wa nakhla'u wa natruku man yafjuruk. Allahumma iyyaka na'budu wa laka nusalli wa nasjudu wa ilayka nas'a wa nahfid wa narju rahmataka wa nakhsha 'adhabaka inna 'adhabaka bil-kuffari mulhiq.",
     english: "O Allah, we seek help from You, seek forgiveness from You, believe in You and rely on You. We praise You in the best way, thank You and do not show ingratitude. We separate ourselves from those who disobey You. O Allah, You alone we worship, to You we pray and prostrate, towards You we strive and hasten. We hope for Your mercy and fear Your punishment. Surely Your punishment overtakes the disbelievers.",
@@ -1033,7 +1033,7 @@ const fullBookEntries = [
     id: "sayyidul-istighfaar",
     title: "Sayyidul Istighfaar",
     category: "protection",
-    keywords: ["istighfar", "forgiveness"],
+    keywords: ["istighfar", "istigfar", "forgiveness", "sayyidul istighfar", "allahumma anta rabbi"],
     bookPages: buildBookPages(68),
   },
   {
@@ -1322,7 +1322,12 @@ function escapeHtml(value) {
 }
 
 function normalizeText(value) {
-  return String(value || "").trim().toLowerCase();
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function getBookPageImage(pageNumber) {
