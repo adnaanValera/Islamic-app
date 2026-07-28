@@ -22,4 +22,4 @@ jobs:
           curl --fail-with-body \
             -X POST \
             -H "x-cron-secret: $CRON_SECRET" \
-            "$REMINDER_URL?window=15"
+            "$REMINDER_URL?window=30"
