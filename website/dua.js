@@ -1278,6 +1278,16 @@ const fullBookEntries = [
 
 duas.push(...fullBookEntries);
 
+const visibleDuas = duas.filter((dua) => {
+  const hasReading = Boolean(dua.arabic || dua.english);
+  const isUrduEntry =
+    dua.id === "salami-urdu" ||
+    /\burdu\b/i.test(dua.title || "") ||
+    (Array.isArray(dua.keywords) && dua.keywords.some((keyword) => /\burdu\b/i.test(keyword)));
+
+  return hasReading && !isUrduEntry;
+});
+
 let currentSearch = "";
 let currentCategory = "all";
 let favoritesOnly = false;
@@ -1330,46 +1340,10 @@ function normalizeText(value) {
     .trim();
 }
 
-function getBookPageImage(pageNumber) {
-  return `./assets/dua-book/page-${String(pageNumber).padStart(3, "0")}.jpg`;
-}
-
-function renderBookPreview(dua) {
-  if (!Array.isArray(dua.bookPages) || !dua.bookPages.length) {
-    return "";
-  }
-
-  const pageLabel =
-    dua.bookPages.length === 1
-      ? `Book page ${dua.bookPages[0]}`
-      : `Book pages ${dua.bookPages[0]}-${dua.bookPages[dua.bookPages.length - 1]}`;
-
-  return `
-    <div class="dua-book-preview">
-      <p class="dua-book-preview-label">${escapeHtml(pageLabel)}</p>
-      <div class="dua-book-preview-stack">
-        ${dua.bookPages
-          .map(
-            (pageNumber) => `
-              <img
-                class="dua-book-preview-image"
-                src="${escapeHtml(getBookPageImage(pageNumber))}"
-                alt="${escapeHtml(`${dua.title} - page ${pageNumber}`)}"
-                loading="lazy"
-                decoding="async"
-              />
-            `,
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
-}
-
 function getFilteredDuas() {
   const term = normalizeText(currentSearch);
 
-  return duas.filter((dua) => {
+  return visibleDuas.filter((dua) => {
     if (currentCategory !== "all" && dua.category !== currentCategory) {
       return false;
     }
@@ -1402,7 +1376,7 @@ function renderCategoryChips() {
     return;
   }
 
-  const categories = ["all", ...new Set(duas.map((dua) => dua.category))];
+  const categories = ["all", ...new Set(visibleDuas.map((dua) => dua.category))];
 
   duaCategoryRow.innerHTML = categories
     .map(
@@ -1495,7 +1469,6 @@ function renderDuas() {
             ${dua.arabic ? `<p class="dua-card-arabic" dir="rtl" lang="ar">${escapeHtml(decodeMojibake(dua.arabic))}</p>` : ""}
             ${dua.transliteration ? `<p class="dua-card-transliteration">${escapeHtml(dua.transliteration)}</p>` : ""}
             ${dua.english ? `<p class="dua-card-english">${escapeHtml(dua.english)}</p>` : ""}
-            ${renderBookPreview(dua)}
           </div>
         </details>
       `;
