@@ -901,6 +901,10 @@ const fullBookEntries = [
     title: "Islamic months",
     category: "daily",
     keywords: ["islamic months", "hijri months"],
+    arabic:
+      "مُحَرَّم، صَفَر، رَبِيعُ ٱلْأَوَّل، رَبِيعُ ٱلْآخِر، جُمَادَى ٱلْأُولَى، جُمَادَى ٱلْآخِرَة، رَجَب، شَعْبَان، رَمَضَان، شَوَّال، ذُو ٱلْقَعْدَة، ذُو ٱلْحِجَّة",
+    english:
+      "Muharram, Safar, Rabi' al-Awwal, Rabi' al-Akhir, Jumada al-Ula, Jumada al-Ukhra, Rajab, Sha'ban, Ramadan, Shawwal, Dhul-Qa'dah and Dhul-Hijjah.",
     bookPages: buildBookPages(24),
   },
   {
@@ -922,6 +926,10 @@ const fullBookEntries = [
     title: "Azaan",
     category: "masjid",
     keywords: ["azaan", "adhan", "call to prayer"],
+    arabic:
+      "اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ. أَشْهَدُ أَنْ لَّا إِلٰهَ إِلَّا اللّٰهُ، أَشْهَدُ أَنْ لَّا إِلٰهَ إِلَّا اللّٰهُ. أَشْهَدُ أَنَّ مُحَمَّدًا رَّسُولُ اللّٰهِ، أَشْهَدُ أَنَّ مُحَمَّدًا رَّسُولُ اللّٰهِ. حَيَّ عَلَى الصَّلَاةِ، حَيَّ عَلَى الصَّلَاةِ. حَيَّ عَلَى الْفَلَاحِ، حَيَّ عَلَى الْفَلَاحِ. اَلصَّلَاةُ خَيْرٌ مِّنَ النَّوْمِ، اَلصَّلَاةُ خَيْرٌ مِّنَ النَّوْمِ. اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ. لَا إِلٰهَ إِلَّا اللّٰهُ",
+    english:
+      "Allah is the Greatest, Allah is the Greatest. I bear witness that there is none worthy of worship besides Allah. I bear witness that Muhammad is the Messenger of Allah. Come to prayer. Come to success. In Fajr: Prayer is better than sleep. Allah is the Greatest. There is none worthy of worship besides Allah.",
     bookPages: buildBookPages(65),
   },
   {
@@ -929,6 +937,10 @@ const fullBookEntries = [
     title: "Iqaamah",
     category: "masjid",
     keywords: ["iqaamah", "iqamah", "call to prayer"],
+    arabic:
+      "اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ. أَشْهَدُ أَنْ لَّا إِلٰهَ إِلَّا اللّٰهُ. أَشْهَدُ أَنَّ مُحَمَّدًا رَّسُولُ اللّٰهِ. حَيَّ عَلَى الصَّلَاةِ. حَيَّ عَلَى الْفَلَاحِ. قَدْ قَامَتِ الصَّلَاةُ، قَدْ قَامَتِ الصَّلَاةُ. اللّٰهُ أَكْبَرُ، اللّٰهُ أَكْبَرُ. لَا إِلٰهَ إِلَّا اللّٰهُ",
+    english:
+      "Allah is the Greatest. I bear witness that there is none worthy of worship besides Allah and that Muhammad is the Messenger of Allah. Come to prayer. Come to success. The prayer has begun. Allah is the Greatest. There is none worthy of worship besides Allah.",
     bookPages: buildBookPages(66),
   },
   {
@@ -936,6 +948,10 @@ const fullBookEntries = [
     title: "Replying to Azaan and Iqaamah",
     category: "masjid",
     keywords: ["azaan", "adhan", "iqamah", "reply"],
+    arabic:
+      "يُجَابُ الْمُؤَذِّنُ بِمِثْلِ مَا يَقُولُ، وَعِنْدَ حَيَّ عَلَى الصَّلَاةِ وَحَيَّ عَلَى الْفَلَاحِ يُقَالُ: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ. وَعِنْدَ قَدْ قَامَتِ الصَّلَاةُ يُقَالُ: أَقَامَهَا اللّٰهُ وَأَدَامَهَا مَا دَامَتِ السَّمَاوَاتُ وَالْأَرْضُ",
+    english:
+      "Repeat the words of the mu'adhdhin. At Hayya 'alas-salah and Hayya 'alal-falah say: There is no might and no power except through Allah. At Qad qamatis-salah say: May Allah establish it and keep it lasting as long as the heavens and the earth remain.",
     bookPages: buildBookPages(67, 68),
   },
   {
@@ -964,6 +980,10 @@ const fullBookEntries = [
     title: "Dua at the arrival of a bride",
     category: "marriage",
     keywords: ["bride", "marriage", "nikah"],
+    arabic:
+      "اَللّٰهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ مَا جَبَلْتَهَا عَلَيْهِ، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا جَبَلْتَهَا عَلَيْهِ",
+    english:
+      "O Allah, I ask You for her goodness and the goodness upon which You created her, and I seek refuge in You from her evil and the evil upon which You created her.",
     bookPages: buildBookPages(57),
   },
   {
@@ -971,6 +991,8 @@ const fullBookEntries = [
     title: "Dua when an evil thought comes to mind",
     category: "protection",
     keywords: ["evil thought", "waswasa", "mind"],
+    arabic: "أَعُوذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+    english: "I seek protection in Allah from Shaytan, the rejected one.",
     bookPages: buildBookPages(57),
   },
   {
@@ -978,6 +1000,10 @@ const fullBookEntries = [
     title: "Dua when in bodily pain",
     category: "healing",
     keywords: ["pain", "body", "healing"],
+    arabic:
+      "بِسْمِ اللّٰهِ، بِسْمِ اللّٰهِ، بِسْمِ اللّٰهِ. أَعُوذُ بِاللّٰهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ",
+    english:
+      "In the name of Allah. I seek refuge in Allah and His power from the evil of what I feel and fear.",
     bookPages: buildBookPages(57),
   },
   {
@@ -985,6 +1011,8 @@ const fullBookEntries = [
     title: "Dua when there is an excessive downpour",
     category: "protection",
     keywords: ["rain", "storm", "downpour"],
+    arabic: "اَللّٰهُمَّ حَوَالَيْنَا وَلَا عَلَيْنَا",
+    english: "O Allah, let it rain around us and not against us.",
     bookPages: buildBookPages(58),
   },
   {
@@ -992,6 +1020,10 @@ const fullBookEntries = [
     title: "Dua for barakah and increase in wealth",
     category: "daily",
     keywords: ["barakah", "wealth", "rizq"],
+    arabic:
+      "اَللّٰهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    english:
+      "O Allah, suffice me with what You have made lawful instead of what You have made unlawful, and make me independent by Your فضل from everyone besides You.",
     bookPages: buildBookPages(58),
   },
   {
@@ -999,6 +1031,10 @@ const fullBookEntries = [
     title: "Dua when entering the market place",
     category: "daily",
     keywords: ["market", "bazaar", "shop"],
+    arabic:
+      "لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لَا يَمُوتُ، بِيَدِهِ الْخَيْرُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    english:
+      "There is none worthy of worship besides Allah alone without partner. To Him belongs the kingdom and all praise. He gives life and causes death, and He is Ever-Living and never dies. In His hand is all good, and He has power over everything.",
     bookPages: buildBookPages(58),
   },
   {
@@ -1006,6 +1042,10 @@ const fullBookEntries = [
     title: "Duas to be recited after Fardh salah",
     category: "salah",
     keywords: ["after fardh", "after prayer", "salah"],
+    arabic:
+      "أَسْتَغْفِرُ اللّٰهَ، أَسْتَغْفِرُ اللّٰهَ، أَسْتَغْفِرُ اللّٰهَ. اَللّٰهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ. سُبْحَانَ اللّٰهِ ٣٣، اَلْحَمْدُ لِلّٰهِ ٣٣، اَللّٰهُ أَكْبَرُ ٣٤",
+    english:
+      "After the fardh prayer: seek forgiveness from Allah three times, say O Allah, You are Peace and from You is peace, then recite SubhanAllah 33 times, Alhamdulillah 33 times and Allahu Akbar 34 times.",
     bookPages: buildBookPages(59),
   },
   {
@@ -1013,6 +1053,8 @@ const fullBookEntries = [
     title: "Tasbeeh-e-Fatimah",
     category: "daily",
     keywords: ["tasbeeh", "fatimah", "dhikr"],
+    arabic: "سُبْحَانَ اللّٰهِ ٣٣، اَلْحَمْدُ لِلّٰهِ ٣٣، اَللّٰهُ أَكْبَرُ ٣٤",
+    english: "Recite SubhanAllah 33 times, Alhamdulillah 33 times and Allahu Akbar 34 times.",
     bookPages: buildBookPages(60),
   },
   {
@@ -1034,6 +1076,10 @@ const fullBookEntries = [
     title: "Sayyidul Istighfaar",
     category: "protection",
     keywords: ["istighfar", "istigfar", "forgiveness", "sayyidul istighfar", "allahumma anta rabbi"],
+    arabic:
+      "اَللّٰهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي، فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+    english:
+      "O Allah, You are my Lord. There is none worthy of worship besides You. You created me and I am Your servant, and I remain upon Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge before You Your favor upon me, and I acknowledge my sin, so forgive me, for surely none forgives sins except You.",
     bookPages: buildBookPages(68),
   },
   {
@@ -1041,6 +1087,10 @@ const fullBookEntries = [
     title: "Durood-e-Nabi",
     category: "salah",
     keywords: ["durood", "salawat", "nabi"],
+    arabic:
+      "صَلَّى اللّٰهُ عَلَى النَّبِيِّ الْأُمِّيِّ وَآلِهِ وَسَلَّمَ تَسْلِيمًا",
+    english:
+      "May Allah send blessings upon the unlettered Prophet, upon his family, and grant them peace.",
     bookPages: buildBookPages(68),
   },
   {
@@ -1048,6 +1098,10 @@ const fullBookEntries = [
     title: "Dua upon seeing a person in difficulty",
     category: "protection",
     keywords: ["difficulty", "hardship"],
+    arabic:
+      "اَلْحَمْدُ لِلّٰهِ الَّذِي عَافَانِي مِمَّا ابْتَلَاكَ بِهِ وَفَضَّلَنِي عَلَى كَثِيرٍ مِّمَّنْ خَلَقَ تَفْضِيلًا",
+    english:
+      "All praise is due to Allah Who has kept me safe from that with which He tested you and preferred me greatly over many of His creation.",
     bookPages: buildBookPages(69),
   },
   {
@@ -1055,6 +1109,8 @@ const fullBookEntries = [
     title: "Dua before slaughtering a Qurbani animal",
     category: "qurbani",
     keywords: ["qurbani", "slaughter", "udhiyah"],
+    arabic: "بِسْمِ اللّٰهِ، اَللّٰهُ أَكْبَرُ",
+    english: "In the name of Allah. Allah is the Greatest.",
     bookPages: buildBookPages(69),
   },
   {
@@ -1062,6 +1118,10 @@ const fullBookEntries = [
     title: "Dua after slaughtering a Qurbani animal",
     category: "qurbani",
     keywords: ["qurbani", "slaughter", "udhiyah"],
+    arabic:
+      "اَللّٰهُمَّ تَقَبَّلْهُ مِنِّي كَمَا تَقَبَّلْتَ مِنْ خَلِيلِكَ إِبْرَاهِيمَ عَلَيْهِ السَّلَامُ وَحَبِيبِكَ مُحَمَّدٍ صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّمَ",
+    english:
+      "O Allah, accept it from me as You accepted from Your friend Ibrahim, peace be upon him, and from Your beloved Muhammad, peace and blessings be upon him.",
     bookPages: buildBookPages(70),
   },
   {
@@ -1069,6 +1129,10 @@ const fullBookEntries = [
     title: "Dua-e-Aqeeqah",
     category: "family",
     keywords: ["aqeeqah", "child", "newborn"],
+    arabic:
+      "بِسْمِ اللّٰهِ، اَللّٰهُمَّ لَكَ وَإِلَيْكَ، هٰذِهِ عَقِيقَةُ فُلَانٍ",
+    english:
+      "In the name of Allah. O Allah, this is for You and for Your sake. This is the 'aqiqah of [name].",
     bookPages: buildBookPages(70),
   },
   {
@@ -1076,6 +1140,8 @@ const fullBookEntries = [
     title: "Dua at the time of death",
     category: "janazah",
     keywords: ["death", "dying"],
+    arabic: "لَا إِلٰهَ إِلَّا اللّٰهُ",
+    english: "There is none worthy of worship besides Allah.",
     bookPages: buildBookPages(71),
   },
   {
@@ -1083,6 +1149,8 @@ const fullBookEntries = [
     title: "Talqeen for a dying person",
     category: "janazah",
     keywords: ["talqeen", "dying person"],
+    arabic: "لَقِّنُوا مَوْتَاكُمْ لَا إِلٰهَ إِلَّا اللّٰهُ",
+    english: "Prompt your dying person with: There is none worthy of worship besides Allah.",
     bookPages: buildBookPages(71),
   },
   {
@@ -1090,6 +1158,10 @@ const fullBookEntries = [
     title: "Thana in Janazah salah",
     category: "janazah",
     keywords: ["janazah", "thana"],
+    arabic:
+      "سُبْحَانَكَ اللّٰهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَجَلَّ ثَنَاؤُكَ وَلَا إِلٰهَ غَيْرُكَ",
+    english:
+      "Glory be to You, O Allah, and all praise is due to You. Blessed is Your name, exalted is Your majesty, glorious is Your praise, and there is none worthy of worship besides You.",
     bookPages: buildBookPages(71),
   },
   {
@@ -1097,6 +1169,10 @@ const fullBookEntries = [
     title: "Dua when entering the Qabrastan",
     category: "janazah",
     keywords: ["graveyard", "qabrastan"],
+    arabic:
+      "اَلسَّلَامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ، وَإِنَّا إِنْ شَاءَ اللّٰهُ بِكُمْ لَلَاحِقُونَ، نَسْأَلُ اللّٰهَ لَنَا وَلَكُمُ الْعَافِيَةَ",
+    english:
+      "Peace be upon you, dwellers of these abodes, from among the believers and Muslims. If Allah wills, we will surely join you. We ask Allah for wellbeing for us and for you.",
     bookPages: buildBookPages(72),
   },
   {
@@ -1104,6 +1180,10 @@ const fullBookEntries = [
     title: "Dua-e-Janazah",
     category: "janazah",
     keywords: ["janazah", "funeral"],
+    arabic:
+      "اَللّٰهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَائِبِنَا وَصَغِيرِنَا وَكَبِيرِنَا وَذَكَرِنَا وَأُنْثَانَا. اَللّٰهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَحْيِهِ عَلَى الْإِسْلَامِ وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوَفَّهُ عَلَى الْإِيمَانِ",
+    english:
+      "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our male and our female. O Allah, whoever You keep alive from among us, keep him alive upon Islam, and whoever You cause to die, cause him to die upon faith.",
     bookPages: buildBookPages(72),
   },
   {
@@ -1111,6 +1191,10 @@ const fullBookEntries = [
     title: "Dua-e-Janazah for a boy child",
     category: "janazah",
     keywords: ["janazah", "boy child"],
+    arabic:
+      "اَللّٰهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا",
+    english:
+      "O Allah, make him a forerunner for us, a reward and a treasure for us, and make him an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(72),
   },
   {
@@ -1118,6 +1202,10 @@ const fullBookEntries = [
     title: "Dua-e-Janazah for a girl child",
     category: "janazah",
     keywords: ["janazah", "girl child"],
+    arabic:
+      "اَللّٰهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً",
+    english:
+      "O Allah, make her a forerunner for us, a reward and a treasure for us, and make her an intercessor for us whose intercession is accepted.",
     bookPages: buildBookPages(73),
   },
   {
@@ -1132,6 +1220,8 @@ const fullBookEntries = [
     title: "Dua while laying the deceased in Qabr",
     category: "janazah",
     keywords: ["qabr", "grave", "deceased"],
+    arabic: "بِسْمِ اللّٰهِ وَعَلَى مِلَّةِ رَسُولِ اللّٰهِ",
+    english: "In the name of Allah and upon the way of the Messenger of Allah.",
     bookPages: buildBookPages(74),
   },
   {
@@ -1139,6 +1229,10 @@ const fullBookEntries = [
     title: "Dua when filling the Qabr with soil",
     category: "janazah",
     keywords: ["grave", "soil", "qabr"],
+    arabic:
+      "مِنْهَا خَلَقْنَاكُمْ وَفِيهَا نُعِيدُكُمْ وَمِنْهَا نُخْرِجُكُمْ تَارَةً أُخْرَى",
+    english:
+      "From it We created you, into it We shall return you, and from it We shall bring you out once again.",
     bookPages: buildBookPages(75),
   },
   {
@@ -1153,6 +1247,10 @@ const fullBookEntries = [
     title: "To save yourself from fitnah",
     category: "protection",
     keywords: ["fitnah", "temptation"],
+    arabic:
+      "رَبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَعُوذُ بِكَ رَبِّ أَنْ يَحْضُرُونِ",
+    english:
+      "My Lord, I seek refuge in You from the whispers of the devils, and I seek refuge in You, my Lord, lest they come near me.",
     bookPages: buildBookPages(76),
   },
   {
@@ -1160,6 +1258,10 @@ const fullBookEntries = [
     title: "Dua for relief from worries and debts",
     category: "protection",
     keywords: ["worries", "debts", "anxiety"],
+    arabic:
+      "اَللّٰهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
+    english:
+      "O Allah, I seek refuge in You from worry and grief, from weakness and laziness, from cowardice and miserliness, and from being overcome by debt and overpowered by people.",
     bookPages: buildBookPages(76),
   },
   {
@@ -1181,6 +1283,10 @@ const fullBookEntries = [
     title: "Dua-e-Istikharah",
     category: "protection",
     keywords: ["istikharah", "guidance", "decision"],
+    arabic:
+      "اَللّٰهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ فَإِنَّكَ تَقْدِرُ وَلَا أَقْدِرُ وَتَعْلَمُ وَلَا أَعْلَمُ وَأَنْتَ عَلَّامُ الْغُيُوبِ. اَللّٰهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ. وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ",
+    english:
+      "O Allah, I seek the good from Your knowledge and seek ability from Your power, and I ask You from Your immense bounty. You have power and I do not. You know and I do not. You are the Knower of the unseen. O Allah, if You know this matter to be good for my religion, my livelihood and the outcome of my affairs, then decree it for me, make it easy for me and bless me in it. And if You know this matter to be bad for my religion, my livelihood and the outcome of my affairs, then turn it away from me and turn me away from it, and decree الخير for me wherever it may be, then make me content with it.",
     bookPages: buildBookPages(81),
   },
   {
@@ -1209,6 +1315,10 @@ const fullBookEntries = [
     title: "Dua for protection from accidents",
     category: "protection",
     keywords: ["accidents", "safety"],
+    arabic:
+      "بِسْمِ اللّٰهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    english:
+      "In the name of Allah, with whose name nothing in the earth or the sky can cause harm, and He is the All-Hearing, the All-Knowing.",
     bookPages: buildBookPages(87),
   },
   {
