@@ -1288,7 +1288,7 @@ let favoritesOnly = false;
 function decodeMojibake(value) {
   const raw = String(value || "");
 
-  if (!/[Ã˜Ã™]/.test(raw)) {
+  if (!/[ØÙÚÛÃ]/.test(raw)) {
     return raw;
   }
 
