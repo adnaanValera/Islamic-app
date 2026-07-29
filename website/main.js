@@ -26,6 +26,7 @@ const mainTasbeehCount = document.getElementById("main-tasbeeh-count");
 const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
 const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
 const mainDailyChecklist = document.getElementById("main-daily-checklist");
+const mainDailyProgressBar = document.getElementById("main-daily-progress-bar");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -47,6 +48,8 @@ let currentAyahOfDay = null;
 let mainSession = loadMainSession();
 let mainPushPublicKey = "";
 let mainSpecialMoments = {};
+let mainLastToggledPrayerLabel = "";
+let mainLastToggleAt = 0;
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -194,13 +197,16 @@ function renderMainDailyChecklist() {
 
   const checklist = getMainChecklistState();
   const currentSalahLabel = getCurrentMainSalahLabel();
+  const checkedCount = mainPrayers.filter((prayer) => Boolean(checklist.checked?.[prayer.label])).length;
+  const now = Date.now();
 
   mainDailyChecklist.innerHTML = mainPrayers
     .map((prayer) => {
       const isChecked = Boolean(checklist.checked?.[prayer.label]);
       const isCurrent = currentSalahLabel === prayer.label;
+      const isToggling = mainLastToggledPrayerLabel === prayer.label && now - mainLastToggleAt < 700;
       return `
-        <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}">
+        <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}${isToggling ? " is-toggling" : ""}">
           <button
             class="main-daily-tick-button"
             type="button"
@@ -216,6 +222,11 @@ function renderMainDailyChecklist() {
     })
     .join("");
 
+  if (mainDailyProgressBar) {
+    const progress = Math.max(0, Math.min((checkedCount / mainPrayers.length) * 100, 100));
+    mainDailyProgressBar.style.width = `${progress}%`;
+  }
+
   mainDailyChecklist.querySelectorAll("[data-main-prayer-check]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
@@ -225,6 +236,8 @@ function renderMainDailyChecklist() {
       const current = getMainChecklistState();
       const nextChecked = !Boolean(current.checked?.[prayerLabel]);
       current.checked[prayerLabel] = nextChecked;
+      mainLastToggledPrayerLabel = prayerLabel;
+      mainLastToggleAt = Date.now();
       saveMainChecklistState(current.checked);
       renderMainDailyChecklist();
     });

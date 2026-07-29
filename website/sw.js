@@ -1,4 +1,4 @@
-const STATIC_CACHE = "nooriva-static-v25";
+const STATIC_CACHE = "nooriva-static-v26";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -83,13 +83,15 @@ self.addEventListener("push", (event) => {
     body: "It is time for prayer.",
     url: "/prayer.html",
   };
+  const prayerTag = payload.prayer ? `prayer-${String(payload.prayer).toLowerCase()}` : "nooriva-prayer";
+  const tag = payload.kind ? `${prayerTag}-${payload.kind}` : prayerTag;
 
   event.waitUntil(
     self.registration.showNotification(payload.title, {
       body: payload.body,
       icon: "./assets/icon-192.png",
       badge: "./assets/favicon-32.png",
-      tag: payload.prayer ? `prayer-${String(payload.prayer).toLowerCase()}` : "nooriva-prayer",
+      tag,
       data: {
         url: payload.url ?? "/prayer.html",
       },

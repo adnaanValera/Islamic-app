@@ -295,6 +295,8 @@ async function handlePrayer(request, response) {
   const removed = new Set();
 
   for (const prayer of pendingPrayers) {
+    let deliveredForPrayer = 0;
+
     for (const subscription of subscriptions) {
       if (isPrayerChecked(checklistStates, subscription.endpoint, dateKey, prayer.label)) {
         continue;
@@ -304,11 +306,13 @@ async function handlePrayer(request, response) {
         await sendPushNotification(subscription, {
           title: `${prayer.label} time`,
           body: prayerReminderBody,
+          kind: "adhan",
           prayer: prayer.label,
           time: prayer.athan,
           url: "/prayer.html",
         });
         sent += 1;
+        deliveredForPrayer += 1;
       } catch (error) {
         const statusCode = error?.statusCode ?? error?.status ?? 0;
 
@@ -320,10 +324,14 @@ async function handlePrayer(request, response) {
       }
     }
 
-    reminderState[`${dateKey}:start:${prayer.label}:${prayer.athan}`] = dateKey;
+    if (deliveredForPrayer > 0) {
+      reminderState[`${dateKey}:start:${prayer.label}:${prayer.athan}`] = dateKey;
+    }
   }
 
   for (const prayer of pendingRunningOut) {
+    let deliveredForPrayer = 0;
+
     for (const subscription of subscriptions) {
       if (isPrayerChecked(checklistStates, subscription.endpoint, dateKey, prayer.label)) {
         continue;
@@ -333,11 +341,13 @@ async function handlePrayer(request, response) {
         await sendPushNotification(subscription, {
           title: `${prayer.label} time is running out!!!`,
           body: `${prayer.label} time is running out!!!`,
+          kind: "running-out",
           prayer: prayer.label,
           time: prayer.salah,
           url: "/prayer.html",
         });
         sent += 1;
+        deliveredForPrayer += 1;
       } catch (error) {
         const statusCode = error?.statusCode ?? error?.status ?? 0;
 
@@ -349,7 +359,9 @@ async function handlePrayer(request, response) {
       }
     }
 
-    reminderState[`${dateKey}:running:${prayer.label}:${prayer.checkpointMinutes}`] = dateKey;
+    if (deliveredForPrayer > 0) {
+      reminderState[`${dateKey}:running:${prayer.label}:${prayer.checkpointMinutes}`] = dateKey;
+    }
   }
 
   for (const endpoint of removed) {
