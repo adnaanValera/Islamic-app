@@ -4058,7 +4058,7 @@ h3 {
 }
 
 .main-hero-section {
-  padding-bottom: 6px;
+  padding-bottom: 2px;
 }
 
 .main-hero-section .hero-copy > * {
@@ -4067,12 +4067,8 @@ h3 {
   animation: mainFadeUp 700ms ease forwards;
 }
 
-.main-hero-section .eyebrow {
-  animation-delay: 70ms;
-}
-
 .main-hero-section #main-greeting {
-  animation-delay: 150ms;
+  animation-delay: 90ms;
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
@@ -4082,11 +4078,47 @@ h3 {
 }
 
 .main-hero-section .hero-actions {
-  animation-delay: 230ms;
+  animation-delay: 160ms;
 }
 
 .main-hero-section .install-status {
-  animation-delay: 300ms;
+  animation-delay: 230ms;
+}
+
+.main-quick-access {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.main-quick-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 244, 236, 0.94));
+  box-shadow: 0 10px 20px rgba(79, 66, 39, 0.05);
+  color: var(--text-strong);
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.main-quick-chip.is-primary {
+  background: linear-gradient(180deg, rgba(212, 180, 118, 0.22), rgba(255, 255, 255, 0.96));
+  border-color: rgba(191, 149, 77, 0.28);
+}
+
+.main-quick-chip:hover,
+.main-quick-chip:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(79, 66, 39, 0.08);
+  border-color: rgba(191, 149, 77, 0.22);
 }
 
 .main-dashboard-section {
@@ -4278,6 +4310,10 @@ h3 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+}
+
+.main-card-prayer {
+  grid-column: 1 / -1;
 }
 
 .main-card {
@@ -4665,6 +4701,14 @@ h3 {
 }
 
 @media (max-width: 720px) {
+  .site-header.home-mobile-header {
+    display: none;
+  }
+
+  .main-quick-access {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .main-daily-checklist {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
@@ -4689,11 +4733,23 @@ h3 {
 
 @media (max-width: 480px) {
   .main-hero-section {
-    padding-top: 8px;
+    padding-top: 4px;
   }
 
   .main-dashboard-section {
-    padding-top: 4px;
+    padding-top: 2px;
+  }
+
+  .main-quick-access {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .main-quick-chip {
+    min-height: 42px;
+    padding: 0 8px;
+    border-radius: 16px;
+    font-size: 0.78rem;
   }
 
   .main-daily-card {
