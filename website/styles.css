@@ -4094,6 +4094,85 @@ h3 {
   gap: 14px;
 }
 
+.main-daily-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 26px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(250, 244, 236, 0.96));
+  box-shadow: 0 14px 28px rgba(79, 66, 39, 0.06);
+}
+
+.main-daily-link {
+  color: var(--gold-soft);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.main-daily-spacer {
+  display: block;
+  min-height: 4px;
+}
+
+.main-daily-checklist {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.main-daily-item {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 10px 6px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.main-daily-item:hover,
+.main-daily-item:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.08);
+  border-color: rgba(191, 149, 77, 0.22);
+}
+
+.main-daily-item.is-checked {
+  background: linear-gradient(180deg, rgba(212, 180, 118, 0.18), rgba(255, 255, 255, 0.95));
+  border-color: rgba(191, 149, 77, 0.28);
+}
+
+.main-daily-tick {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(191, 149, 77, 0.4);
+  background: rgba(255, 255, 255, 0.92);
+  position: relative;
+}
+
+.main-daily-item.is-checked .main-daily-tick {
+  background: rgba(212, 180, 118, 0.22);
+  border-color: rgba(191, 149, 77, 0.56);
+}
+
+.main-daily-item.is-checked .main-daily-tick::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+}
+
 .main-auth-gate {
   display: grid;
 }
@@ -4495,6 +4574,10 @@ h3 {
 }
 
 @media (max-width: 720px) {
+  .main-daily-checklist {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .main-dashboard-grid {
     grid-template-columns: 1fr;
   }
@@ -4520,6 +4603,27 @@ h3 {
 
   .main-dashboard-section {
     padding-top: 4px;
+  }
+
+  .main-daily-card {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .main-daily-checklist {
+    gap: 6px;
+  }
+
+  .main-daily-item {
+    gap: 6px;
+    padding: 9px 4px;
+    font-size: 0.72rem;
+    border-radius: 16px;
+  }
+
+  .main-daily-tick {
+    width: 20px;
+    height: 20px;
   }
 
   .main-card {

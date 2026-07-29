@@ -25,6 +25,7 @@ const mainTasbeehButton = document.getElementById("main-tasbeeh-button");
 const mainTasbeehCount = document.getElementById("main-tasbeeh-count");
 const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
 const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
+const mainDailyChecklist = document.getElementById("main-daily-checklist");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -34,6 +35,7 @@ const mainPrayers = [
   { athanKey: "eshaAthan", salahKey: "eshaJamaah", startKey: "eshaStarts", label: "Esha", endKey: null },
 ];
 const accountSessionStorageKey = "nooriva-account-session";
+const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
 const contactSubmitUrl = "/api/contact-submit";
@@ -125,6 +127,76 @@ function loadMainSession() {
 function saveMainSession(session) {
   localStorage.setItem(accountSessionStorageKey, JSON.stringify(session));
   mainSession = session;
+}
+
+function getMainChecklistState() {
+  const { dateKey } = getMainMalawiParts();
+  const raw = localStorage.getItem(mainPrayerChecklistStorageKey);
+
+  if (!raw) {
+    return { dateKey, checked: {} };
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed?.dateKey !== dateKey) {
+      return { dateKey, checked: {} };
+    }
+
+    return { dateKey, checked: parsed.checked ?? {} };
+  } catch {
+    return { dateKey, checked: {} };
+  }
+}
+
+function saveMainChecklistState(checked) {
+  const { dateKey } = getMainMalawiParts();
+  localStorage.setItem(
+    mainPrayerChecklistStorageKey,
+    JSON.stringify({
+      dateKey,
+      checked,
+    }),
+  );
+}
+
+function renderMainDailyChecklist() {
+  if (!mainDailyChecklist) {
+    return;
+  }
+
+  const checklist = getMainChecklistState();
+
+  mainDailyChecklist.innerHTML = mainPrayers
+    .map((prayer) => {
+      const isChecked = Boolean(checklist.checked?.[prayer.label]);
+      return `
+        <button
+          class="main-daily-item${isChecked ? " is-checked" : ""}"
+          type="button"
+          data-main-prayer-check="${prayer.label}"
+          aria-pressed="${isChecked ? "true" : "false"}"
+        >
+          <span class="main-daily-tick" aria-hidden="true"></span>
+          <span>${prayer.label}</span>
+        </button>
+      `;
+    })
+    .join("");
+
+  mainDailyChecklist.querySelectorAll("[data-main-prayer-check]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const prayerLabel = button.dataset.mainPrayerCheck;
+      const current = getMainChecklistState();
+      const nextChecked = !Boolean(current.checked?.[prayerLabel]);
+      current.checked[prayerLabel] = nextChecked;
+      saveMainChecklistState(current.checked);
+      renderMainDailyChecklist();
+    });
+  });
 }
 
 function renderMainGreeting() {
@@ -730,6 +802,7 @@ contactForm?.addEventListener("submit", async (event) => {
 });
 
 renderMainGreeting();
+renderMainDailyChecklist();
 updateMainNotificationButton();
 loadMainPrayer();
 loadMainAyah();
