@@ -116,6 +116,33 @@ function getMainPrayerWindows() {
   });
 }
 
+function getCurrentMainSalahLabel() {
+  if (!mainPrayerRows.length) {
+    return null;
+  }
+
+  const windows = getMainPrayerWindows();
+  const { timeKey } = getMainMalawiParts();
+  const currentMinutes = getMainMinutes(timeKey) ?? 0;
+
+  const currentPrayer =
+    windows.find((prayer) => {
+      const adjustedCurrentMinutes =
+        prayer.endMinutes !== null && prayer.endMinutes <= prayer.startMinutes && currentMinutes < prayer.startMinutes
+          ? currentMinutes + 24 * 60
+          : currentMinutes;
+      const wrapsMidnight = prayer.endMinutes <= prayer.startMinutes || prayer.endMinutes > 24 * 60;
+
+      if (wrapsMidnight) {
+        return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
+      }
+
+      return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
+    }) ?? null;
+
+  return currentPrayer?.label ?? null;
+}
+
 function loadMainSession() {
   try {
     return JSON.parse(localStorage.getItem(accountSessionStorageKey) || "null");
@@ -166,20 +193,25 @@ function renderMainDailyChecklist() {
   }
 
   const checklist = getMainChecklistState();
+  const currentSalahLabel = getCurrentMainSalahLabel();
 
   mainDailyChecklist.innerHTML = mainPrayers
     .map((prayer) => {
       const isChecked = Boolean(checklist.checked?.[prayer.label]);
+      const isCurrent = currentSalahLabel === prayer.label;
       return `
-        <button
-          class="main-daily-item${isChecked ? " is-checked" : ""}"
-          type="button"
-          data-main-prayer-check="${prayer.label}"
-          aria-pressed="${isChecked ? "true" : "false"}"
-        >
-          <span class="main-daily-tick" aria-hidden="true"></span>
-          <span>${prayer.label}</span>
-        </button>
+        <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}">
+          <button
+            class="main-daily-tick-button"
+            type="button"
+            data-main-prayer-check="${prayer.label}"
+            aria-pressed="${isChecked ? "true" : "false"}"
+            aria-label="Mark ${prayer.label} as ${isChecked ? "not completed" : "completed"}"
+          >
+            <span class="main-daily-tick" aria-hidden="true"></span>
+          </button>
+          <a class="main-daily-name" href="./prayer.html">${prayer.label}</a>
+        </div>
       `;
     })
     .join("");
@@ -434,6 +466,7 @@ async function loadMainPrayer() {
     };
 
     renderMainPrayer();
+    renderMainDailyChecklist();
     window.setInterval(renderMainPrayer, 60000);
   } catch {
     if (mainPrayerName) mainPrayerName.textContent = "Prayer unavailable";
