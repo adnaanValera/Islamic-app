@@ -4057,6 +4057,18 @@ h3 {
   }
 }
 
+.main-top-logo {
+  display: flex;
+  justify-content: center;
+  margin: 2px 0 8px;
+}
+
+.main-top-logo-image {
+  width: min(186px, 56vw);
+  height: auto;
+  display: block;
+}
+
 .main-hero-section {
   padding-bottom: 2px;
 }
@@ -4679,6 +4691,11 @@ h3 {
     display: none;
   }
 
+  .main-top-logo {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
   .main-daily-checklist {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
@@ -4702,6 +4719,10 @@ h3 {
 }
 
 @media (max-width: 480px) {
+  .main-top-logo-image {
+    width: min(168px, 60vw);
+  }
+
   .main-hero-section {
     padding-top: 4px;
   }
