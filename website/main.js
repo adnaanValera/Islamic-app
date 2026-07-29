@@ -146,6 +146,55 @@ function getCurrentMainSalahLabel() {
   return currentPrayer?.label ?? null;
 }
 
+function getChecklistHighlightMainSalahLabel() {
+  if (!mainPrayerRows.length) {
+    return null;
+  }
+
+  const windows = getMainPrayerWindows();
+  const { timeKey } = getMainMalawiParts();
+  const currentMinutes = getMainMinutes(timeKey) ?? 0;
+
+  const currentPrayer =
+    windows.find((prayer) => {
+      const adjustedCurrentMinutes =
+        prayer.endMinutes !== null && prayer.endMinutes <= prayer.startMinutes && currentMinutes < prayer.startMinutes
+          ? currentMinutes + 24 * 60
+          : currentMinutes;
+      const wrapsMidnight = prayer.endMinutes <= prayer.startMinutes || prayer.endMinutes > 24 * 60;
+
+      if (wrapsMidnight) {
+        return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
+      }
+
+      return adjustedCurrentMinutes >= prayer.startMinutes && adjustedCurrentMinutes < prayer.endMinutes;
+    }) ?? null;
+
+  if (currentPrayer) {
+    return { label: currentPrayer.label, state: "current" };
+  }
+
+  const nextPrayer =
+    windows
+      .map((prayer) => ({
+        ...prayer,
+        effectiveStart: prayer.startMinutes > currentMinutes ? prayer.startMinutes : prayer.startMinutes + 24 * 60,
+      }))
+      .sort((a, b) => a.effectiveStart - b.effectiveStart)[0] ?? null;
+
+  return nextPrayer ? { label: nextPrayer.label, state: "next" } : null;
+}
+
+function toggleMainChecklistPrayer(prayerLabel) {
+  const current = getMainChecklistState();
+  const nextChecked = !Boolean(current.checked?.[prayerLabel]);
+  current.checked[prayerLabel] = nextChecked;
+  mainLastToggledPrayerLabel = prayerLabel;
+  mainLastToggleAt = Date.now();
+  saveMainChecklistState(current.checked);
+  renderMainDailyChecklist();
+}
+
 function loadMainSession() {
   try {
     return JSON.parse(localStorage.getItem(accountSessionStorageKey) || "null");
@@ -196,19 +245,26 @@ function renderMainDailyChecklist() {
   }
 
   const checklist = getMainChecklistState();
-  const currentSalahLabel = getCurrentMainSalahLabel();
+  const highlightPrayer = getChecklistHighlightMainSalahLabel();
   const checkedCount = mainPrayers.filter((prayer) => Boolean(checklist.checked?.[prayer.label])).length;
   const now = Date.now();
 
   mainDailyChecklist.innerHTML = mainPrayers
     .map((prayer) => {
       const isChecked = Boolean(checklist.checked?.[prayer.label]);
-      const isCurrent = currentSalahLabel === prayer.label;
+      const isCurrent = highlightPrayer?.label === prayer.label && highlightPrayer?.state === "current";
+      const isNext = highlightPrayer?.label === prayer.label && highlightPrayer?.state === "next";
       const isToggling = mainLastToggledPrayerLabel === prayer.label && now - mainLastToggleAt < 700;
       return `
-        <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}${isToggling ? " is-toggling" : ""}">
+        <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}${isNext ? " is-next" : ""}${isToggling ? " is-toggling" : ""}">
           <div class="main-daily-name-wrap">
-            <a class="main-daily-name" href="./prayer.html">${prayer.label}</a>
+            <button
+              class="main-daily-name"
+              type="button"
+              data-main-prayer-check="${prayer.label}"
+              aria-pressed="${isChecked ? "true" : "false"}"
+              aria-label="Mark ${prayer.label} as ${isChecked ? "not completed" : "completed"}"
+            >${prayer.label}</button>
           </div>
           <button
             class="main-daily-tick-button"
@@ -233,15 +289,7 @@ function renderMainDailyChecklist() {
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-
-      const prayerLabel = button.dataset.mainPrayerCheck;
-      const current = getMainChecklistState();
-      const nextChecked = !Boolean(current.checked?.[prayerLabel]);
-      current.checked[prayerLabel] = nextChecked;
-      mainLastToggledPrayerLabel = prayerLabel;
-      mainLastToggleAt = Date.now();
-      saveMainChecklistState(current.checked);
-      renderMainDailyChecklist();
+      toggleMainChecklistPrayer(button.dataset.mainPrayerCheck);
     });
   });
 }
