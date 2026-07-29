@@ -207,7 +207,9 @@ function renderMainDailyChecklist() {
       const isToggling = mainLastToggledPrayerLabel === prayer.label && now - mainLastToggleAt < 700;
       return `
         <div class="main-daily-item${isChecked ? " is-checked" : ""}${isCurrent ? " is-current" : ""}${isToggling ? " is-toggling" : ""}">
-          <a class="main-daily-name" href="./prayer.html">${prayer.label}</a>
+          <div class="main-daily-name-wrap">
+            <a class="main-daily-name" href="./prayer.html">${prayer.label}</a>
+          </div>
           <button
             class="main-daily-tick-button"
             type="button"
