@@ -637,14 +637,14 @@ function fitAyahCardText() {
 
   const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
   const arabicMax = tallVariant
-    ? arabicLength < 120 ? 34 : arabicLength < 170 ? 30 : 27
-    : arabicLength < 70 ? 33 : arabicLength < 120 ? 30 : 26;
+    ? arabicLength < 120 ? 31 : arabicLength < 170 ? 28 : 25
+    : arabicLength < 70 ? 30 : arabicLength < 120 ? 28 : 24;
   const englishMax = tallVariant
-    ? englishLength < 140 ? 15.5 : englishLength < 210 ? 14.5 : 13
-    : englishLength < 90 ? 15.5 : englishLength < 150 ? 14 : 12.5;
+    ? englishLength < 140 ? 14.5 : englishLength < 210 ? 13.5 : 12.5
+    : englishLength < 90 ? 14.5 : englishLength < 150 ? 13 : 12;
 
-  fitElementText(mainAyahArabic, { min: tallVariant ? 18 : 17, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.5 : 1.54 });
-  fitElementText(mainAyahEnglish, { min: 11, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.34 : 1.38 });
+  fitElementText(mainAyahArabic, { min: tallVariant ? 16 : 15, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.46 : 1.5 });
+  fitElementText(mainAyahEnglish, { min: 10.5, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.3 : 1.34 });
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
@@ -652,11 +652,11 @@ function fitAyahCardText() {
 
   if (contentBox) {
     const contentBoxHeight = contentBox.clientHeight ?? 0;
-    const gap = tallVariant ? (window.innerWidth <= 480 ? 10 : 14) : (window.innerWidth <= 480 ? 10 : 14);
+    const gap = tallVariant ? (window.innerWidth <= 480 ? 8 : 12) : (window.innerWidth <= 480 ? 8 : 12);
     const contentHeight = arabicHeight + englishHeight + gap;
-    const topOffset = Math.max((contentBoxHeight - contentHeight) / 2 - (tallVariant ? 4 : 2), 0);
+    const topOffset = Math.max((contentBoxHeight - contentHeight) / 2, 0);
     contentBox.style.paddingTop = `${topOffset}px`;
-    contentBox.style.paddingBottom = `${Math.max(topOffset * 0.18, 0)}px`;
+    contentBox.style.paddingBottom = `${Math.max(topOffset * 0.08, 0)}px`;
   }
 }
 
