@@ -24,6 +24,7 @@ const adminUsersList = document.getElementById("admin-users-list");
 const adminMessagesList = document.getElementById("admin-messages-list");
 const adminCardTitleInput = document.getElementById("admin-card-title");
 const adminCardBodyInput = document.getElementById("admin-card-body");
+const adminTemplatePreview = document.getElementById("admin-template-preview");
 const adminTemplateTitle = document.getElementById("admin-template-title");
 const adminTemplateBody = document.getElementById("admin-template-body");
 const adminCardDownloadButton = document.getElementById("admin-card-download");
@@ -192,6 +193,22 @@ function sanitizeFileNamePart(value) {
   return String(value || "Nooriva").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
 }
 
+function getElementBoxRatios(element, container) {
+  if (!element || !container) {
+    return null;
+  }
+
+  const elementRect = element.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+
+  return {
+    left: (elementRect.left - containerRect.left) / containerRect.width,
+    top: (elementRect.top - containerRect.top) / containerRect.height,
+    width: elementRect.width / containerRect.width,
+    height: elementRect.height / containerRect.height,
+  };
+}
+
 function downloadAdminCard() {
   const image = new Image();
   image.onload = () => {
@@ -209,31 +226,45 @@ function downloadAdminCard() {
 
     const titleText = adminCardTitleInput?.value?.trim() || "Nooriva";
     const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
+    const previewWidth = adminTemplatePreview?.clientWidth || 1;
+    const scale = canvas.width / previewWidth;
+    const titleStyles = adminTemplateTitle ? window.getComputedStyle(adminTemplateTitle) : null;
+    const bodyStyles = adminTemplateBody ? window.getComputedStyle(adminTemplateBody) : null;
+    const titleBox = getElementBoxRatios(adminTemplateTitle, adminTemplatePreview);
+    const bodyBox = getElementBoxRatios(adminTemplateBody, adminTemplatePreview);
 
-    const titleCenterX = canvas.width * 0.5;
-    const titleBoxTop = canvas.height * 0.199;
-    const titleBoxWidth = canvas.width * 0.58;
-    const titleBoxHeight = canvas.height * 0.044;
+    if (!titleBox || !bodyBox || !titleStyles || !bodyStyles) {
+      return;
+    }
+
+    const titleCenterX = canvas.width * (titleBox.left + titleBox.width / 2);
+    const titleBoxTop = canvas.height * titleBox.top;
+    const titleBoxWidth = canvas.width * titleBox.width;
+    const titleBoxHeight = canvas.height * titleBox.height;
+    const titleMaxFontSize = Math.max(Math.round(Number.parseFloat(titleStyles.fontSize || "20") * scale), 16);
+    const titleMinFontSize = Math.max(Math.round(titleMaxFontSize * 0.62), 14);
     const titleLayout = getCanvasLayout(context, titleText, {
-      maxFontSize: 27,
-      minFontSize: 16,
+      maxFontSize: titleMaxFontSize,
+      minFontSize: titleMinFontSize,
       width: titleBoxWidth,
       maxHeight: titleBoxHeight,
-      lineHeightRatio: 1,
+      lineHeightRatio: Number.parseFloat(titleStyles.lineHeight) / Number.parseFloat(titleStyles.fontSize || "20") || 1,
       weight: "600",
       family: "'Cormorant Garamond', serif",
     });
 
-    const bodyCenterX = canvas.width * 0.5;
-    const bodyBoxTop = canvas.height * 0.313;
-    const bodyBoxWidth = canvas.width * 0.8;
-    const bodyBoxHeight = canvas.height * 0.438;
+    const bodyCenterX = canvas.width * (bodyBox.left + bodyBox.width / 2);
+    const bodyBoxTop = canvas.height * bodyBox.top;
+    const bodyBoxWidth = canvas.width * bodyBox.width;
+    const bodyBoxHeight = canvas.height * bodyBox.height;
+    const bodyMaxFontSize = Math.max(Math.round(Number.parseFloat(bodyStyles.fontSize || "16") * scale), 12);
+    const bodyMinFontSize = Math.max(Math.round(bodyMaxFontSize * 0.64), 11);
     const bodyLayout = getCanvasLayout(context, bodyText, {
-      maxFontSize: 22,
-      minFontSize: 14,
+      maxFontSize: bodyMaxFontSize,
+      minFontSize: bodyMinFontSize,
       width: bodyBoxWidth,
       maxHeight: bodyBoxHeight,
-      lineHeightRatio: 1.5,
+      lineHeightRatio: Number.parseFloat(bodyStyles.lineHeight) / Number.parseFloat(bodyStyles.fontSize || "16") || 1.5,
       weight: "500",
       family: "Manrope, sans-serif",
     });
@@ -244,7 +275,7 @@ function downloadAdminCard() {
       context,
       titleLayout.lines,
       titleCenterX,
-      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.79,
+      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.8,
       titleLayout.lineHeight,
     );
 
