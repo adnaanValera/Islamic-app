@@ -211,11 +211,11 @@ function downloadAdminCard() {
     const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
 
     const titleCenterX = canvas.width * 0.5;
-    const titleBoxTop = canvas.height * 0.24;
+    const titleBoxTop = canvas.height * 0.217;
     const titleBoxWidth = canvas.width * 0.58;
-    const titleBoxHeight = canvas.height * 0.039;
+    const titleBoxHeight = canvas.height * 0.052;
     const titleLayout = getCanvasLayout(context, titleText, {
-      maxFontSize: 27,
+      maxFontSize: 29,
       minFontSize: 16,
       width: titleBoxWidth,
       maxHeight: titleBoxHeight,
@@ -244,7 +244,7 @@ function downloadAdminCard() {
       context,
       titleLayout.lines,
       titleCenterX,
-      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.79,
+      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.81,
       titleLayout.lineHeight,
     );
 
