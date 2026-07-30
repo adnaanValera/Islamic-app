@@ -4418,7 +4418,7 @@ h3 {
   font-size: clamp(0.9rem, 1.85vw, 1.22rem);
   text-align: center;
   overflow: hidden;
-  white-space: pre-wrap;
+  white-space: normal;
   text-wrap: balance;
 }
 
@@ -4436,7 +4436,7 @@ h3 {
   font-size: clamp(0.84rem, 1.85vw, 0.96rem);
   line-height: 1.58;
   text-align: center;
-  white-space: pre-wrap;
+  white-space: normal;
   overflow: hidden;
   text-wrap: balance;
 }

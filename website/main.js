@@ -592,11 +592,17 @@ async function loadMainAyah() {
     const payload = await response.json();
     const [arabic, english] = payload?.data ?? [];
 
+    const normalizeAyahFlowText = (value) =>
+      String(value ?? "—")
+        .replace(/\s*\n+\s*/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
     currentAyahOfDay = {
       surahName: english?.surah?.englishName ?? arabic?.surah?.englishName ?? "Quran",
       ayahInSurah: english?.numberInSurah ?? arabic?.numberInSurah ?? "",
-      arabic: arabic?.text ?? "—",
-      english: english?.text ?? "—",
+      arabic: normalizeAyahFlowText(arabic?.text),
+      english: normalizeAyahFlowText(english?.text),
     };
 
     if (mainAyahArabic) mainAyahArabic.textContent = currentAyahOfDay.arabic;

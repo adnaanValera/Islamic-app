@@ -128,14 +128,22 @@ function fitAdminTemplatePreview() {
   fitTextToBox(adminTemplateBody, { min: 11, max: 17, step: 0.5, lineHeight: 1.5 });
 }
 
+function normalizeFlowText(value, fallback = "") {
+  const normalized = String(value ?? "")
+    .replace(/\s*\n+\s*/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return normalized || fallback;
+}
+
 function renderAdminTemplatePreview() {
   if (adminTemplateTitle) {
-    adminTemplateTitle.textContent = adminCardTitleInput?.value?.trim() || "Nooriva";
+    adminTemplateTitle.textContent = normalizeFlowText(adminCardTitleInput?.value, "Nooriva");
   }
 
   if (adminTemplateBody) {
-    const value = adminCardBodyInput?.value?.trim();
-    adminTemplateBody.textContent = value || "Add your text here.";
+    adminTemplateBody.textContent = normalizeFlowText(adminCardBodyInput?.value, "Add your text here.");
   }
 
   window.requestAnimationFrame(fitAdminTemplatePreview);
@@ -224,8 +232,8 @@ function downloadAdminCard() {
     context.drawImage(image, 0, 0);
     context.textAlign = "center";
 
-    const titleText = adminCardTitleInput?.value?.trim() || "Nooriva";
-    const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
+    const titleText = normalizeFlowText(adminCardTitleInput?.value, "Nooriva");
+    const bodyText = normalizeFlowText(adminCardBodyInput?.value, "Add your text here.");
     const previewWidth = adminTemplatePreview?.clientWidth || 1;
     const scale = canvas.width / previewWidth;
     const titleStyles = adminTemplateTitle ? window.getComputedStyle(adminTemplateTitle) : null;
