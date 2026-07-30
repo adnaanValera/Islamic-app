@@ -35,6 +35,16 @@ const mainPrayers = [
   { athanKey: "maghribAthan", salahKey: "maghribJamaah", startKey: "sunset", label: "Maghrib", endKey: "eshaStarts" },
   { athanKey: "eshaAthan", salahKey: "eshaJamaah", startKey: "eshaStarts", label: "Esha", endKey: null },
 ];
+const mainAyahCandidates = [
+  1, 2, 3, 4, 5, 19, 20, 36, 55, 94, 112, 113, 114,
+  262, 255, 256, 286, 284,
+  617, 690, 743, 846, 899, 954, 1015, 1118,
+  1287, 1363, 1473, 1506, 1598, 1710, 1755, 1806,
+  2140, 2210, 2348, 2483, 2558, 2675, 2857, 2932,
+  3159, 3253, 3340, 3437, 3532, 3660, 3814, 3998,
+  4215, 4314, 4474, 4636, 4725, 4882, 5031, 5187,
+  5315, 5480, 5604, 5739, 5888, 6009, 6105, 6201,
+];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
 const pushPublicKeyApiUrl = "/api/push-public-key";
@@ -543,10 +553,10 @@ function getAyahNumberForToday() {
   let seed = 0;
 
   for (const character of dateKey) {
-    seed = (seed * 31 + character.charCodeAt(0)) % 6236;
+    seed = (seed * 31 + character.charCodeAt(0)) % mainAyahCandidates.length;
   }
 
-  return (seed % 6236) + 1;
+  return mainAyahCandidates[seed % mainAyahCandidates.length];
 }
 
 async function loadMainAyah() {

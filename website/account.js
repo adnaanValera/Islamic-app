@@ -211,15 +211,15 @@ function downloadAdminCard() {
     const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
 
     const titleCenterX = canvas.width * 0.5;
-    const titleBoxTop = canvas.height * 0.189;
+    const titleBoxTop = canvas.height * 0.227;
     const titleBoxWidth = canvas.width * 0.64;
-    const titleBoxHeight = canvas.height * 0.075;
+    const titleBoxHeight = canvas.height * 0.046;
     const titleLayout = getCanvasLayout(context, titleText, {
-      maxFontSize: 38,
-      minFontSize: 20,
+      maxFontSize: 31,
+      minFontSize: 18,
       width: titleBoxWidth,
       maxHeight: titleBoxHeight,
-      lineHeightRatio: 1.08,
+      lineHeightRatio: 1.02,
       weight: "600",
       family: "'Cormorant Garamond', serif",
     });
@@ -244,7 +244,7 @@ function downloadAdminCard() {
       context,
       titleLayout.lines,
       titleCenterX,
-      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.84,
+      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.8,
       titleLayout.lineHeight,
     );
 
