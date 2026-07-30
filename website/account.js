@@ -228,103 +228,97 @@ function sanitizeFileNamePart(value) {
   return String(value || "Nooriva").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
 }
 
-function getElementBoxRatios(element, container) {
-  if (!element || !container) {
-    return null;
-  }
-
-  const elementRect = element.getBoundingClientRect();
-  const containerRect = container.getBoundingClientRect();
-
-  return {
-    left: (elementRect.left - containerRect.left) / containerRect.width,
-    top: (elementRect.top - containerRect.top) / containerRect.height,
-    width: elementRect.width / containerRect.width,
-    height: elementRect.height / containerRect.height,
-  };
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-function downloadAdminCard() {
+async function assetToDataUrl(assetUrl) {
+  const response = await fetch(assetUrl);
+  const blob = await response.blob();
+
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function buildInlineStyle(computedStyle, extra = {}) {
+  const base = {
+    position: computedStyle.position,
+    left: computedStyle.left,
+    top: computedStyle.top,
+    width: computedStyle.width,
+    height: computedStyle.height,
+    display: computedStyle.display,
+    alignItems: computedStyle.alignItems,
+    justifyContent: computedStyle.justifyContent,
+    margin: computedStyle.margin,
+    color: computedStyle.color,
+    fontFamily: computedStyle.fontFamily,
+    fontSize: computedStyle.fontSize,
+    fontWeight: computedStyle.fontWeight,
+    lineHeight: computedStyle.lineHeight,
+    textAlign: computedStyle.textAlign,
+    whiteSpace: computedStyle.whiteSpace,
+    overflow: computedStyle.overflow,
+    padding: computedStyle.padding,
+  };
+
+  return Object.entries({ ...base, ...extra })
+    .filter(([, value]) => value && value !== "normal")
+    .map(([key, value]) => `${key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}:${value}`)
+    .join(";");
+}
+
+async function downloadAdminCard() {
+  if (!adminTemplatePreview || !adminTemplateTitle || !adminTemplateBody) {
+    return;
+  }
+
+  const previewRect = adminTemplatePreview.getBoundingClientRect();
+  const titleStyles = window.getComputedStyle(adminTemplateTitle);
+  const bodyStyles = window.getComputedStyle(adminTemplateBody);
+  const backgroundUrl = await assetToDataUrl("./assets/admin-card-template.jpg");
+
+  const titleHtml = escapeHtml(adminTemplateTitle.textContent || "Nooriva");
+  const bodyHtml = escapeHtml(adminTemplateBody.textContent || "Add your text here.").replace(/\n/g, "<br/>");
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(previewRect.width * 3)}" height="${Math.round(previewRect.height * 3)}" viewBox="0 0 ${previewRect.width} ${previewRect.height}">
+      <foreignObject x="0" y="0" width="${previewRect.width}" height="${previewRect.height}">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${previewRect.width}px;height:${previewRect.height}px;background-image:url('${backgroundUrl}');background-size:cover;background-position:center;border-radius:28px;overflow:hidden;">
+          <div style="${buildInlineStyle(titleStyles)}">${titleHtml}</div>
+          <div style="${buildInlineStyle(bodyStyles)}">${bodyHtml}</div>
+        </div>
+      </foreignObject>
+    </svg>
+  `;
+
+  const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+  const svgUrl = URL.createObjectURL(svgBlob);
   const image = new Image();
+
   image.onload = () => {
     const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height;
+    canvas.width = Math.round(previewRect.width * 3);
+    canvas.height = Math.round(previewRect.height * 3);
     const context = canvas.getContext("2d");
 
     if (!context) {
+      URL.revokeObjectURL(svgUrl);
       return;
     }
 
-    context.drawImage(image, 0, 0);
-    context.textAlign = "center";
-
-    const titleText = normalizeFlowText(adminCardTitleInput?.value, "Nooriva");
-    const bodyText = normalizePreviewText(adminCardBodyInput?.value, "Add your text here.");
-    const previewWidth = adminTemplatePreview?.clientWidth || 1;
-    const scale = canvas.width / previewWidth;
-    const titleStyles = adminTemplateTitle ? window.getComputedStyle(adminTemplateTitle) : null;
-    const bodyStyles = adminTemplateBody ? window.getComputedStyle(adminTemplateBody) : null;
-    const titleBox = getElementBoxRatios(adminTemplateTitle, adminTemplatePreview);
-    const bodyBox = getElementBoxRatios(adminTemplateBody, adminTemplatePreview);
-
-    if (!titleBox || !bodyBox || !titleStyles || !bodyStyles) {
-      return;
-    }
-
-    const titleCenterX = canvas.width * (titleBox.left + titleBox.width / 2);
-    const titleBoxTop = canvas.height * titleBox.top;
-    const titleBoxWidth = canvas.width * titleBox.width;
-    const titleBoxHeight = canvas.height * titleBox.height;
-    const titleMaxFontSize = Math.max(Math.round(Number.parseFloat(titleStyles.fontSize || "20") * scale), 16);
-    const titleMinFontSize = Math.max(Math.round(titleMaxFontSize * 0.62), 14);
-    const titleLayout = getCanvasLayout(context, titleText, {
-      maxFontSize: titleMaxFontSize,
-      minFontSize: titleMinFontSize,
-      width: titleBoxWidth,
-      maxHeight: titleBoxHeight,
-      lineHeightRatio: Number.parseFloat(titleStyles.lineHeight) / Number.parseFloat(titleStyles.fontSize || "20") || 1,
-      weight: "600",
-      family: "'Cormorant Garamond', serif",
-    });
-
-    const bodyCenterX = canvas.width * (bodyBox.left + bodyBox.width / 2);
-    const bodyBoxTop = canvas.height * bodyBox.top;
-    const bodyBoxWidth = canvas.width * bodyBox.width;
-    const bodyBoxHeight = canvas.height * bodyBox.height;
-    const bodyMaxFontSize = Math.max(Math.round(Number.parseFloat(bodyStyles.fontSize || "16") * scale), 12);
-    const bodyMinFontSize = Math.max(Math.round(bodyMaxFontSize * 0.64), 11);
-    const bodyLayout = getCanvasLayout(context, bodyText, {
-      maxFontSize: bodyMaxFontSize,
-      minFontSize: bodyMinFontSize,
-      width: bodyBoxWidth,
-      maxHeight: bodyBoxHeight,
-      lineHeightRatio: Number.parseFloat(bodyStyles.lineHeight) / Number.parseFloat(bodyStyles.fontSize || "16") || 1.5,
-      weight: "500",
-      family: "Manrope, sans-serif",
-    });
-
-    context.fillStyle = "#1F2E29";
-    context.font = `600 ${titleLayout.size}px 'Cormorant Garamond', serif`;
-    drawCenteredLines(
-      context,
-      titleLayout.lines,
-      titleCenterX,
-      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.8,
-      titleLayout.lineHeight,
-    );
-
-    context.fillStyle = "#2A3833";
-    context.font = `500 ${bodyLayout.size}px Manrope, sans-serif`;
-    drawCenteredLines(
-      context,
-      bodyLayout.lines,
-      bodyCenterX,
-      bodyBoxTop + Math.max((bodyBoxHeight - bodyLayout.totalHeight) / 2, 0) + bodyLayout.lineHeight * 0.88,
-      bodyLayout.lineHeight,
-    );
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     canvas.toBlob((blob) => {
+      URL.revokeObjectURL(svgUrl);
       if (!blob) {
         return;
       }
@@ -332,13 +326,13 @@ function downloadAdminCard() {
       const link = document.createElement("a");
       const objectUrl = URL.createObjectURL(blob);
       link.href = objectUrl;
-      link.download = `${sanitizeFileNamePart(titleText)}.png`;
+      link.download = `${sanitizeFileNamePart(adminTemplateTitle.textContent || "Nooriva")}.png`;
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
     }, "image/png");
   };
 
-  image.src = "./assets/admin-card-template.jpg";
+  image.src = svgUrl;
 }
 
 async function submitAuth(url, fullName, password) {
