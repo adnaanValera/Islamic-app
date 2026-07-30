@@ -670,6 +670,22 @@ function sanitizeFileNamePart(value) {
   return String(value || "Quran").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
 }
 
+function getElementBoxRatios(element, container) {
+  if (!element || !container) {
+    return null;
+  }
+
+  const elementRect = element.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+
+  return {
+    left: (elementRect.left - containerRect.left) / containerRect.width,
+    top: (elementRect.top - containerRect.top) / containerRect.height,
+    width: elementRect.width / containerRect.width,
+    height: elementRect.height / containerRect.height,
+  };
+}
+
 function wrapCanvasText(context, text, maxWidth) {
   const words = String(text || "").split(/\s+/);
   const lines = [];
@@ -737,55 +753,67 @@ function downloadAyahCard() {
 
     context.drawImage(image, 0, 0);
     context.textAlign = "center";
-    context.fillStyle = "#13221c";
+    const preview = mainAyahCardShell;
+    const arabicStyles = mainAyahArabic ? window.getComputedStyle(mainAyahArabic) : null;
+    const englishStyles = mainAyahEnglish ? window.getComputedStyle(mainAyahEnglish) : null;
+    const referenceStyles = mainAyahReference ? window.getComputedStyle(mainAyahReference) : null;
+    const arabicBox = getElementBoxRatios(mainAyahArabic, preview);
+    const englishBox = getElementBoxRatios(mainAyahEnglish, preview);
+    const referenceBox = getElementBoxRatios(mainAyahReference, preview);
 
-    const frameLeft = tallVariant ? canvas.width * 0.12 : canvas.width * 0.112;
-    const frameTop = tallVariant ? canvas.height * 0.205 : canvas.height * 0.245;
-    const frameWidth = tallVariant ? canvas.width * 0.76 : canvas.width * 0.776;
-    const frameHeight = tallVariant ? canvas.height * 0.67 : canvas.height * 0.596;
-    const centerX = frameLeft + frameWidth / 2;
+    if (!preview || !arabicStyles || !englishStyles || !referenceStyles || !arabicBox || !englishBox || !referenceBox) {
+      return;
+    }
+
+    const previewWidth = preview.clientWidth || 1;
+    const scale = canvas.width / previewWidth;
+
     const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
-      maxFontSize: tallVariant ? 64 : currentAyahOfDay.arabic.length < 90 ? 78 : 68,
-      minFontSize: tallVariant ? 30 : 32,
-      width: frameWidth * 0.92,
-      maxHeight: frameHeight * (tallVariant ? 0.44 : 0.5),
-      lineHeightRatio: tallVariant ? 1.28 : 1.34,
+      maxFontSize: Math.max(Math.round(Number.parseFloat(arabicStyles.fontSize || "24") * scale), 16),
+      minFontSize: Math.max(Math.round(Number.parseFloat(arabicStyles.fontSize || "24") * scale * 0.7), 14),
+      width: canvas.width * arabicBox.width,
+      maxHeight: canvas.height * arabicBox.height,
+      lineHeightRatio: Number.parseFloat(arabicStyles.lineHeight) / Number.parseFloat(arabicStyles.fontSize || "24") || 1.4,
       weight: "600",
       family: "'Noto Naskh Arabic', serif",
     });
+
     const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
-      maxFontSize: tallVariant ? 28 : currentAyahOfDay.english.length < 110 ? 34 : 30,
-      minFontSize: tallVariant ? 16 : 18,
-      width: frameWidth * 0.82,
-      maxHeight: frameHeight * (tallVariant ? 0.26 : 0.2),
-      lineHeightRatio: tallVariant ? 1.4 : 1.48,
+      maxFontSize: Math.max(Math.round(Number.parseFloat(englishStyles.fontSize || "14") * scale), 10),
+      minFontSize: Math.max(Math.round(Number.parseFloat(englishStyles.fontSize || "14") * scale * 0.76), 10),
+      width: canvas.width * englishBox.width,
+      maxHeight: canvas.height * englishBox.height,
+      lineHeightRatio: Number.parseFloat(englishStyles.lineHeight) / Number.parseFloat(englishStyles.fontSize || "14") || 1.34,
       weight: "500",
       family: "Manrope, sans-serif",
     });
-    const referenceHeight = 34;
-    const referenceGap = tallVariant ? 18 : 10;
-    const totalHeight = arabicLayout.totalHeight + 34 + englishLayout.totalHeight + referenceGap + referenceHeight;
-    const startY = frameTop + Math.max((frameHeight - totalHeight) / 2, 20);
 
+    context.fillStyle = "#1F2E29";
     context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
-    drawCenteredLines(context, arabicLayout.lines, centerX, startY, arabicLayout.lineHeight);
+    drawCenteredLines(
+      context,
+      arabicLayout.lines,
+      canvas.width * (arabicBox.left + arabicBox.width / 2),
+      canvas.height * arabicBox.top + Math.max((canvas.height * arabicBox.height - arabicLayout.totalHeight) / 2, 0) + arabicLayout.lineHeight * 0.84,
+      arabicLayout.lineHeight,
+    );
 
-    context.fillStyle = "#2b352f";
+    context.fillStyle = "#2A3833";
     context.font = `500 ${englishLayout.size}px Manrope, sans-serif`;
     drawCenteredLines(
       context,
       englishLayout.lines,
-      centerX,
-      startY + arabicLayout.totalHeight + 34,
+      canvas.width * (englishBox.left + englishBox.width / 2),
+      canvas.height * englishBox.top + Math.max((canvas.height * englishBox.height - englishLayout.totalHeight) / 2, 0) + englishLayout.lineHeight * 0.84,
       englishLayout.lineHeight,
     );
 
-    context.font = "700 23px Manrope, sans-serif";
+    context.font = `700 ${Math.max(Math.round(Number.parseFloat(referenceStyles.fontSize || "14") * scale), 12)}px Manrope, sans-serif`;
     context.fillStyle = "#8e7440";
     context.fillText(
       `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`,
-      centerX,
-      startY + arabicLayout.totalHeight + 34 + englishLayout.totalHeight + referenceGap,
+      canvas.width * (referenceBox.left + referenceBox.width / 2),
+      canvas.height * referenceBox.top + canvas.height * referenceBox.height * 0.7,
     );
 
     const link = document.createElement("a");

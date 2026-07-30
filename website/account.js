@@ -137,13 +137,24 @@ function normalizeFlowText(value, fallback = "") {
   return normalized || fallback;
 }
 
+function normalizePreviewText(value, fallback = "") {
+  const normalized = String(value ?? "")
+    .replace(/\r\n/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n[ \t]+/g, "\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+
+  return normalized || fallback;
+}
+
 function renderAdminTemplatePreview() {
   if (adminTemplateTitle) {
     adminTemplateTitle.textContent = normalizeFlowText(adminCardTitleInput?.value, "Nooriva");
   }
 
   if (adminTemplateBody) {
-    adminTemplateBody.textContent = normalizeFlowText(adminCardBodyInput?.value, "Add your text here.");
+    adminTemplateBody.textContent = normalizePreviewText(adminCardBodyInput?.value, "Add your text here.");
   }
 
   window.requestAnimationFrame(fitAdminTemplatePreview);
@@ -233,7 +244,7 @@ function downloadAdminCard() {
     context.textAlign = "center";
 
     const titleText = normalizeFlowText(adminCardTitleInput?.value, "Nooriva");
-    const bodyText = normalizeFlowText(adminCardBodyInput?.value, "Add your text here.");
+    const bodyText = normalizePreviewText(adminCardBodyInput?.value, "Add your text here.");
     const previewWidth = adminTemplatePreview?.clientWidth || 1;
     const scale = canvas.width / previewWidth;
     const titleStyles = adminTemplateTitle ? window.getComputedStyle(adminTemplateTitle) : null;
