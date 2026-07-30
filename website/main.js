@@ -670,6 +670,68 @@ function sanitizeFileNamePart(value) {
   return String(value || "Quran").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function assetToDataUrl(assetUrl) {
+  const response = await fetch(assetUrl);
+  const blob = await response.blob();
+
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function buildInlineStyle(computedStyle, extra = {}) {
+  const styleMap = {
+    position: extra.position ?? "absolute",
+    left: extra.left ?? "0px",
+    top: extra.top ?? "0px",
+    width: extra.width ?? computedStyle.width,
+    height: extra.height ?? computedStyle.height,
+    display: extra.display ?? computedStyle.display,
+    alignItems: extra.alignItems ?? computedStyle.alignItems,
+    justifyContent: extra.justifyContent ?? computedStyle.justifyContent,
+    flexDirection: extra.flexDirection ?? computedStyle.flexDirection,
+    gap: extra.gap ?? computedStyle.gap,
+    padding: extra.padding ?? computedStyle.padding,
+    paddingTop: extra.paddingTop ?? computedStyle.paddingTop,
+    paddingBottom: extra.paddingBottom ?? computedStyle.paddingBottom,
+    margin: extra.margin ?? computedStyle.margin,
+    fontFamily: extra.fontFamily ?? computedStyle.fontFamily,
+    fontSize: extra.fontSize ?? computedStyle.fontSize,
+    fontWeight: extra.fontWeight ?? computedStyle.fontWeight,
+    lineHeight: extra.lineHeight ?? computedStyle.lineHeight,
+    letterSpacing: extra.letterSpacing ?? computedStyle.letterSpacing,
+    color: extra.color ?? computedStyle.color,
+    textAlign: extra.textAlign ?? computedStyle.textAlign,
+    direction: extra.direction ?? computedStyle.direction,
+    whiteSpace: extra.whiteSpace ?? computedStyle.whiteSpace,
+    overflowWrap: extra.overflowWrap ?? computedStyle.overflowWrap,
+    wordBreak: extra.wordBreak ?? computedStyle.wordBreak,
+    textWrap: extra.textWrap ?? computedStyle.textWrap,
+    overflow: extra.overflow ?? computedStyle.overflow,
+    borderRadius: extra.borderRadius ?? computedStyle.borderRadius,
+    boxSizing: extra.boxSizing ?? computedStyle.boxSizing,
+    background: extra.background ?? computedStyle.background,
+    transform: extra.transform ?? computedStyle.transform,
+  };
+
+  return Object.entries(styleMap)
+    .filter(([, currentValue]) => currentValue && currentValue !== "normal" && currentValue !== "none")
+    .map(([key, currentValue]) => `${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}:${currentValue}`)
+    .join(";");
+}
+
 function getElementBoxRatios(element, container) {
   if (!element || !container) {
     return null;
@@ -739,99 +801,137 @@ function downloadAyahCard() {
     return;
   }
 
-  const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
-  const image = new Image();
-  image.onload = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height;
-    const context = canvas.getContext("2d");
+  const preview = mainAyahCardShell;
+  const art = preview?.querySelector(".main-ayah-card-art");
+  const inner = preview?.querySelector(".main-ayah-card-inner");
+  const content = preview?.querySelector(".main-ayah-content");
+  const tallVariant = preview?.dataset.cardVariant === "tall";
 
-    if (!context) {
-      return;
+  if (!preview || !art || !inner || !content || !mainAyahArabic || !mainAyahEnglish || !mainAyahReference) {
+    return;
+  }
+
+  mainAyahDownload.disabled = true;
+
+  (async () => {
+    try {
+      const backgroundAsset = tallVariant ? "./assets/ayah-card-template-tall.png" : "./assets/ayah-card-template.jpeg";
+      const backgroundDataUrl = await assetToDataUrl(backgroundAsset);
+
+      const artRect = art.getBoundingClientRect();
+      const innerRect = inner.getBoundingClientRect();
+      const contentRect = content.getBoundingClientRect();
+      const arabicRect = mainAyahArabic.getBoundingClientRect();
+      const englishRect = mainAyahEnglish.getBoundingClientRect();
+      const referenceRect = mainAyahReference.getBoundingClientRect();
+
+      const exportWidth = Math.max(1200, Math.round(artRect.width * (tallVariant ? 2.1 : 2.35)));
+      const exportHeight = Math.round(exportWidth * (artRect.height / Math.max(artRect.width, 1)));
+
+      const artStyle = window.getComputedStyle(art);
+      const innerStyle = window.getComputedStyle(inner);
+      const contentStyle = window.getComputedStyle(content);
+      const arabicStyle = window.getComputedStyle(mainAyahArabic);
+      const englishStyle = window.getComputedStyle(mainAyahEnglish);
+      const referenceStyle = window.getComputedStyle(mainAyahReference);
+
+      const svgMarkup = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${exportWidth}" height="${exportHeight}" viewBox="0 0 ${artRect.width} ${artRect.height}">
+          <foreignObject width="100%" height="100%">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${artRect.width}px;height:${artRect.height}px;overflow:hidden;border-radius:${artStyle.borderRadius};box-sizing:border-box;background-image:url('${backgroundDataUrl}');background-size:cover;background-position:center;background-repeat:no-repeat;">
+              <div style="${buildInlineStyle(innerStyle, {
+                left: `${innerRect.left - artRect.left}px`,
+                top: `${innerRect.top - artRect.top}px`,
+                width: `${innerRect.width}px`,
+                height: `${innerRect.height}px`,
+              })}">
+                <div style="${buildInlineStyle(contentStyle, {
+                  left: `${contentRect.left - artRect.left}px`,
+                  top: `${contentRect.top - artRect.top}px`,
+                  width: `${contentRect.width}px`,
+                  height: `${contentRect.height}px`,
+                  paddingTop: contentStyle.paddingTop,
+                  paddingBottom: contentStyle.paddingBottom,
+                })}">
+                  <p style="${buildInlineStyle(arabicStyle, {
+                    left: `${arabicRect.left - artRect.left}px`,
+                    top: `${arabicRect.top - artRect.top}px`,
+                    width: `${arabicRect.width}px`,
+                    height: `${arabicRect.height}px`,
+                    margin: "0",
+                    display: "block",
+                    whiteSpace: "pre-wrap",
+                  })}">${escapeHtml(mainAyahArabic.textContent || "")}</p>
+                  <p style="${buildInlineStyle(englishStyle, {
+                    left: `${englishRect.left - artRect.left}px`,
+                    top: `${englishRect.top - artRect.top}px`,
+                    width: `${englishRect.width}px`,
+                    height: `${englishRect.height}px`,
+                    margin: "0",
+                    display: "block",
+                    whiteSpace: "pre-wrap",
+                  })}">${escapeHtml(mainAyahEnglish.textContent || "")}</p>
+                </div>
+                <p style="${buildInlineStyle(referenceStyle, {
+                  left: `${referenceRect.left - artRect.left}px`,
+                  top: `${referenceRect.top - artRect.top}px`,
+                  width: `${referenceRect.width}px`,
+                  height: `${referenceRect.height}px`,
+                  margin: "0",
+                  display: "block",
+                  whiteSpace: "pre-wrap",
+                })}">${escapeHtml(mainAyahReference.textContent || "")}</p>
+              </div>
+            </div>
+          </foreignObject>
+        </svg>
+      `;
+
+      const svgBlob = new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      const image = new Image();
+
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = exportWidth;
+        canvas.height = exportHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          URL.revokeObjectURL(svgUrl);
+          mainAyahDownload.disabled = false;
+          return;
+        }
+
+        context.drawImage(image, 0, 0, exportWidth, exportHeight);
+        URL.revokeObjectURL(svgUrl);
+
+        canvas.toBlob((blob) => {
+          mainAyahDownload.disabled = false;
+          if (!blob) {
+            return;
+          }
+
+          const link = document.createElement("a");
+          const fileName = `${sanitizeFileNamePart(currentAyahOfDay.surahName)}-${sanitizeFileNamePart(currentAyahOfDay.ayahInSurah)}.png`;
+          const objectUrl = URL.createObjectURL(blob);
+          link.href = objectUrl;
+          link.download = fileName;
+          link.click();
+          window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+        }, "image/png");
+      };
+
+      image.onerror = () => {
+        URL.revokeObjectURL(svgUrl);
+        mainAyahDownload.disabled = false;
+      };
+
+      image.src = svgUrl;
+    } catch {
+      mainAyahDownload.disabled = false;
     }
-
-    context.drawImage(image, 0, 0);
-    context.textAlign = "center";
-    const preview = mainAyahCardShell;
-    const arabicStyles = mainAyahArabic ? window.getComputedStyle(mainAyahArabic) : null;
-    const englishStyles = mainAyahEnglish ? window.getComputedStyle(mainAyahEnglish) : null;
-    const referenceStyles = mainAyahReference ? window.getComputedStyle(mainAyahReference) : null;
-    const arabicBox = getElementBoxRatios(mainAyahArabic, preview);
-    const englishBox = getElementBoxRatios(mainAyahEnglish, preview);
-    const referenceBox = getElementBoxRatios(mainAyahReference, preview);
-
-    if (!preview || !arabicStyles || !englishStyles || !referenceStyles || !arabicBox || !englishBox || !referenceBox) {
-      return;
-    }
-
-    const previewWidth = preview.clientWidth || 1;
-    const scale = canvas.width / previewWidth;
-
-    const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
-      maxFontSize: Math.max(Math.round(Number.parseFloat(arabicStyles.fontSize || "24") * scale), 16),
-      minFontSize: Math.max(Math.round(Number.parseFloat(arabicStyles.fontSize || "24") * scale * 0.7), 14),
-      width: canvas.width * arabicBox.width,
-      maxHeight: canvas.height * arabicBox.height,
-      lineHeightRatio: Number.parseFloat(arabicStyles.lineHeight) / Number.parseFloat(arabicStyles.fontSize || "24") || 1.4,
-      weight: "600",
-      family: "'Noto Naskh Arabic', serif",
-    });
-
-    const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
-      maxFontSize: Math.max(Math.round(Number.parseFloat(englishStyles.fontSize || "14") * scale), 10),
-      minFontSize: Math.max(Math.round(Number.parseFloat(englishStyles.fontSize || "14") * scale * 0.76), 10),
-      width: canvas.width * englishBox.width,
-      maxHeight: canvas.height * englishBox.height,
-      lineHeightRatio: Number.parseFloat(englishStyles.lineHeight) / Number.parseFloat(englishStyles.fontSize || "14") || 1.34,
-      weight: "500",
-      family: "Manrope, sans-serif",
-    });
-
-    context.fillStyle = "#1F2E29";
-    context.font = `600 ${arabicLayout.size}px 'Noto Naskh Arabic', serif`;
-    drawCenteredLines(
-      context,
-      arabicLayout.lines,
-      canvas.width * (arabicBox.left + arabicBox.width / 2),
-      canvas.height * arabicBox.top + Math.max((canvas.height * arabicBox.height - arabicLayout.totalHeight) / 2, 0) + arabicLayout.lineHeight * 0.84,
-      arabicLayout.lineHeight,
-    );
-
-    context.fillStyle = "#2A3833";
-    context.font = `500 ${englishLayout.size}px Manrope, sans-serif`;
-    drawCenteredLines(
-      context,
-      englishLayout.lines,
-      canvas.width * (englishBox.left + englishBox.width / 2),
-      canvas.height * englishBox.top + Math.max((canvas.height * englishBox.height - englishLayout.totalHeight) / 2, 0) + englishLayout.lineHeight * 0.84,
-      englishLayout.lineHeight,
-    );
-
-    context.font = `700 ${Math.max(Math.round(Number.parseFloat(referenceStyles.fontSize || "14") * scale), 12)}px Manrope, sans-serif`;
-    context.fillStyle = "#8e7440";
-    context.fillText(
-      `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`,
-      canvas.width * (referenceBox.left + referenceBox.width / 2),
-      canvas.height * referenceBox.top + canvas.height * referenceBox.height * 0.7,
-    );
-
-    const link = document.createElement("a");
-    const fileName = `${sanitizeFileNamePart(currentAyahOfDay.surahName)}-${sanitizeFileNamePart(currentAyahOfDay.ayahInSurah)}.png`;
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        return;
-      }
-
-      const objectUrl = URL.createObjectURL(blob);
-      link.href = objectUrl;
-      link.download = fileName;
-      link.click();
-      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-    }, "image/png");
-  };
-
-  image.src = tallVariant ? "./assets/ayah-card-template-tall.png" : "./assets/ayah-card-template.jpeg";
+  })();
 }
 
 function getMainTasbeehState() {

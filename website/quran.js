@@ -35,6 +35,7 @@ function defaultState() {
     search: "",
     view: "both",
     currentPage: 1,
+    bothChunkIndex: 0,
     lastReading: {
       surahKey: "1",
       page: 1,
@@ -54,6 +55,7 @@ function loadState() {
       search: parsed?.search || "",
       view: ["arabic", "english", "both"].includes(parsed?.view) ? parsed.view : "both",
       currentPage: Math.max(1, Math.min(Number(parsed?.currentPage || parsed?.lastReading?.page || 1), totalQuranPages)),
+      bothChunkIndex: Math.max(0, Number(parsed?.bothChunkIndex || 0)),
       lastReading: {
         surahKey: String(parsed?.lastReading?.surahKey || parsed?.selectedKey || "1"),
         page: Math.max(1, Math.min(Number(parsed?.lastReading?.page || parsed?.currentPage || 1), totalQuranPages)),
@@ -268,7 +270,12 @@ function buildEnglishPage(pageData) {
 function buildBothPage(pageData) {
   const ayahs = Array.isArray(pageData?.ayahs) ? pageData.ayahs : [];
   const surah = getCurrentSurahFromPageData(pageData);
-  return ayahs
+  const chunkSize = 3;
+  const totalChunks = Math.max(1, Math.ceil(ayahs.length / chunkSize));
+  const safeChunkIndex = Math.max(0, Math.min(quranState.bothChunkIndex || 0, totalChunks - 1));
+  const visibleAyahs = ayahs.slice(safeChunkIndex * chunkSize, safeChunkIndex * chunkSize + chunkSize);
+
+  return visibleAyahs
     .map(
       (ayah) => `
         <article class="quran-ayah-card quran-ayah-card-premium quran-ayah-card-both">
@@ -283,18 +290,48 @@ function buildBothPage(pageData) {
 }
 
 function renderPageIndicators() {
+  const pageAyahs = Array.isArray(currentPageData?.ayahs) ? currentPageData.ayahs : [];
+  const chunkCount = quranState.view === "both" ? Math.max(1, Math.ceil(pageAyahs.length / 3)) : 1;
+  const safeChunkIndex = Math.max(0, Math.min(quranState.bothChunkIndex || 0, chunkCount - 1));
+  const chunkSuffix = quranState.view === "both" ? ` · Set ${safeChunkIndex + 1} of ${chunkCount}` : "";
+
   pageIndicators.innerHTML = `
     <button class="quran-page-step" id="quran-page-prev" type="button" ${currentPageNumber <= 1 || isNavigating ? "disabled" : ""}>Prev page</button>
-    <span class="quran-page-counter">Page ${currentPageNumber} of ${totalQuranPages}</span>
+    <span class="quran-page-counter">Page ${currentPageNumber} of ${totalQuranPages}${chunkSuffix}</span>
     <button class="quran-page-step" id="quran-page-next" type="button" ${currentPageNumber >= totalQuranPages || isNavigating ? "disabled" : ""}>Next page</button>
   `;
 
   document.getElementById("quran-page-prev")?.addEventListener("click", async () => {
-    await goToPage(currentPageNumber - 1);
+    await stepReading(-1);
   });
   document.getElementById("quran-page-next")?.addEventListener("click", async () => {
-    await goToPage(currentPageNumber + 1);
+    await stepReading(1);
   });
+}
+
+async function stepReading(direction) {
+  if (quranState.view !== "both") {
+    await goToPage(currentPageNumber + direction);
+    return;
+  }
+
+  const ayahs = Array.isArray(currentPageData?.ayahs) ? currentPageData.ayahs : [];
+  const chunkCount = Math.max(1, Math.ceil(ayahs.length / 3));
+  const currentChunk = Math.max(0, Math.min(quranState.bothChunkIndex || 0, chunkCount - 1));
+
+  if (direction > 0 && currentChunk < chunkCount - 1) {
+    quranState.bothChunkIndex = currentChunk + 1;
+    render();
+    return;
+  }
+
+  if (direction < 0 && currentChunk > 0) {
+    quranState.bothChunkIndex = currentChunk - 1;
+    render();
+    return;
+  }
+
+  await goToPage(currentPageNumber + direction, true, direction < 0 ? "end" : "start");
 }
 
 function attachSwipeHandlers() {
@@ -316,7 +353,7 @@ function attachSwipeHandlers() {
       const deltaY = touchStartY - touchEndY;
       if (Math.abs(deltaY) > Math.abs(deltaX)) return;
       if (Math.abs(deltaX) < 44 || isNavigating) return;
-      await goToPage(deltaX > 0 ? currentPageNumber + 1 : currentPageNumber - 1);
+      await stepReading(deltaX > 0 ? 1 : -1);
     },
     { passive: true },
   );
@@ -357,7 +394,7 @@ function render() {
   saveState();
 }
 
-async function goToPage(pageNumber, forceReload = false) {
+async function goToPage(pageNumber, forceReload = false, bothChunkTarget = "start") {
   const safePage = Math.max(1, Math.min(pageNumber, totalQuranPages));
   if (!forceReload && safePage === currentPageNumber && currentPageData) return;
 
@@ -383,6 +420,13 @@ async function goToPage(pageNumber, forceReload = false) {
     }
 
     currentPageData = pageData;
+    if (quranState.view === "both") {
+      const pageAyahs = Array.isArray(currentPageData?.ayahs) ? currentPageData.ayahs : [];
+      const chunkCount = Math.max(1, Math.ceil(pageAyahs.length / 3));
+      quranState.bothChunkIndex = bothChunkTarget === "end" ? chunkCount - 1 : 0;
+    } else {
+      quranState.bothChunkIndex = 0;
+    }
     const pageSurah = getCurrentSurahFromPageData(currentPageData);
     rememberCurrentReading(pageSurah?.number ?? quranState.selectedKey, safePage);
     quranStatus.textContent = "";
@@ -426,6 +470,7 @@ searchInput?.addEventListener("focus", () => {
 languageButtons.forEach((button) => {
   button.addEventListener("click", async () => {
     quranState.view = button.dataset.quranView;
+    quranState.bothChunkIndex = 0;
     pageCache.clear();
     await goToPage(currentPageNumber, true);
   });
