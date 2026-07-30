@@ -36,14 +36,38 @@ const mainPrayers = [
   { athanKey: "eshaAthan", salahKey: "eshaJamaah", startKey: "eshaStarts", label: "Esha", endKey: null },
 ];
 const mainAyahCandidates = [
-  1, 2, 3, 4, 5, 19, 20, 36, 55, 94, 112, 113, 114,
-  262, 255, 256, 286, 284,
-  617, 690, 743, 846, 899, 954, 1015, 1118,
-  1287, 1363, 1473, 1506, 1598, 1710, 1755, 1806,
-  2140, 2210, 2348, 2483, 2558, 2675, 2857, 2932,
-  3159, 3253, 3340, 3437, 3532, 3660, 3814, 3998,
-  4215, 4314, 4474, 4636, 4725, 4882, 5031, 5187,
-  5315, 5480, 5604, 5739, 5888, 6009, 6105, 6201,
+  "2:152", "2:186", "2:201", "2:286",
+  "3:8", "3:139", "3:173",
+  "8:2", "8:46",
+  "9:51",
+  "13:28",
+  "14:7",
+  "16:18",
+  "17:24",
+  "20:114",
+  "21:87", "21:88",
+  "25:74",
+  "29:69",
+  "33:56",
+  "39:53",
+  "40:60",
+  "50:16",
+  "51:56", "51:58",
+  "55:13",
+  "65:3",
+  "73:8",
+  "93:3", "93:4", "93:5", "93:11",
+  "94:5", "94:6", "94:8",
+  "95:4",
+  "96:1",
+  "97:1",
+  "99:7", "99:8",
+  "103:1", "103:2", "103:3",
+  "108:1", "108:2", "108:3",
+  "109:1", "109:6",
+  "112:1", "112:2", "112:3", "112:4",
+  "113:1", "113:5",
+  "114:1", "114:6",
 ];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
@@ -548,7 +572,7 @@ async function loadMainPrayer() {
   }
 }
 
-function getAyahNumberForToday() {
+function getAyahReferenceForToday() {
   const { dateKey } = getMainMalawiParts();
   let seed = 0;
 
@@ -561,8 +585,8 @@ function getAyahNumberForToday() {
 
 async function loadMainAyah() {
   try {
-    const ayahNumber = getAyahNumberForToday();
-    const response = await fetch(`${mainAyahApiBase}/ayah/${ayahNumber}/editions/quran-uthmani,en.sahih`, {
+    const ayahReference = getAyahReferenceForToday();
+    const response = await fetch(`${mainAyahApiBase}/ayah/${ayahReference}/editions/quran-uthmani,en.sahih`, {
       cache: "force-cache",
     });
     const payload = await response.json();
