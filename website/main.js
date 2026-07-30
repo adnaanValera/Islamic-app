@@ -614,14 +614,15 @@ function fitAyahCardText() {
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
-  const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = tallVariant ? (window.innerWidth <= 480 ? 14 : 20) : (window.innerWidth <= 480 ? 16 : 22);
-  const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
-  const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
-  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 2 : (window.innerWidth <= 480 ? 6 : 10)), 0);
+  const contentBox = mainAyahArabic?.closest(".main-ayah-content");
 
-  if (mainAyahReference?.parentElement) {
-    mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
+  if (contentBox) {
+    const contentBoxHeight = contentBox.clientHeight ?? 0;
+    const gap = tallVariant ? (window.innerWidth <= 480 ? 12 : 16) : (window.innerWidth <= 480 ? 12 : 18);
+    const contentHeight = arabicHeight + englishHeight + gap;
+    const topOffset = Math.max((contentBoxHeight - contentHeight) / 2, 0);
+    contentBox.style.paddingTop = `${topOffset}px`;
+    contentBox.style.paddingBottom = `${Math.max(topOffset * 0.32, 0)}px`;
   }
 }
 

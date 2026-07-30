@@ -123,8 +123,8 @@ function fitTextToBox(element, { min, max, step = 1, lineHeight = 1.4 }) {
 }
 
 function fitAdminTemplatePreview() {
-  fitTextToBox(adminTemplateTitle, { min: 18, max: 30, step: 1, lineHeight: 1.12 });
-  fitTextToBox(adminTemplateBody, { min: 11, max: 18, step: 0.5, lineHeight: 1.55 });
+  fitTextToBox(adminTemplateTitle, { min: 17, max: 28, step: 1, lineHeight: 1.1 });
+  fitTextToBox(adminTemplateBody, { min: 11, max: 17, step: 0.5, lineHeight: 1.5 });
 }
 
 function renderAdminTemplatePreview() {
@@ -211,29 +211,29 @@ function downloadAdminCard() {
     const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
 
     const titleCenterX = canvas.width * 0.5;
-    const titleBoxTop = canvas.height * 0.202;
-    const titleBoxWidth = canvas.width * 0.62;
-    const titleBoxHeight = canvas.height * 0.072;
+    const titleBoxTop = canvas.height * 0.189;
+    const titleBoxWidth = canvas.width * 0.64;
+    const titleBoxHeight = canvas.height * 0.075;
     const titleLayout = getCanvasLayout(context, titleText, {
-      maxFontSize: 40,
-      minFontSize: 22,
+      maxFontSize: 38,
+      minFontSize: 20,
       width: titleBoxWidth,
       maxHeight: titleBoxHeight,
-      lineHeightRatio: 1.12,
+      lineHeightRatio: 1.08,
       weight: "600",
       family: "'Cormorant Garamond', serif",
     });
 
     const bodyCenterX = canvas.width * 0.5;
-    const bodyBoxTop = canvas.height * 0.34;
-    const bodyBoxWidth = canvas.width * 0.73;
-    const bodyBoxHeight = canvas.height * 0.43;
+    const bodyBoxTop = canvas.height * 0.313;
+    const bodyBoxWidth = canvas.width * 0.8;
+    const bodyBoxHeight = canvas.height * 0.438;
     const bodyLayout = getCanvasLayout(context, bodyText, {
-      maxFontSize: 24,
+      maxFontSize: 22,
       minFontSize: 14,
       width: bodyBoxWidth,
       maxHeight: bodyBoxHeight,
-      lineHeightRatio: 1.55,
+      lineHeightRatio: 1.5,
       weight: "500",
       family: "Manrope, sans-serif",
     });
@@ -244,7 +244,7 @@ function downloadAdminCard() {
       context,
       titleLayout.lines,
       titleCenterX,
-      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.86,
+      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.84,
       titleLayout.lineHeight,
     );
 
@@ -254,7 +254,7 @@ function downloadAdminCard() {
       context,
       bodyLayout.lines,
       bodyCenterX,
-      bodyBoxTop + Math.max((bodyBoxHeight - bodyLayout.totalHeight) / 2, 0) + bodyLayout.lineHeight * 0.9,
+      bodyBoxTop + Math.max((bodyBoxHeight - bodyLayout.totalHeight) / 2, 0) + bodyLayout.lineHeight * 0.88,
       bodyLayout.lineHeight,
     );
 
