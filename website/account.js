@@ -26,6 +26,7 @@ const adminCardTitleInput = document.getElementById("admin-card-title");
 const adminCardBodyInput = document.getElementById("admin-card-body");
 const adminTemplateTitle = document.getElementById("admin-template-title");
 const adminTemplateBody = document.getElementById("admin-template-body");
+const adminCardDownloadButton = document.getElementById("admin-card-download");
 const accountButtons = [registerButton, signinButton];
 const adminOverviewUrl = "/api/admin-overview";
 
@@ -106,6 +107,26 @@ function setButtonsDisabled(disabled) {
   });
 }
 
+function fitTextToBox(element, { min, max, step = 1, lineHeight = 1.4 }) {
+  if (!element) {
+    return;
+  }
+
+  let size = max;
+  element.style.fontSize = `${size}px`;
+  element.style.lineHeight = String(lineHeight);
+
+  while (size > min && (element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth)) {
+    size -= step;
+    element.style.fontSize = `${size}px`;
+  }
+}
+
+function fitAdminTemplatePreview() {
+  fitTextToBox(adminTemplateTitle, { min: 18, max: 30, step: 1, lineHeight: 1.12 });
+  fitTextToBox(adminTemplateBody, { min: 11, max: 18, step: 0.5, lineHeight: 1.55 });
+}
+
 function renderAdminTemplatePreview() {
   if (adminTemplateTitle) {
     adminTemplateTitle.textContent = adminCardTitleInput?.value?.trim() || "Nooriva";
@@ -115,6 +136,143 @@ function renderAdminTemplatePreview() {
     const value = adminCardBodyInput?.value?.trim();
     adminTemplateBody.textContent = value || "Add your text here.";
   }
+
+  window.requestAnimationFrame(fitAdminTemplatePreview);
+}
+
+function wrapCanvasText(context, text, maxWidth) {
+  const words = String(text || "").split(/\s+/);
+  const lines = [];
+  let currentLine = "";
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    if (context.measureText(testLine).width <= maxWidth || !currentLine) {
+      currentLine = testLine;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+}
+
+function getCanvasLayout(context, text, options) {
+  const { maxFontSize, minFontSize, width, maxHeight, lineHeightRatio, weight, family } = options;
+
+  for (let size = maxFontSize; size >= minFontSize; size -= 1) {
+    context.font = `${weight} ${size}px ${family}`;
+    const lines = wrapCanvasText(context, text, width);
+    const lineHeight = size * lineHeightRatio;
+    const totalHeight = lines.length * lineHeight;
+
+    if (totalHeight <= maxHeight) {
+      return { size, lines, lineHeight, totalHeight };
+    }
+  }
+
+  context.font = `${weight} ${minFontSize}px ${family}`;
+  const lines = wrapCanvasText(context, text, width);
+  const lineHeight = minFontSize * lineHeightRatio;
+  return { size: minFontSize, lines, lineHeight, totalHeight: lines.length * lineHeight };
+}
+
+function drawCenteredLines(context, lines, x, startY, lineHeight) {
+  lines.forEach((line, index) => {
+    context.fillText(line, x, startY + index * lineHeight);
+  });
+}
+
+function sanitizeFileNamePart(value) {
+  return String(value || "Nooriva").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "");
+}
+
+function downloadAdminCard() {
+  const image = new Image();
+  image.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      return;
+    }
+
+    context.drawImage(image, 0, 0);
+    context.textAlign = "center";
+
+    const titleText = adminCardTitleInput?.value?.trim() || "Nooriva";
+    const bodyText = adminCardBodyInput?.value?.trim() || "Add your text here.";
+
+    const titleCenterX = canvas.width * 0.5;
+    const titleBoxTop = canvas.height * 0.202;
+    const titleBoxWidth = canvas.width * 0.62;
+    const titleBoxHeight = canvas.height * 0.072;
+    const titleLayout = getCanvasLayout(context, titleText, {
+      maxFontSize: 40,
+      minFontSize: 22,
+      width: titleBoxWidth,
+      maxHeight: titleBoxHeight,
+      lineHeightRatio: 1.12,
+      weight: "600",
+      family: "'Cormorant Garamond', serif",
+    });
+
+    const bodyCenterX = canvas.width * 0.5;
+    const bodyBoxTop = canvas.height * 0.34;
+    const bodyBoxWidth = canvas.width * 0.73;
+    const bodyBoxHeight = canvas.height * 0.43;
+    const bodyLayout = getCanvasLayout(context, bodyText, {
+      maxFontSize: 24,
+      minFontSize: 14,
+      width: bodyBoxWidth,
+      maxHeight: bodyBoxHeight,
+      lineHeightRatio: 1.55,
+      weight: "500",
+      family: "Manrope, sans-serif",
+    });
+
+    context.fillStyle = "#1F2E29";
+    context.font = `600 ${titleLayout.size}px 'Cormorant Garamond', serif`;
+    drawCenteredLines(
+      context,
+      titleLayout.lines,
+      titleCenterX,
+      titleBoxTop + Math.max((titleBoxHeight - titleLayout.totalHeight) / 2, 0) + titleLayout.lineHeight * 0.86,
+      titleLayout.lineHeight,
+    );
+
+    context.fillStyle = "#2A3833";
+    context.font = `500 ${bodyLayout.size}px Manrope, sans-serif`;
+    drawCenteredLines(
+      context,
+      bodyLayout.lines,
+      bodyCenterX,
+      bodyBoxTop + Math.max((bodyBoxHeight - bodyLayout.totalHeight) / 2, 0) + bodyLayout.lineHeight * 0.9,
+      bodyLayout.lineHeight,
+    );
+
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        return;
+      }
+
+      const link = document.createElement("a");
+      const objectUrl = URL.createObjectURL(blob);
+      link.href = objectUrl;
+      link.download = `${sanitizeFileNamePart(titleText)}.png`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    }, "image/png");
+  };
+
+  image.src = "./assets/admin-card-template.jpg";
 }
 
 async function submitAuth(url, fullName, password) {
@@ -226,6 +384,7 @@ showSigninButton?.addEventListener("click", () => setView("signin"));
 showRegisterButton?.addEventListener("click", () => setView("register"));
 adminCardTitleInput?.addEventListener("input", renderAdminTemplatePreview);
 adminCardBodyInput?.addEventListener("input", renderAdminTemplatePreview);
+adminCardDownloadButton?.addEventListener("click", downloadAdminCard);
 
 signinPassword?.addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
@@ -245,3 +404,4 @@ setView("signin");
 renderSession();
 loadAdminOverview();
 renderAdminTemplatePreview();
+window.addEventListener("resize", renderAdminTemplatePreview);

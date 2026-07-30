@@ -591,7 +591,7 @@ function fitElementText(element, { min, max, step = 1, lineHeight }) {
     element.style.lineHeight = String(lineHeight);
   }
 
-  while (size > min && element.scrollHeight > element.clientHeight) {
+  while (size > min && (element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth)) {
     size -= step;
     element.style.fontSize = `${size}px`;
   }
@@ -615,10 +615,10 @@ function fitAyahCardText() {
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
   const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = tallVariant ? (window.innerWidth <= 480 ? 16 : 22) : (window.innerWidth <= 480 ? 18 : 24);
+  const gap = tallVariant ? (window.innerWidth <= 480 ? 14 : 20) : (window.innerWidth <= 480 ? 16 : 22);
   const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
   const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
-  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 6 : (window.innerWidth <= 480 ? 10 : 14)), 0);
+  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 2 : (window.innerWidth <= 480 ? 6 : 10)), 0);
 
   if (mainAyahReference?.parentElement) {
     mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
