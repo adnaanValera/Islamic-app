@@ -143,6 +143,7 @@ function normalizePreviewText(value, fallback = "") {
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n[ \t]+/g, "\n")
     .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 
   return normalized || fallback;
@@ -161,7 +162,7 @@ function renderAdminTemplatePreview() {
 }
 
 function wrapCanvasText(context, text, maxWidth) {
-  const words = String(text || "").split(/\s+/);
+  const words = String(text || "").split(" ");
   const lines = [];
   let currentLine = "";
 
@@ -182,12 +183,27 @@ function wrapCanvasText(context, text, maxWidth) {
   return lines;
 }
 
+function wrapCanvasParagraphs(context, text, maxWidth) {
+  return String(text || "")
+    .split("\n")
+    .flatMap((paragraph, index, array) => {
+      const normalizedParagraph = paragraph.trim();
+      const paragraphLines = normalizedParagraph ? wrapCanvasText(context, normalizedParagraph, maxWidth) : [""];
+
+      if (index < array.length - 1) {
+        return [...paragraphLines, ""];
+      }
+
+      return paragraphLines;
+    });
+}
+
 function getCanvasLayout(context, text, options) {
   const { maxFontSize, minFontSize, width, maxHeight, lineHeightRatio, weight, family } = options;
 
   for (let size = maxFontSize; size >= minFontSize; size -= 1) {
     context.font = `${weight} ${size}px ${family}`;
-    const lines = wrapCanvasText(context, text, width);
+    const lines = wrapCanvasParagraphs(context, text, width);
     const lineHeight = size * lineHeightRatio;
     const totalHeight = lines.length * lineHeight;
 
@@ -197,7 +213,7 @@ function getCanvasLayout(context, text, options) {
   }
 
   context.font = `${weight} ${minFontSize}px ${family}`;
-  const lines = wrapCanvasText(context, text, width);
+  const lines = wrapCanvasParagraphs(context, text, width);
   const lineHeight = minFontSize * lineHeightRatio;
   return { size: minFontSize, lines, lineHeight, totalHeight: lines.length * lineHeight };
 }
