@@ -264,7 +264,7 @@ function renderMainDailyChecklist() {
               data-main-prayer-check="${prayer.label}"
               aria-pressed="${isChecked ? "true" : "false"}"
               aria-label="Mark ${prayer.label} as ${isChecked ? "not completed" : "completed"}"
-            >${prayer.label}</button>
+            >☾ ${prayer.label}</button>
           </div>
           <button
             class="main-daily-tick-button"

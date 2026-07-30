@@ -224,7 +224,7 @@ async function handlePrayer(request, response) {
   const { dateKey, timeKey } = getMalawiTimeParts();
   const rawCurrentMinutes = getMinutes(timeKey);
   const requestedWindow = Number.parseInt(request.query?.window ?? request.headers["x-window-minutes"], 10);
-  const windowMinutes = Number.isFinite(requestedWindow) ? Math.min(Math.max(requestedWindow, 1), 30) : 5;
+  const windowMinutes = Number.isFinite(requestedWindow) ? Math.min(Math.max(requestedWindow, 1), 180) : 15;
 
   if (rawCurrentMinutes === null) {
     response.status(500).json({ ok: false, error: "Unable to resolve current Malawi time." });

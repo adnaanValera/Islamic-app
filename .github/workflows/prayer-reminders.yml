@@ -36,8 +36,8 @@ jobs:
 
           case "$TARGET_URL" in
             *"window="*) ;;
-            *\?*) TARGET_URL="${TARGET_URL}&window=30" ;;
-            *) TARGET_URL="${TARGET_URL}?window=30" ;;
+            *\?*) TARGET_URL="${TARGET_URL}&window=180" ;;
+            *) TARGET_URL="${TARGET_URL}?window=180" ;;
           esac
 
           echo "Triggering $TARGET_URL"
