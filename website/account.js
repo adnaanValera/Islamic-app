@@ -22,6 +22,10 @@ const accountFormStack = document.getElementById("account-form-stack");
 const adminPanel = document.getElementById("admin-panel");
 const adminUsersList = document.getElementById("admin-users-list");
 const adminMessagesList = document.getElementById("admin-messages-list");
+const adminCardTitleInput = document.getElementById("admin-card-title");
+const adminCardBodyInput = document.getElementById("admin-card-body");
+const adminTemplateTitle = document.getElementById("admin-template-title");
+const adminTemplateBody = document.getElementById("admin-template-body");
 const accountButtons = [registerButton, signinButton];
 const adminOverviewUrl = "/api/admin-overview";
 
@@ -100,6 +104,17 @@ function setButtonsDisabled(disabled) {
       button.disabled = disabled;
     }
   });
+}
+
+function renderAdminTemplatePreview() {
+  if (adminTemplateTitle) {
+    adminTemplateTitle.textContent = adminCardTitleInput?.value?.trim() || "Nooriva";
+  }
+
+  if (adminTemplateBody) {
+    const value = adminCardBodyInput?.value?.trim();
+    adminTemplateBody.textContent = value || "Add your text here.";
+  }
 }
 
 async function submitAuth(url, fullName, password) {
@@ -209,6 +224,8 @@ signoutButton?.addEventListener("click", () => {
 
 showSigninButton?.addEventListener("click", () => setView("signin"));
 showRegisterButton?.addEventListener("click", () => setView("register"));
+adminCardTitleInput?.addEventListener("input", renderAdminTemplatePreview);
+adminCardBodyInput?.addEventListener("input", renderAdminTemplatePreview);
 
 signinPassword?.addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
@@ -227,3 +244,4 @@ registerPassword?.addEventListener("keydown", async (event) => {
 setView("signin");
 renderSession();
 loadAdminOverview();
+renderAdminTemplatePreview();

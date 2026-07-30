@@ -603,22 +603,22 @@ function fitAyahCardText() {
 
   const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
   const arabicMax = tallVariant
-    ? arabicLength < 120 ? 33 : 29
-    : arabicLength < 70 ? 32 : arabicLength < 120 ? 29 : 26;
+    ? arabicLength < 120 ? 36 : arabicLength < 170 ? 32 : 29
+    : arabicLength < 70 ? 35 : arabicLength < 120 ? 32 : 28;
   const englishMax = tallVariant
-    ? englishLength < 140 ? 15 : 13.5
-    : englishLength < 90 ? 16 : englishLength < 150 ? 14 : 12.5;
+    ? englishLength < 140 ? 16.5 : englishLength < 210 ? 15 : 13.5
+    : englishLength < 90 ? 17 : englishLength < 150 ? 15 : 13;
 
-  fitElementText(mainAyahArabic, { min: tallVariant ? 17 : 16, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.56 : 1.6 });
-  fitElementText(mainAyahEnglish, { min: 10, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.36 : 1.42 });
+  fitElementText(mainAyahArabic, { min: tallVariant ? 19 : 18, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.54 : 1.58 });
+  fitElementText(mainAyahEnglish, { min: 11.5, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.4 : 1.44 });
 
   const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
   const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
   const referenceHeight = mainAyahReference?.scrollHeight ?? 0;
-  const gap = tallVariant ? (window.innerWidth <= 480 ? 14 : 20) : (window.innerWidth <= 480 ? 18 : 26);
+  const gap = tallVariant ? (window.innerWidth <= 480 ? 16 : 22) : (window.innerWidth <= 480 ? 18 : 24);
   const contentHeight = arabicHeight + englishHeight + referenceHeight + gap;
   const frameHeight = mainAyahArabic?.parentElement?.clientHeight ?? 0;
-  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 8 : (window.innerWidth <= 480 ? 12 : 18)), 0);
+  const topOffset = Math.max((frameHeight - contentHeight) / 2 + (tallVariant ? 6 : (window.innerWidth <= 480 ? 10 : 14)), 0);
 
   if (mainAyahReference?.parentElement) {
     mainAyahReference.parentElement.style.paddingTop = `${topOffset}px`;
@@ -704,20 +704,20 @@ function downloadAyahCard() {
     const frameHeight = tallVariant ? canvas.height * 0.67 : canvas.height * 0.596;
     const centerX = frameLeft + frameWidth / 2;
     const arabicLayout = getBestCanvasTextLayout(context, currentAyahOfDay.arabic, {
-      maxFontSize: tallVariant ? 58 : currentAyahOfDay.arabic.length < 90 ? 72 : 64,
-      minFontSize: tallVariant ? 26 : 30,
-      width: frameWidth * 0.9,
-      maxHeight: frameHeight * (tallVariant ? 0.42 : 0.48),
-      lineHeightRatio: tallVariant ? 1.3 : 1.38,
+      maxFontSize: tallVariant ? 64 : currentAyahOfDay.arabic.length < 90 ? 78 : 68,
+      minFontSize: tallVariant ? 30 : 32,
+      width: frameWidth * 0.92,
+      maxHeight: frameHeight * (tallVariant ? 0.44 : 0.5),
+      lineHeightRatio: tallVariant ? 1.28 : 1.34,
       weight: "600",
       family: "'Noto Naskh Arabic', serif",
     });
     const englishLayout = getBestCanvasTextLayout(context, currentAyahOfDay.english, {
-      maxFontSize: tallVariant ? 26 : currentAyahOfDay.english.length < 110 ? 32 : 28,
-      minFontSize: tallVariant ? 15 : 17,
-      width: frameWidth * 0.78,
-      maxHeight: frameHeight * (tallVariant ? 0.24 : 0.18),
-      lineHeightRatio: tallVariant ? 1.38 : 1.5,
+      maxFontSize: tallVariant ? 28 : currentAyahOfDay.english.length < 110 ? 34 : 30,
+      minFontSize: tallVariant ? 16 : 18,
+      width: frameWidth * 0.82,
+      maxHeight: frameHeight * (tallVariant ? 0.26 : 0.2),
+      lineHeightRatio: tallVariant ? 1.4 : 1.48,
       weight: "500",
       family: "Manrope, sans-serif",
     });

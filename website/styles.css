@@ -1,13 +1,13 @@
 :root {
-  --bg: #f8f3ea;
-  --panel: rgba(255, 252, 246, 0.92);
-  --line: rgba(191, 149, 77, 0.22);
-  --gold: #c5964e;
-  --gold-soft: #b78642;
-  --text: #17312a;
-  --text-strong: #102621;
-  --muted: #5c6d66;
-  --green-accent: #25443c;
+  --bg: #f9f6f0;
+  --panel: rgba(249, 246, 240, 0.94);
+  --line: rgba(215, 183, 119, 0.28);
+  --gold: #c6a15a;
+  --gold-soft: #d7b777;
+  --text: #2a3833;
+  --text-strong: #1f2e29;
+  --muted: #6b736a;
+  --green-accent: #1f2e29;
   --shadow: 0 24px 52px rgba(79, 66, 39, 0.1);
   --shadow-soft: 0 14px 32px rgba(79, 66, 39, 0.08);
   --ease-premium: 220ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -29,9 +29,9 @@ body {
   font-family: "Manrope", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(197, 150, 78, 0.14), transparent 30%),
-    radial-gradient(circle at 90% 18%, rgba(37, 68, 60, 0.09), transparent 24%),
-    linear-gradient(180deg, #fcf8f1 0%, #f7f0e3 44%, #f4ecde 100%);
+    radial-gradient(circle at top left, rgba(198, 161, 90, 0.12), transparent 30%),
+    radial-gradient(circle at 90% 18%, rgba(31, 46, 41, 0.07), transparent 24%),
+    linear-gradient(180deg, #fbf8f3 0%, #f9f6f0 42%, #f5f0e8 100%);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -219,9 +219,9 @@ h3 {
 }
 
 .button-primary {
-  background: linear-gradient(180deg, #d7ab63 0%, #bc8740 100%);
-  color: #fffaf2;
-  box-shadow: 0 12px 24px rgba(188, 135, 64, 0.2);
+  background: linear-gradient(180deg, #2a3833 0%, #1f2e29 100%);
+  color: #f9f6f0;
+  box-shadow: 0 12px 24px rgba(31, 46, 41, 0.18);
 }
 
 .button-secondary {
@@ -4365,6 +4365,72 @@ h3 {
   margin-top: 10px;
 }
 
+.admin-template-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.admin-template-controls {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-card-body-input {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.admin-template-preview-shell {
+  display: grid;
+  place-items: center;
+}
+
+.admin-template-preview {
+  position: relative;
+  width: min(360px, 100%);
+  aspect-ratio: 720 / 1280;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(249, 246, 240, 0.03), rgba(249, 246, 240, 0.03)),
+    url("./assets/admin-card-template.jpg") center/cover no-repeat;
+  box-shadow: 0 20px 40px rgba(31, 46, 41, 0.08);
+}
+
+.admin-template-preview-inner {
+  position: absolute;
+  inset: 17.5% 9% 12% 9%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-template-title {
+  margin: 0;
+  width: 78%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-strong);
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.15rem, 2.7vw, 1.7rem);
+  text-align: center;
+}
+
+.admin-template-body {
+  margin-top: 18%;
+  width: 88%;
+  min-height: 50%;
+  color: var(--text);
+  font-size: clamp(0.88rem, 2vw, 1rem);
+  line-height: 1.65;
+  text-align: center;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
 .main-card-head span {
   color: var(--muted);
   font-size: 0.73rem;
@@ -4517,12 +4583,12 @@ h3 {
 
 .main-ayah-card-inner {
   position: absolute;
-  inset: 28% 11.2% 14% 11.2%;
+  inset: 26% 10.4% 13.2% 10.4%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .main-ayah-arabic {
@@ -4530,10 +4596,10 @@ h3 {
   color: var(--text-strong);
   font-family: "Noto Naskh Arabic", serif;
   width: 100%;
-  max-height: 46%;
+  max-height: 49%;
   overflow: hidden;
-  font-size: clamp(1.25rem, 2.05vw, 2rem);
-  line-height: 1.72;
+  font-size: clamp(1.35rem, 2.2vw, 2.15rem);
+  line-height: 1.66;
   text-align: center;
   text-wrap: balance;
 }
@@ -4541,26 +4607,26 @@ h3 {
 .main-ayah-english {
   margin: 0;
   color: var(--text);
-  width: 88%;
-  max-height: 26%;
+  width: 90%;
+  max-height: 27%;
   overflow: hidden;
-  font-size: clamp(0.7rem, 0.94vw, 0.84rem);
-  line-height: 1.38;
+  font-size: clamp(0.76rem, 1vw, 0.9rem);
+  line-height: 1.42;
   text-align: center;
   text-wrap: balance;
 }
 
 .main-ayah-card-shell[data-card-variant="tall"] .main-ayah-card-inner {
-  inset: 22% 12% 13% 12%;
-  gap: 10px;
+  inset: 20.5% 10.6% 12% 10.6%;
+  gap: 9px;
 }
 
 .main-ayah-card-shell[data-card-variant="tall"] .main-ayah-arabic {
-  max-height: 42%;
+  max-height: 45%;
 }
 
 .main-ayah-card-shell[data-card-variant="tall"] .main-ayah-english {
-  max-height: 28%;
+  max-height: 30%;
 }
 
 .main-ayah-reference {
