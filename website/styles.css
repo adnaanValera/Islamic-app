@@ -4311,8 +4311,14 @@ h3 {
 
 .main-dashboard-grid {
   display: grid;
+  gap: 14px;
+}
+
+.main-supporting-row {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  grid-column: 1 / -1;
 }
 
 .main-card-prayer {
@@ -4847,9 +4853,40 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .main-supporting-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .main-card-prayer,
+  .main-card-ayah,
+  .main-card-tasbeeh {
+    grid-column: 1 / -1;
+  }
+
   .main-qibla-frame {
-    width: 120px;
-    height: 120px;
+    width: 104px;
+    height: 104px;
+  }
+
+  .main-quran-mini {
+    min-height: 150px;
+    padding: 8px 2px 2px;
+  }
+
+  .main-quran-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 2rem;
+  }
+
+  .main-quran-last {
+    font-size: 0.9rem;
+  }
+
+  .main-card-qibla .main-mini-copy,
+  #main-quran-last-meta {
+    font-size: 0.76rem;
+    line-height: 1.35;
   }
 
   .cta-form-message {
