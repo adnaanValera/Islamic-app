@@ -1,4 +1,7 @@
 const quranStorageKey = "nooriva-quran-state";
+const quranSurahListCacheStorageKey = "nooriva-quran-surah-list-cache";
+const quranPageCacheStorageKey = "nooriva-quran-page-cache";
+const quranSurahStartCacheStorageKey = "nooriva-quran-surah-start-cache";
 const quranApiBaseUrl = "https://api.alquran.cloud/v1";
 const totalQuranPages = 604;
 const basmalaText = "\u0628\u0650\u0633\u0652\u0645\u0650 \u0671\u0644\u0644\u0651\u0670\u0647\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0652\u0645\u064e\u0670\u0646\u0650 \u0671\u0644\u0631\u064e\u0651\u062d\u0650\u064a\u0645\u0650";
@@ -28,6 +31,23 @@ const surahStartPageCache = new Map();
 let touchStartX = 0;
 let touchStartY = 0;
 let isNavigating = false;
+
+function loadCachedQuranJson(storageKey, fallbackValue) {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(storageKey) || "null");
+    return parsed ?? fallbackValue;
+  } catch {
+    return fallbackValue;
+  }
+}
+
+function saveCachedQuranJson(storageKey, value) {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(value));
+  } catch {
+    // Ignore storage failures.
+  }
+}
 
 function defaultState() {
   return {
@@ -106,10 +126,20 @@ function rememberCurrentReading(surahKey, pageNumber) {
 }
 
 async function fetchSurahList() {
-  const response = await fetch(`${quranApiBaseUrl}/surah`, { cache: "force-cache" });
-  if (!response.ok) throw new Error("Unable to load Quran surahs.");
-  const payload = await response.json();
-  return payload?.data ?? [];
+  try {
+    const response = await fetch(`${quranApiBaseUrl}/surah`, { cache: "force-cache" });
+    if (!response.ok) throw new Error("Unable to load Quran surahs.");
+    const payload = await response.json();
+    const data = payload?.data ?? [];
+    saveCachedQuranJson(quranSurahListCacheStorageKey, data);
+    return data;
+  } catch {
+    const cached = loadCachedQuranJson(quranSurahListCacheStorageKey, []);
+    if (cached.length) {
+      return cached;
+    }
+    throw new Error("Unable to load Quran surahs.");
+  }
 }
 
 async function fetchPage(pageNumber) {
@@ -118,24 +148,48 @@ async function fetchPage(pageNumber) {
 
   const edition =
     quranState.view === "arabic" ? "quran-uthmani" : quranState.view === "english" ? "en.sahih" : "quran-uthmani,en.sahih";
-  const response = await fetch(`${quranApiBaseUrl}/page/${pageNumber}/${edition}`, { cache: "force-cache" });
-  if (!response.ok) throw new Error("Unable to load Quran page.");
-  const payload = await response.json();
-  const data = payload?.data ?? {};
-  pageCache.set(cacheKey, data);
-  return data;
+  const cachedPages = loadCachedQuranJson(quranPageCacheStorageKey, {});
+
+  try {
+    const response = await fetch(`${quranApiBaseUrl}/page/${pageNumber}/${edition}`, { cache: "force-cache" });
+    if (!response.ok) throw new Error("Unable to load Quran page.");
+    const payload = await response.json();
+    const data = payload?.data ?? {};
+    pageCache.set(cacheKey, data);
+    cachedPages[cacheKey] = data;
+    saveCachedQuranJson(quranPageCacheStorageKey, cachedPages);
+    return data;
+  } catch {
+    if (cachedPages[cacheKey]) {
+      pageCache.set(cacheKey, cachedPages[cacheKey]);
+      return cachedPages[cacheKey];
+    }
+    throw new Error("Unable to load Quran page.");
+  }
 }
 
 async function fetchSurahStartPage(surahNumber) {
   const numericSurah = Number(surahNumber);
   if (surahStartPageCache.has(numericSurah)) return surahStartPageCache.get(numericSurah);
 
-  const response = await fetch(`${quranApiBaseUrl}/surah/${numericSurah}/quran-uthmani`, { cache: "force-cache" });
-  if (!response.ok) throw new Error("Unable to load surah start.");
-  const payload = await response.json();
-  const firstAyahPage = payload?.data?.ayahs?.[0]?.page ?? 1;
-  surahStartPageCache.set(numericSurah, firstAyahPage);
-  return firstAyahPage;
+  const cachedStarts = loadCachedQuranJson(quranSurahStartCacheStorageKey, {});
+
+  try {
+    const response = await fetch(`${quranApiBaseUrl}/surah/${numericSurah}/quran-uthmani`, { cache: "force-cache" });
+    if (!response.ok) throw new Error("Unable to load surah start.");
+    const payload = await response.json();
+    const firstAyahPage = payload?.data?.ayahs?.[0]?.page ?? 1;
+    surahStartPageCache.set(numericSurah, firstAyahPage);
+    cachedStarts[numericSurah] = firstAyahPage;
+    saveCachedQuranJson(quranSurahStartCacheStorageKey, cachedStarts);
+    return firstAyahPage;
+  } catch {
+    if (cachedStarts[numericSurah]) {
+      surahStartPageCache.set(numericSurah, cachedStarts[numericSurah]);
+      return cachedStarts[numericSurah];
+    }
+    throw new Error("Unable to load surah start.");
+  }
 }
 
 function getCurrentSurahFromPageData(pageData) {
@@ -408,7 +462,12 @@ async function goToPage(pageNumber, forceReload = false, bothChunkTarget = "star
     currentPageNumber = safePage;
 
     if (quranState.view === "both") {
-      const englishPage = await fetch(`${quranApiBaseUrl}/page/${safePage}/en.sahih`, { cache: "force-cache" }).then((r) => r.json());
+      let englishPage = null;
+      try {
+        englishPage = await fetch(`${quranApiBaseUrl}/page/${safePage}/en.sahih`, { cache: "force-cache" }).then((r) => r.json());
+      } catch {
+        englishPage = { data: { ayahs: Array.isArray(pageData?.ayahs) ? pageData.ayahs.map((ayah) => ({ text: ayah.secondaryText ?? "" })) : [] } };
+      }
       const englishAyahs = englishPage?.data?.ayahs ?? [];
       pageData = {
         ...pageData,
@@ -429,7 +488,7 @@ async function goToPage(pageNumber, forceReload = false, bothChunkTarget = "star
     }
     const pageSurah = getCurrentSurahFromPageData(currentPageData);
     rememberCurrentReading(pageSurah?.number ?? quranState.selectedKey, safePage);
-    quranStatus.textContent = "";
+    quranStatus.textContent = navigator.onLine ? "" : "Offline. Showing saved Quran pages.";
     render();
   } catch {
     quranStatus.textContent = "We couldn't load that page just now.";
@@ -503,5 +562,16 @@ async function initQuran() {
     quranStatus.textContent = "We couldn't load the Quran just now.";
   }
 }
+
+window.addEventListener("offline", () => {
+  if (currentPageData) {
+    quranStatus.textContent = "Offline. Showing saved Quran pages.";
+  }
+});
+
+window.addEventListener("online", () => {
+  quranStatus.textContent = "Back online.";
+  goToPage(currentPageNumber, true).catch(() => undefined);
+});
 
 initQuran();

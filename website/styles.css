@@ -187,6 +187,11 @@ h3 {
   font-size: 0.92rem;
 }
 
+.install-status.is-offline,
+.status-line.is-offline {
+  color: var(--gold);
+}
+
 .hero-meta span {
   padding: 8px 12px;
   border-radius: 999px;

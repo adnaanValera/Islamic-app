@@ -1,4 +1,4 @@
-const STATIC_CACHE = "nooriva-static-v27";
+const STATIC_CACHE = "nooriva-static-v28";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -167,12 +167,17 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(event.request.url);
 
+  if (url.pathname.startsWith("/api/prayer-times")) {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+
   if (url.origin !== self.location.origin) {
     return;
   }
 
   if (url.pathname.startsWith("/api/")) {
-    event.respondWith(fetch(event.request));
+    event.respondWith(networkFirst(event.request));
     return;
   }
 

@@ -18,6 +18,7 @@ const mainAyahDownload = document.getElementById("main-ayah-download");
 const mainAyahCopyStatus = document.getElementById("main-ayah-copy-status");
 const mainGreeting = document.getElementById("main-greeting");
 const mainNotificationButton = document.getElementById("main-enable-notifications");
+const homeInstallStatus = document.getElementById("home-install-status");
 const contactForm = document.getElementById("contact-form");
 const contactName = document.getElementById("contact-name");
 const contactMessage = document.getElementById("contact-message");
@@ -75,6 +76,8 @@ const mainAyahCandidates = [
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
 const quranHomeStorageKey = "nooriva-quran-state";
+const mainPrayerCacheStorageKey = "nooriva-main-prayer-cache";
+const mainAyahCacheStorageKey = "nooriva-main-ayah-cache";
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
 const contactSubmitUrl = "/api/contact-submit";
@@ -90,6 +93,32 @@ let mainLastToggledPrayerLabel = "";
 let mainLastToggleAt = 0;
 let mainLastNotificationMinuteKey = "";
 let mainAbsoluteCompassReady = false;
+let mainPrayerRefreshIntervalStarted = false;
+
+function loadMainCachedJson(storageKey) {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function saveMainCachedJson(storageKey, value) {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(value));
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function setMainConnectivityStatus(message, isOffline = false) {
+  if (!homeInstallStatus) {
+    return;
+  }
+
+  homeInstallStatus.textContent = message;
+  homeInstallStatus.classList.toggle("is-offline", Boolean(isOffline));
+}
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -561,8 +590,16 @@ function renderMainPrayer() {
 async function loadMainPrayer() {
   try {
     const response = await fetch(mainPrayerApiUrl, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Prayer API returned ${response.status}`);
+    }
     const payload = await response.json();
     const data = payload?.data ?? {};
+
+    saveMainCachedJson(mainPrayerCacheStorageKey, {
+      savedAt: Date.now(),
+      data,
+    });
 
     mainPrayerRows = mainPrayers.map((prayer) => ({
       label: prayer.label,
@@ -580,11 +617,39 @@ async function loadMainPrayer() {
 
     renderMainPrayer();
     renderMainDailyChecklist();
-    window.setInterval(renderMainPrayer, 60000);
+    setMainConnectivityStatus("Ready.");
+    if (!mainPrayerRefreshIntervalStarted) {
+      window.setInterval(renderMainPrayer, 60000);
+      mainPrayerRefreshIntervalStarted = true;
+    }
   } catch {
+    const cached = loadMainCachedJson(mainPrayerCacheStorageKey);
+    const data = cached?.data ?? null;
+
+    if (data) {
+      mainPrayerRows = mainPrayers.map((prayer) => ({
+        label: prayer.label,
+        athan: data?.[prayer.athanKey] ?? "--:--",
+        salah: data?.[prayer.salahKey] ?? "--:--",
+        startTime: data?.[prayer.startKey] ?? data?.[prayer.salahKey] ?? "--:--",
+        endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
+      }));
+      mainSpecialMoments = {
+        sunrise: data?.sunrise ?? "--:--",
+        sunset: data?.sunset ?? "--:--",
+        istiwa: data?.istiwa ?? "--:--",
+        zawaalEnd: data?.zawaalEnd ?? "--:--",
+      };
+      renderMainPrayer();
+      renderMainDailyChecklist();
+      setMainConnectivityStatus("Offline. Showing saved prayer times.", true);
+      return;
+    }
+
     if (mainPrayerName) mainPrayerName.textContent = "Prayer unavailable";
     if (mainPrayerTime) mainPrayerTime.textContent = "--:--";
     if (mainNextSalah) mainNextSalah.textContent = "Next salah unavailable";
+    setMainConnectivityStatus("Offline. Connect once to load your prayer data.", true);
   }
 }
 
@@ -621,6 +686,11 @@ async function loadMainAyah() {
       english: normalizeAyahFlowText(english?.text),
     };
 
+    saveMainCachedJson(mainAyahCacheStorageKey, {
+      dateKey: getMainMalawiParts().dateKey,
+      ayah: currentAyahOfDay,
+    });
+
     if (mainAyahArabic) mainAyahArabic.textContent = currentAyahOfDay.arabic;
     if (mainAyahEnglish) mainAyahEnglish.textContent = currentAyahOfDay.english;
     if (mainAyahReference) {
@@ -631,6 +701,21 @@ async function loadMainAyah() {
     }
     fitAyahCardText();
   } catch {
+    const cached = loadMainCachedJson(mainAyahCacheStorageKey);
+    if (cached?.ayah) {
+      currentAyahOfDay = cached.ayah;
+      if (mainAyahArabic) mainAyahArabic.textContent = currentAyahOfDay.arabic ?? "—";
+      if (mainAyahEnglish) mainAyahEnglish.textContent = currentAyahOfDay.english ?? "Ayah unavailable right now.";
+      if (mainAyahReference) {
+        mainAyahReference.textContent = `${currentAyahOfDay.surahName ?? "Quran"} ${currentAyahOfDay.ayahInSurah ?? ""}`.trim();
+      }
+      if (mainAyahCopyStatus) {
+        mainAyahCopyStatus.textContent = "Offline copy ready.";
+      }
+      fitAyahCardText();
+      return;
+    }
+
     if (mainAyahEnglish) mainAyahEnglish.textContent = "Ayah unavailable right now.";
   }
 }
@@ -1212,6 +1297,17 @@ loadMainQuranLastReading();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+window.addEventListener("offline", () => {
+  setMainConnectivityStatus("Offline. Showing saved data.", true);
+});
+
+window.addEventListener("online", () => {
+  setMainConnectivityStatus("Back online.");
+  loadMainPrayer().catch(() => undefined);
+  loadMainAyah().catch(() => undefined);
+  loadMainQuranLastReading().catch(() => undefined);
+});
+
 setInterval(() => {
   renderMainPrayer();
   maybeSendMainPrayerNotification().catch(() => undefined);

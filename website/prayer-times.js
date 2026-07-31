@@ -50,6 +50,7 @@ const notificationButton = document.getElementById("enable-notifications");
 const downloadAppButton = document.getElementById("download-app");
 const prayerActions = document.getElementById("prayer-actions");
 const prayerChecklistStorageKey = "nooriva-prayer-checklist";
+const prayerTimesCacheStorageKey = "nooriva-prayer-times-cache";
 let lastPrayerRefreshSlot = "";
 
 function getMalawiDateParts() {
@@ -120,6 +121,31 @@ function getChecklistState() {
     return { dateKey, checked: parsed.checked ?? {} };
   } catch (error) {
     return { dateKey, checked: {} };
+  }
+}
+
+function loadCachedPrayerPayload() {
+  try {
+    return JSON.parse(localStorage.getItem(prayerTimesCacheStorageKey) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function setPrayerStatus(message, isOffline = false) {
+  if (!prayerStatus) {
+    return;
+  }
+
+  prayerStatus.textContent = message;
+  prayerStatus.classList.toggle("is-offline", Boolean(isOffline));
+}
+
+function saveCachedPrayerPayload(payload) {
+  try {
+    localStorage.setItem(prayerTimesCacheStorageKey, JSON.stringify(payload));
+  } catch {
+    // Ignore storage failures.
   }
 }
 
@@ -559,7 +585,7 @@ function scheduleNextPrayerNotification() {
 
 async function loadPrayerTimes() {
   try {
-    prayerStatus.textContent = "Refreshing live prayer times...";
+    setPrayerStatus("Refreshing live prayer times...");
 
     const response = await fetch(prayerApiUrl, { cache: "no-store" });
     if (!response.ok) {
@@ -568,6 +594,10 @@ async function loadPrayerTimes() {
 
     const payload = await response.json();
     const data = payload?.data;
+    saveCachedPrayerPayload({
+      savedAt: Date.now(),
+      data,
+    });
 
     latestPrayerTimes = prayers.map((prayer) => ({
       label: prayer.label,
@@ -588,10 +618,38 @@ async function loadPrayerTimes() {
       })),
     );
 
-    prayerStatus.textContent = "Prayer times updated.";
+    setPrayerStatus("Prayer times updated.");
     scheduleNextPrayerNotification();
   } catch (error) {
-    prayerStatus.textContent = "We couldn't refresh the prayer times just now.";
+    const cached = loadCachedPrayerPayload();
+    const data = cached?.data;
+
+    if (data) {
+      latestPrayerTimes = prayers.map((prayer) => ({
+        label: prayer.label,
+        athan: data?.[prayer.athanKey] ?? "--:--",
+        salah: data?.[prayer.salahKey] ?? "--:--",
+        endTime: prayer.endKey ? data?.[prayer.endKey] ?? "--:--" : "--:--",
+      }));
+
+      renderPrayerTimes();
+      renderJumuahTimes({
+        adhan: data?.jumuahTime1 || "--:--",
+        khutbah: data?.jumuahTime3 || "--:--",
+      });
+      renderStartTimings(
+        startTimings.map((timing) => ({
+          label: timing.label,
+          time: data?.[timing.key] || "--:--",
+        })),
+      );
+
+      setPrayerStatus("Offline. Showing saved prayer times.", true);
+      scheduleNextPrayerNotification();
+      return;
+    }
+
+    setPrayerStatus("We couldn't refresh the prayer times just now.");
   }
 }
 
@@ -693,6 +751,17 @@ document.addEventListener("visibilitychange", () => {
     syncPrayerChecklistToBackend().catch(() => undefined);
     loadPrayerTimes();
   }
+});
+
+window.addEventListener("offline", () => {
+  if (latestPrayerTimes.length) {
+    setPrayerStatus("Offline. Showing saved prayer times.", true);
+  }
+});
+
+window.addEventListener("online", () => {
+  setPrayerStatus("Back online. Refreshing prayer times...");
+  loadPrayerTimes();
 });
 
 function maybeRefreshOnPrayerSchedule() {
