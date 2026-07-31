@@ -55,20 +55,8 @@ function normalizeCurrentMinutes(prayers, currentMinutes) {
   return currentMinutes < earlyMorningCutoff ? currentMinutes + 24 * 60 : currentMinutes;
 }
 
-function getDuePrayers(prayers, currentMinutes, windowMinutes) {
-  const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1), 0);
-
-  return prayers.filter((prayer) => {
-    const prayerMinutes = getMinutes(prayer.athan);
-
-    if (prayerMinutes === null) {
-      return false;
-    }
-
-    const normalizedPrayerMinutes =
-      prayerMinutes < lowerBound && currentMinutes > 24 * 60 ? prayerMinutes + 24 * 60 : prayerMinutes;
-    return normalizedPrayerMinutes >= lowerBound && normalizedPrayerMinutes <= currentMinutes;
-  });
+function getDuePrayers(prayers, timeKey) {
+  return prayers.filter((prayer) => String(prayer.athan || "") === String(timeKey || ""));
 }
 
 function getPrayerWindows(prayers) {
@@ -232,7 +220,7 @@ async function handlePrayer(request, response) {
   }
 
   const currentMinutes = normalizeCurrentMinutes(prayers, rawCurrentMinutes);
-  const duePrayers = getDuePrayers(prayers, currentMinutes, windowMinutes);
+  const duePrayers = getDuePrayers(prayers, timeKey);
   const dueRunningOut = getDueRunningOutReminders(prayers, currentMinutes, windowMinutes);
 
   if (duePrayers.length === 0 && dueRunningOut.length === 0) {

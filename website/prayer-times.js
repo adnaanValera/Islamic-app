@@ -33,6 +33,7 @@ let serviceWorkerRegistration = null;
 let pushPublicKey = "";
 let backendPushReady = false;
 let lastChecklistSyncKey = "";
+let lastNotificationMinuteKey = "";
 const notificationIcon = "./assets/icon-192.png";
 const notificationBadge = "./assets/favicon-32.png";
 
@@ -59,6 +60,7 @@ function getMalawiDateParts() {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 
@@ -68,6 +70,7 @@ function getMalawiDateParts() {
   return {
     dateKey: `${values.year}-${values.month}-${values.day}`,
     timeKey: `${values.hour}:${values.minute}`,
+    secondKey: values.second,
   };
 }
 
@@ -551,7 +554,7 @@ function scheduleNextPrayerNotification() {
   nextPrayerNotificationTimeout = window.setTimeout(async () => {
     await maybeSendPrayerNotification();
     scheduleNextPrayerNotification();
-  }, Math.min(upcoming.waitMs + 1500, 2147483647));
+  }, Math.min(Math.max(upcoming.waitMs, 0) + 250, 2147483647));
 }
 
 async function loadPrayerTimes() {
@@ -597,7 +600,14 @@ async function maybeSendPrayerNotification() {
     return;
   }
 
-  const { dateKey, timeKey } = getMalawiDateParts();
+  const { dateKey, timeKey, secondKey } = getMalawiDateParts();
+  const minuteKey = `${dateKey}:${timeKey}`;
+
+  if (lastNotificationMinuteKey === minuteKey || secondKey !== "00") {
+    return;
+  }
+
+  lastNotificationMinuteKey = minuteKey;
 
   for (const prayer of latestPrayerTimes) {
     const storageKey = `nooriva-notified-${dateKey}-${prayer.label.toLowerCase()}`;
@@ -705,5 +715,5 @@ setInterval(() => {
 }, 1000);
 
 setInterval(() => {
-  maybeSendPrayerNotification();
-}, 15000);
+  maybeSendPrayerNotification().catch(() => undefined);
+}, 1000);

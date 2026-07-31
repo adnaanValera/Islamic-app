@@ -84,6 +84,7 @@ let mainPushPublicKey = "";
 let mainSpecialMoments = {};
 let mainLastToggledPrayerLabel = "";
 let mainLastToggleAt = 0;
+let mainLastNotificationMinuteKey = "";
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -93,6 +94,7 @@ function getMainMalawiParts() {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 
@@ -102,6 +104,7 @@ function getMainMalawiParts() {
   return {
     dateKey: `${values.year}-${values.month}-${values.day}`,
     timeKey: `${values.hour}:${values.minute}`,
+    secondKey: values.second,
   };
 }
 
@@ -638,32 +641,61 @@ function fitElementText(element, { min, max, step = 1, lineHeight }) {
 }
 
 function fitAyahCardText() {
+  const contentBox = mainAyahArabic?.closest(".main-ayah-content");
+  if (!mainAyahArabic || !mainAyahEnglish || !contentBox) {
+    return;
+  }
+
   const arabicLength = String(currentAyahOfDay?.arabic || "").length;
   const englishLength = String(currentAyahOfDay?.english || "").length;
-
   const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
-  const arabicMax = tallVariant
-    ? arabicLength < 120 ? 31 : arabicLength < 170 ? 28 : 25
-    : arabicLength < 70 ? 30 : arabicLength < 120 ? 28 : 24;
-  const englishMax = tallVariant
-    ? englishLength < 140 ? 14.5 : englishLength < 210 ? 13.5 : 12.5
-    : englishLength < 90 ? 14.5 : englishLength < 150 ? 13 : 12;
 
-  fitElementText(mainAyahArabic, { min: tallVariant ? 16 : 15, max: arabicMax, step: 1, lineHeight: tallVariant ? 1.46 : 1.5 });
-  fitElementText(mainAyahEnglish, { min: 10.5, max: englishMax, step: 0.5, lineHeight: tallVariant ? 1.3 : 1.34 });
+  let arabicSize = tallVariant
+    ? arabicLength < 100 ? 31 : arabicLength < 150 ? 28 : 24
+    : arabicLength < 65 ? 29 : arabicLength < 110 ? 27 : 23;
+  let englishSize = tallVariant
+    ? englishLength < 110 ? 14.5 : englishLength < 170 ? 13.4 : 12
+    : englishLength < 85 ? 14.25 : englishLength < 135 ? 12.8 : 11.6;
 
-  const arabicHeight = mainAyahArabic?.scrollHeight ?? 0;
-  const englishHeight = mainAyahEnglish?.scrollHeight ?? 0;
-  const contentBox = mainAyahArabic?.closest(".main-ayah-content");
+  const arabicMin = tallVariant ? 15 : 14;
+  const englishMin = tallVariant ? 10 : 9.6;
+  const gap = window.innerWidth <= 480 ? 8 : 12;
+  const availableHeight = contentBox.clientHeight ?? 0;
 
-  if (contentBox) {
-    const contentBoxHeight = contentBox.clientHeight ?? 0;
-    const gap = tallVariant ? (window.innerWidth <= 480 ? 8 : 12) : (window.innerWidth <= 480 ? 8 : 12);
-    const contentHeight = arabicHeight + englishHeight + gap;
-    const topOffset = Math.max((contentBoxHeight - contentHeight) / 2, 0);
-    contentBox.style.paddingTop = `${topOffset}px`;
-    contentBox.style.paddingBottom = `${Math.max(topOffset * 0.08, 0)}px`;
+  mainAyahArabic.style.lineHeight = tallVariant ? "1.44" : "1.48";
+  mainAyahEnglish.style.lineHeight = tallVariant ? "1.28" : "1.32";
+
+  mainAyahArabic.style.fontSize = `${arabicSize}px`;
+  mainAyahEnglish.style.fontSize = `${englishSize}px`;
+
+  for (let step = 0; step < 40; step += 1) {
+    const totalHeight = mainAyahArabic.scrollHeight + mainAyahEnglish.scrollHeight + gap;
+    const tooWide =
+      mainAyahArabic.scrollWidth > mainAyahArabic.clientWidth ||
+      mainAyahEnglish.scrollWidth > mainAyahEnglish.clientWidth;
+
+    if (totalHeight <= availableHeight && !tooWide) {
+      break;
+    }
+
+    if (mainAyahArabic.scrollHeight >= mainAyahEnglish.scrollHeight && arabicSize > arabicMin) {
+      arabicSize -= 1;
+      mainAyahArabic.style.fontSize = `${arabicSize}px`;
+    } else if (englishSize > englishMin) {
+      englishSize -= 0.4;
+      mainAyahEnglish.style.fontSize = `${englishSize}px`;
+    } else if (arabicSize > arabicMin) {
+      arabicSize -= 1;
+      mainAyahArabic.style.fontSize = `${arabicSize}px`;
+    } else {
+      break;
+    }
   }
+
+  const contentHeight = mainAyahArabic.scrollHeight + mainAyahEnglish.scrollHeight + gap;
+  const topOffset = Math.max((availableHeight - contentHeight) / 2, 0);
+  contentBox.style.paddingTop = `${topOffset}px`;
+  contentBox.style.paddingBottom = `${Math.max(topOffset * 0.08, 0)}px`;
 }
 
 function sanitizeFileNamePart(value) {
@@ -958,6 +990,68 @@ function renderMainTasbeeh() {
   if (mainTasbeehLabel) mainTasbeehLabel.textContent = "Today";
 }
 
+async function showMainPrayerNotification(prayer) {
+  const title = `${prayer.label} time`;
+  const body =
+    "The Messenger of Allah (ﷺ) said: ‘The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.’";
+
+  try {
+    const registration = await navigator.serviceWorker.ready.catch(() => null);
+    if (registration) {
+      await registration.showNotification(title, {
+        body,
+        icon: "./assets/icon-192.png",
+        badge: "./assets/favicon-32.png",
+        tag: `nooriva-main-adhan-${prayer.label.toLowerCase()}`,
+        renotify: true,
+        data: {
+          url: "/prayer.html",
+        },
+      });
+      return true;
+    }
+  } catch {
+    // fall through to Notification API
+  }
+
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification(title, {
+      body,
+      icon: "./assets/icon-192.png",
+      badge: "./assets/favicon-32.png",
+      tag: `nooriva-main-adhan-${prayer.label.toLowerCase()}`,
+    });
+    return true;
+  }
+
+  return false;
+}
+
+async function maybeSendMainPrayerNotification() {
+  if (!("Notification" in window) || Notification.permission !== "granted" || !mainPrayerRows.length) {
+    return;
+  }
+
+  const { dateKey, timeKey, secondKey } = getMainMalawiParts();
+  const minuteKey = `${dateKey}:${timeKey}`;
+
+  if (mainLastNotificationMinuteKey === minuteKey || secondKey !== "00") {
+    return;
+  }
+
+  mainLastNotificationMinuteKey = minuteKey;
+
+  for (const prayer of mainPrayerRows) {
+    const storageKey = `nooriva-notified-${dateKey}-${prayer.label.toLowerCase()}`;
+    if (prayer.athan === timeKey && !localStorage.getItem(storageKey)) {
+      const shown = await showMainPrayerNotification(prayer);
+      if (shown) {
+        localStorage.setItem(storageKey, "true");
+      }
+    }
+  }
+}
+
 function setupMainTasbeeh() {
   renderMainTasbeeh();
 
@@ -1074,6 +1168,10 @@ loadMainAyah();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
+setInterval(() => {
+  renderMainPrayer();
+  maybeSendMainPrayerNotification().catch(() => undefined);
+}, 1000);
 
 
 
