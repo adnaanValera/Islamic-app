@@ -85,6 +85,7 @@ let mainSpecialMoments = {};
 let mainLastToggledPrayerLabel = "";
 let mainLastToggleAt = 0;
 let mainLastNotificationMinuteKey = "";
+let mainAbsoluteCompassReady = false;
 
 function getMainMalawiParts() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -614,7 +615,7 @@ async function loadMainAyah() {
       mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
     if (mainAyahCardShell) {
-      const isLongAyah = currentAyahOfDay.arabic.length > 120 || currentAyahOfDay.english.length > 150;
+      const isLongAyah = currentAyahOfDay.arabic.length > 78 || currentAyahOfDay.english.length > 96;
       mainAyahCardShell.dataset.cardVariant = isLongAyah ? "tall" : "default";
     }
     fitAyahCardText();
@@ -651,14 +652,14 @@ function fitAyahCardText() {
   const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
 
   let arabicSize = tallVariant
-    ? arabicLength < 100 ? 31 : arabicLength < 150 ? 28 : 24
-    : arabicLength < 65 ? 29 : arabicLength < 110 ? 27 : 23;
+    ? arabicLength < 84 ? 27.5 : arabicLength < 124 ? 24.5 : 21
+    : arabicLength < 58 ? 26.5 : arabicLength < 92 ? 24 : 20.6;
   let englishSize = tallVariant
-    ? englishLength < 110 ? 14.5 : englishLength < 170 ? 13.4 : 12
-    : englishLength < 85 ? 14.25 : englishLength < 135 ? 12.8 : 11.6;
+    ? englishLength < 90 ? 13.1 : englishLength < 130 ? 11.8 : 10.6
+    : englishLength < 72 ? 13 : englishLength < 108 ? 11.6 : 10.4;
 
-  const arabicMin = tallVariant ? 15 : 14;
-  const englishMin = tallVariant ? 10 : 9.6;
+  const arabicMin = tallVariant ? 14 : 13.5;
+  const englishMin = tallVariant ? 9.4 : 9.1;
   const gap = window.innerWidth <= 480 ? 8 : 12;
   const availableHeight = contentBox.clientHeight ?? 0;
 
@@ -1084,6 +1085,18 @@ function normalizeMainHeading(degrees) {
   return (degrees % 360 + 360) % 360;
 }
 
+function getMainScreenAngle() {
+  if (window.screen?.orientation && typeof window.screen.orientation.angle === "number") {
+    return window.screen.orientation.angle;
+  }
+
+  if (typeof window.orientation === "number") {
+    return window.orientation;
+  }
+
+  return 0;
+}
+
 function updateMainQiblaVisual() {
   if (mainBearing === null) return;
 
@@ -1102,9 +1115,16 @@ function updateMainQiblaVisual() {
 function startMainQiblaCompass() {
   const handleOrientation = (event) => {
     if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
+      mainAbsoluteCompassReady = true;
       mainHeading = normalizeMainHeading(event.webkitCompassHeading);
     } else if (typeof event.alpha === "number" && !Number.isNaN(event.alpha)) {
-      mainHeading = normalizeMainHeading(360 - event.alpha);
+      if (event.absolute === true) {
+        mainAbsoluteCompassReady = true;
+      } else if (mainAbsoluteCompassReady) {
+        return;
+      }
+
+      mainHeading = normalizeMainHeading(360 - event.alpha - getMainScreenAngle());
     }
 
     updateMainQiblaVisual();

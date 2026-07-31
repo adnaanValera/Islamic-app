@@ -5,6 +5,7 @@ const duaCategoryRow = document.getElementById("dua-category-row");
 const duaFavoritesToggle = document.getElementById("dua-favorites-toggle");
 
 const duaFavoritesStorageKey = "nooriva-dua-favorites";
+const accountSessionStorageKey = "nooriva-account-session";
 
 const duas = [
   {
@@ -1285,6 +1286,19 @@ let currentSearch = "";
 let currentCategory = "all";
 let favoritesOnly = false;
 
+function loadSession() {
+  try {
+    return JSON.parse(localStorage.getItem(accountSessionStorageKey) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function isAdminSession() {
+  const session = loadSession();
+  return String(session?.user?.fullName ?? "").trim().toLowerCase() === "adnaan valera";
+}
+
 function decodeMojibake(value) {
   const raw = String(value || "");
 
@@ -1476,6 +1490,34 @@ function renderDuas() {
   bindDuaActions();
 }
 
+function renderDuaAdminLock() {
+  if (duaSearchInput) {
+    duaSearchInput.disabled = true;
+    duaSearchInput.placeholder = "Admin only";
+  }
+
+  if (duaFavoritesToggle) {
+    duaFavoritesToggle.style.display = "none";
+  }
+
+  if (duaCategoryRow) {
+    duaCategoryRow.innerHTML = "";
+  }
+
+  if (duaStatus) {
+    duaStatus.textContent = "Admin only for now.";
+  }
+
+  if (duaList) {
+    duaList.innerHTML = `
+      <article class="dua-empty-state">
+        <strong>Dua is hidden for now</strong>
+        <p>Please sign in as admin to view this page.</p>
+      </article>
+    `;
+  }
+}
+
 duaSearchInput?.addEventListener("input", () => {
   currentSearch = duaSearchInput.value;
   renderDuas();
@@ -1488,10 +1530,14 @@ duaFavoritesToggle?.addEventListener("click", () => {
   renderDuas();
 });
 
-if (duaStatus) {
-  duaStatus.textContent = "";
-}
+if (!isAdminSession()) {
+  renderDuaAdminLock();
+} else {
+  if (duaStatus) {
+    duaStatus.textContent = "";
+  }
 
-renderCategoryChips();
-renderDuas();
+  renderCategoryChips();
+  renderDuas();
+}
 

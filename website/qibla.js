@@ -22,6 +22,7 @@ let qiblaBooted = false;
 let locationWatchId = null;
 let orientationHandler = null;
 let motionPermissionRequested = false;
+let absoluteCompassReady = false;
 const qiblaLocationStorageKey = "nooriva-qibla-last-location";
 const degreeSymbol = "\u00B0";
 
@@ -143,6 +144,16 @@ function normalizeHeading(degrees) {
 
 function getHeadingFromOrientationEvent(event) {
   if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
+    absoluteCompassReady = true;
+    if (typeof event.webkitCompassAccuracy === "number" && !Number.isNaN(event.webkitCompassAccuracy)) {
+      if (event.webkitCompassAccuracy <= 12) {
+        setAccuracyLabel("High precision");
+      } else if (event.webkitCompassAccuracy <= 25) {
+        setAccuracyLabel("Calibrating");
+      } else {
+        setAccuracyLabel("Needs calibration");
+      }
+    }
     return normalizeHeading(event.webkitCompassHeading);
   }
 
@@ -150,7 +161,13 @@ function getHeadingFromOrientationEvent(event) {
     return null;
   }
 
-  return normalizeHeading(360 - event.alpha + getScreenAngle());
+  if (event.absolute === true) {
+    absoluteCompassReady = true;
+  } else if (absoluteCompassReady) {
+    return null;
+  }
+
+  return normalizeHeading(360 - event.alpha - getScreenAngle());
 }
 
 function useBearingFallback(reason) {
@@ -218,7 +235,7 @@ function updateAlignment(heading) {
     setAccuracyLabel("Re-align");
   }
 
-  qiblaStatus.textContent = "Move slowly until both arrows line up.";
+  qiblaStatus.textContent = "Move slowly and calibrate your phone if the compass drifts.";
   qiblaAngle.textContent =
     diff > 0
       ? `Turn ${Math.round(absoluteDiff)}${degreeSymbol} clockwise`
@@ -262,6 +279,7 @@ function startCompass() {
     updateAlignment(heading);
   };
 
+  absoluteCompassReady = false;
   setWaitingForHeading();
   startCompassWatchdog();
 
