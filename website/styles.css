@@ -4109,6 +4109,10 @@ h3 {
   padding: 0 4px;
 }
 
+.main-card-head-section {
+  gap: 4px;
+}
+
 .main-daily-card {
   display: grid;
   gap: 12px;
@@ -4309,6 +4313,13 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.main-card-prayer-hero {
+  padding: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(198, 161, 90, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 244, 236, 0.98));
+}
+
 .main-card {
   display: grid;
   gap: 12px;
@@ -4461,6 +4472,22 @@ h3 {
   font-size: 1.05rem;
 }
 
+.main-card-link-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 161, 90, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--gold-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 .main-prayer-banner {
   min-height: 100%;
   gap: 8px;
@@ -4517,6 +4544,29 @@ h3 {
   justify-items: center;
   gap: 10px;
   padding: 4px 0 2px;
+}
+
+.main-quran-mini {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 10px;
+  min-height: 170px;
+  padding: 10px 6px 6px;
+}
+
+.main-quran-icon {
+  display: grid;
+  place-items: center;
+  width: 86px;
+  height: 86px;
+  border-radius: 24px;
+  border: 1px solid rgba(198, 161, 90, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 238, 228, 0.96));
+  color: var(--gold-soft);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.4rem;
+  box-shadow: 0 14px 24px rgba(31, 46, 41, 0.06);
 }
 
 .main-qibla-frame {
@@ -4677,7 +4727,7 @@ h3 {
 }
 
 .main-card-ayah {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 .main-card-ayah .main-card-head {
@@ -4711,6 +4761,10 @@ h3 {
   cursor: pointer;
   overflow: hidden;
   transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.main-card-tasbeeh {
+  align-content: start;
 }
 
 .main-tasbeeh-button.is-tapping {
@@ -4834,10 +4888,6 @@ h3 {
 
   .main-dashboard-grid {
     grid-template-columns: 1fr;
-  }
-
-  .main-card-ayah {
-    grid-column: auto;
   }
 
   .main-qibla-frame {

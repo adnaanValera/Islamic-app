@@ -68,10 +68,105 @@
         </section>
 
         <section class="main-dashboard-section">
+          <a class="main-card main-card-prayer main-card-prayer-hero" href="./prayer.html">
+            <div class="main-card-head main-card-head-row">
+              <div>
+                <strong>Prayer</strong>
+                <span>Current salah</span>
+              </div>
+              <span class="main-card-link-pill">Open</span>
+            </div>
+            <div class="next-prayer-banner main-prayer-banner">
+              <span class="next-prayer-label" id="main-prayer-label">Current</span>
+              <strong class="next-prayer-name" id="main-prayer-name">Loading...</strong>
+              <div class="main-prayer-detail-grid">
+                <span class="main-prayer-meta" id="main-prayer-time">Salah --:--</span>
+                <span class="main-next-salah" id="main-next-salah">Adhan --:--</span>
+              </div>
+              <div class="next-prayer-progress main-prayer-progress-wrap" aria-hidden="true">
+                <span class="next-prayer-progress-fill" id="main-prayer-progress"></span>
+              </div>
+            </div>
+          </a>
+
+          <section class="main-essentials-header">
+            <div class="main-card-head main-card-head-section">
+              <strong>Essentials</strong>
+              <span>Your core daily tools</span>
+            </div>
+          </section>
+
+          <div class="main-dashboard-grid">
+            <a class="main-card main-card-qibla" href="./qibla.html">
+              <div class="main-card-head main-card-head-row">
+                <strong>Qibla</strong>
+                <span class="main-card-link-pill">Compass</span>
+              </div>
+              <div class="main-qibla-mini">
+                <div class="qibla-compass-frame main-qibla-frame">
+                  <div class="qibla-compass main-qibla-compass">
+                    <span class="qibla-north-mark">N</span>
+                    <span class="qibla-ring"></span>
+                    <span class="qibla-direction-arrow" id="main-qibla-arrow"></span>
+                    <span class="qibla-phone-arrow" id="main-qibla-phone"></span>
+                    <span class="qibla-center-dot"></span>
+                  </div>
+                </div>
+                <p class="main-mini-copy" id="main-qibla-status">Opening qibla…</p>
+              </div>
+            </a>
+
+            <a class="main-card main-card-quran" href="./quran.html">
+              <div class="main-card-head main-card-head-row">
+                <strong>Quran</strong>
+                <span class="main-card-link-pill">Read</span>
+              </div>
+              <div class="main-quran-mini">
+                <div class="main-quran-icon" aria-hidden="true">۞</div>
+                <p class="main-mini-copy">Open your reading and continue where you left off.</p>
+              </div>
+            </a>
+
+            <section class="main-card main-card-ayah">
+              <div class="main-card-head main-card-head-row">
+                <div>
+                  <strong>Ayah of the day</strong>
+                </div>
+                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Download ayah card">
+                  <span aria-hidden="true" class="main-download-icon">↓</span>
+                </button>
+              </div>
+              <div class="main-ayah-card-shell" id="main-ayah-card-shell">
+                <div class="main-ayah-card-art">
+                  <div class="main-ayah-card-inner">
+                    <div class="main-ayah-content">
+                      <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                      <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                    </div>
+                    <p class="main-mini-copy main-ayah-reference" id="main-ayah-reference"></p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="main-card main-card-tasbeeh">
+              <div class="main-card-head main-card-head-row">
+                <strong>Tasbeeh</strong>
+                <span class="main-card-link-pill">Today</span>
+              </div>
+              <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
+                <span class="main-tasbeeh-ring"></span>
+                <strong id="main-tasbeeh-count">0</strong>
+                <span id="main-tasbeeh-label">Today</span>
+              </button>
+            </section>
+          </div>
+
           <section class="main-daily-card">
             <div class="main-card-head main-card-head-row">
               <div>
                 <strong>Nooriva daily</strong>
+                <span>Track all 5 salah</span>
               </div>
               <a class="main-daily-link" href="./prayer.html">Prayer</a>
             </div>
@@ -105,82 +200,6 @@
               </a>
             </div>
           </section>
-
-          <section class="main-essentials-header">
-            <div class="main-card-head">
-              <strong>Essentials</strong>
-            </div>
-          </section>
-
-          <div class="main-dashboard-grid">
-            <a class="main-card main-card-prayer" href="./prayer.html">
-              <div class="main-card-head">
-                <strong>Prayer</strong>
-              </div>
-              <div class="next-prayer-banner main-prayer-banner">
-                <span class="next-prayer-label" id="main-prayer-label">Current</span>
-                <strong class="next-prayer-name" id="main-prayer-name">Loading...</strong>
-                <div class="main-prayer-detail-grid">
-                  <span class="main-prayer-meta" id="main-prayer-time">Salah --:--</span>
-                  <span class="main-next-salah" id="main-next-salah">Adhan --:--</span>
-                </div>
-                <div class="next-prayer-progress main-prayer-progress-wrap" aria-hidden="true">
-                  <span class="next-prayer-progress-fill" id="main-prayer-progress"></span>
-                </div>
-              </div>
-            </a>
-
-            <a class="main-card main-card-qibla" href="./qibla.html">
-              <div class="main-card-head">
-                <strong>Qibla</strong>
-              </div>
-              <div class="main-qibla-mini">
-                <div class="qibla-compass-frame main-qibla-frame">
-                  <div class="qibla-compass main-qibla-compass">
-                    <span class="qibla-north-mark">N</span>
-                    <span class="qibla-ring"></span>
-                    <span class="qibla-direction-arrow" id="main-qibla-arrow"></span>
-                    <span class="qibla-phone-arrow" id="main-qibla-phone"></span>
-                    <span class="qibla-center-dot"></span>
-                  </div>
-                </div>
-                <p class="main-mini-copy" id="main-qibla-status">Opening qibla…</p>
-              </div>
-            </a>
-
-            <section class="main-card main-card-ayah">
-              <div class="main-card-head main-card-head-row">
-                <div>
-                  <strong>Ayah of the day</strong>
-                </div>
-                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Download ayah card">
-                  <span aria-hidden="true" class="main-download-icon">↓</span>
-                </button>
-              </div>
-              <div class="main-ayah-card-shell" id="main-ayah-card-shell">
-                <div class="main-ayah-card-art">
-                  <div class="main-ayah-card-inner">
-                    <div class="main-ayah-content">
-                      <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
-                      <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
-                    </div>
-                    <p class="main-mini-copy main-ayah-reference" id="main-ayah-reference"></p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="main-card main-card-tasbeeh">
-              <div class="main-card-head">
-                <strong>Tasbeeh</strong>
-              </div>
-              <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
-                <span class="main-tasbeeh-ring"></span>
-                <strong id="main-tasbeeh-count">0</strong>
-                <span id="main-tasbeeh-label">Today</span>
-              </button>
-            </section>
-          </div>
         </section>
 
         <section class="cta-section" id="contact">
