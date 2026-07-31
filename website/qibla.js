@@ -12,6 +12,8 @@ const qiblaFallback = document.getElementById("qibla-fallback");
 const qiblaGuidanceTitle = document.getElementById("qibla-guidance-title");
 const qiblaGuidanceDetail = document.getElementById("qibla-guidance-detail");
 const qiblaGuidanceText = document.getElementById("qibla-guidance-text");
+const qiblaHelperTitle = document.getElementById("qibla-helper-title");
+const qiblaHelperText = document.getElementById("qibla-helper-text");
 
 let currentBearing = null;
 let latestHeading = null;
@@ -73,6 +75,11 @@ function setGuidance(title, detail) {
   setText(qiblaGuidanceText, detail);
 }
 
+function setHelper(title, detail) {
+  setText(qiblaHelperTitle, title);
+  setText(qiblaHelperText, detail);
+}
+
 function loadStoredLocation() {
   try {
     const raw = localStorage.getItem(qiblaLocationStorageKey);
@@ -120,6 +127,7 @@ function setWaitingForHeading() {
   setText(qiblaAlignment, "Starting");
   setAccuracyLabel("Warming up");
   setCompassMode("Opening compass");
+  setHelper("Compass help", "Keep your phone upright and still for a moment.");
   setGuidance(
     "Preparing live compass",
     "Nooriva is opening your device sensors now.",
@@ -179,6 +187,7 @@ function useBearingFallback(reason) {
   setAccuracyLabel("Manual guidance");
   setCompassMode("Bearing fallback");
   setFallbackLabel("North reference");
+  setHelper("Compass unavailable", "Face north first, then follow the gold arrow toward the Qibla.");
   qiblaAngle.textContent = currentBearing
     ? `Qibla is ${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`
     : "Qibla bearing ready";
@@ -192,6 +201,7 @@ function updateAlignment(heading) {
     setText(deviceHeading, `${Math.round(heading)}${degreeSymbol} ${degreesToCardinal(heading)}`);
     setCompassMode("Compass ready");
     setAccuracyLabel("Waiting for location");
+    setHelper("Location needed", "Compass is ready. Nooriva is still confirming your location.");
     return;
   }
 
@@ -221,18 +231,22 @@ function updateAlignment(heading) {
     qiblaAngle.textContent = "You are facing the Qibla";
     qiblaStatus.textContent = "Aligned";
     setAccuracyLabel("Excellent");
+    setHelper("Perfect", "You are facing the Qibla.");
     return;
   }
 
   if (absoluteDiff <= 15) {
     setText(qiblaAlignment, "Very close");
     setAccuracyLabel("Very good");
+    setHelper("Almost there", "A small turn should line you up.");
   } else if (absoluteDiff <= 30) {
     setText(qiblaAlignment, "Close");
     setAccuracyLabel("Good");
+    setHelper("Fine tune", "Turn gently until the arrows line up.");
   } else {
     setText(qiblaAlignment, "Turn");
     setAccuracyLabel("Re-align");
+    setHelper("Re-align", "Move your phone in a figure-eight if the compass feels off.");
   }
 
   qiblaStatus.textContent = "Move slowly and calibrate your phone if the compass drifts.";
@@ -297,6 +311,7 @@ function startCompass() {
       .then((permission) => {
         if (permission !== "granted") {
           qiblaStatus.textContent = "Motion permission was not granted.";
+          setHelper("Motion blocked", "Enable motion access if you want the live compass to work.");
           useBearingFallback("Motion access was denied, so Nooriva is using bearing mode.");
           return;
         }
@@ -306,6 +321,7 @@ function startCompass() {
       })
       .catch(() => {
         qiblaStatus.textContent = "Unable to access motion sensors.";
+        setHelper("Compass unavailable", "This device did not expose a usable compass.");
         useBearingFallback("This device could not expose motion sensors.");
       });
 
@@ -350,6 +366,7 @@ function startLocationUpdates() {
   setAccuracyLabel("Checking");
   setCompassMode("Checking sensors");
   setFallbackLabel("Compass first");
+  setHelper("Getting location", "Nooriva is checking your location for the Qibla bearing.");
 
   const storedLocation = loadStoredLocation();
 
@@ -388,6 +405,7 @@ function startLocationUpdates() {
         setAccuracyLabel("Unavailable");
         setCompassMode("Unavailable");
         setFallbackLabel("No location");
+        setHelper("Location blocked", "Allow location so Nooriva can calculate the Qibla properly.");
       }
     },
     {
