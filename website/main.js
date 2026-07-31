@@ -15,6 +15,7 @@ const mainAyahArabic = document.getElementById("main-ayah-arabic");
 const mainAyahEnglish = document.getElementById("main-ayah-english");
 const mainAyahReference = document.getElementById("main-ayah-reference");
 const mainAyahDownload = document.getElementById("main-ayah-download");
+const mainAyahCopyStatus = document.getElementById("main-ayah-copy-status");
 const mainGreeting = document.getElementById("main-greeting");
 const mainNotificationButton = document.getElementById("main-enable-notifications");
 const contactForm = document.getElementById("contact-form");
@@ -27,6 +28,8 @@ const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
 const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
 const mainDailyChecklist = document.getElementById("main-daily-checklist");
 const mainDailyProgressBar = document.getElementById("main-daily-progress-bar");
+const mainQuranLast = document.getElementById("main-quran-last");
+const mainQuranLastMeta = document.getElementById("main-quran-last-meta");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -71,6 +74,7 @@ const mainAyahCandidates = [
 ];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
+const quranHomeStorageKey = "nooriva-quran-state";
 const pushPublicKeyApiUrl = "/api/push-public-key";
 const pushSubscribeApiUrl = "/api/push-subscribe";
 const contactSubmitUrl = "/api/contact-submit";
@@ -131,6 +135,14 @@ function formatHoursAndMinutes(totalMinutes) {
   }
 
   return `${hours}h ${minutes}m`;
+}
+
+function loadQuranHomeState() {
+  try {
+    return JSON.parse(localStorage.getItem(quranHomeStorageKey) || "null");
+  } catch {
+    return null;
+  }
 }
 
 function getMainPrayerWindows() {
@@ -522,8 +534,8 @@ function renderMainPrayer() {
     const minutesUntilNextSalah = nextPrayerMinutes - currentMinutes;
     const minutesUntilAdhan = nextAdhanMinutes - currentMinutes;
     mainNextSalah.textContent = currentPrayer
-      ? `Adhan ${nextAdhan?.label ?? "--"} ${nextAdhan?.athan ?? "--:--"} - ${formatHoursAndMinutes(minutesUntilAdhan)}`
-      : `Next ${nextPrayer?.label ?? "--"} ${nextPrayer?.displayTime ?? "--:--"} - ${formatHoursAndMinutes(minutesUntilNextSalah)}`;
+      ? `Next adhan · ${nextAdhan?.label ?? "--"} · ${nextAdhan?.athan ?? "--:--"} · ${formatHoursAndMinutes(minutesUntilAdhan)}`
+      : `Next salah · ${nextPrayer?.label ?? "--"} · ${nextPrayer?.displayTime ?? "--:--"} · ${formatHoursAndMinutes(minutesUntilNextSalah)}`;
   }
 
   if (mainPrayerProgress) {
@@ -614,9 +626,8 @@ async function loadMainAyah() {
     if (mainAyahReference) {
       mainAyahReference.textContent = `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
     }
-    if (mainAyahCardShell) {
-      const isLongAyah = currentAyahOfDay.arabic.length > 78 || currentAyahOfDay.english.length > 96;
-      mainAyahCardShell.dataset.cardVariant = isLongAyah ? "tall" : "default";
+    if (mainAyahCopyStatus) {
+      mainAyahCopyStatus.textContent = "";
     }
     fitAyahCardText();
   } catch {
@@ -642,61 +653,73 @@ function fitElementText(element, { min, max, step = 1, lineHeight }) {
 }
 
 function fitAyahCardText() {
-  const contentBox = mainAyahArabic?.closest(".main-ayah-content");
-  if (!mainAyahArabic || !mainAyahEnglish || !contentBox) {
+  if (!mainAyahArabic || !mainAyahEnglish) {
     return;
   }
 
-  const arabicLength = String(currentAyahOfDay?.arabic || "").length;
-  const englishLength = String(currentAyahOfDay?.english || "").length;
-  const tallVariant = mainAyahCardShell?.dataset.cardVariant === "tall";
+  fitElementText(mainAyahArabic, { min: 20, max: 29, step: 1, lineHeight: 1.62 });
+  fitElementText(mainAyahEnglish, { min: 11, max: 15, step: 0.5, lineHeight: 1.5 });
+}
 
-  let arabicSize = tallVariant
-    ? arabicLength < 84 ? 27.5 : arabicLength < 124 ? 24.5 : 21
-    : arabicLength < 58 ? 26.5 : arabicLength < 92 ? 24 : 20.6;
-  let englishSize = tallVariant
-    ? englishLength < 90 ? 13.1 : englishLength < 130 ? 11.8 : 10.6
-    : englishLength < 72 ? 13 : englishLength < 108 ? 11.6 : 10.4;
-
-  const arabicMin = tallVariant ? 14 : 13.5;
-  const englishMin = tallVariant ? 9.4 : 9.1;
-  const gap = window.innerWidth <= 480 ? 8 : 12;
-  const availableHeight = contentBox.clientHeight ?? 0;
-
-  mainAyahArabic.style.lineHeight = tallVariant ? "1.44" : "1.48";
-  mainAyahEnglish.style.lineHeight = tallVariant ? "1.28" : "1.32";
-
-  mainAyahArabic.style.fontSize = `${arabicSize}px`;
-  mainAyahEnglish.style.fontSize = `${englishSize}px`;
-
-  for (let step = 0; step < 40; step += 1) {
-    const totalHeight = mainAyahArabic.scrollHeight + mainAyahEnglish.scrollHeight + gap;
-    const tooWide =
-      mainAyahArabic.scrollWidth > mainAyahArabic.clientWidth ||
-      mainAyahEnglish.scrollWidth > mainAyahEnglish.clientWidth;
-
-    if (totalHeight <= availableHeight && !tooWide) {
-      break;
-    }
-
-    if (mainAyahArabic.scrollHeight >= mainAyahEnglish.scrollHeight && arabicSize > arabicMin) {
-      arabicSize -= 1;
-      mainAyahArabic.style.fontSize = `${arabicSize}px`;
-    } else if (englishSize > englishMin) {
-      englishSize -= 0.4;
-      mainAyahEnglish.style.fontSize = `${englishSize}px`;
-    } else if (arabicSize > arabicMin) {
-      arabicSize -= 1;
-      mainAyahArabic.style.fontSize = `${arabicSize}px`;
-    } else {
-      break;
-    }
+async function copyMainAyah() {
+  if (!currentAyahOfDay) {
+    return;
   }
 
-  const contentHeight = mainAyahArabic.scrollHeight + mainAyahEnglish.scrollHeight + gap;
-  const topOffset = Math.max((availableHeight - contentHeight) / 2, 0);
-  contentBox.style.paddingTop = `${topOffset}px`;
-  contentBox.style.paddingBottom = `${Math.max(topOffset * 0.08, 0)}px`;
+  const text = `${currentAyahOfDay.arabic}\n\n${currentAyahOfDay.english}\n\n${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    if (mainAyahCopyStatus) {
+      mainAyahCopyStatus.textContent = "Copied";
+      window.setTimeout(() => {
+        if (mainAyahCopyStatus.textContent === "Copied") {
+          mainAyahCopyStatus.textContent = "";
+        }
+      }, 1800);
+    }
+  } catch {
+    if (mainAyahCopyStatus) {
+      mainAyahCopyStatus.textContent = "Copy failed";
+    }
+  }
+}
+
+async function loadMainQuranLastReading() {
+  const state = loadQuranHomeState();
+  const surahKey = String(state?.lastReading?.surahKey || state?.selectedKey || "1");
+  const page = Math.max(1, Number(state?.lastReading?.page || state?.currentPage || 1));
+  const bothChunkIndex = Math.max(0, Number(state?.bothChunkIndex || 0));
+
+  try {
+    const [surahResponse, pageResponse] = await Promise.all([
+      fetch(`${mainAyahApiBase}/surah/${surahKey}`, { cache: "force-cache" }),
+      fetch(`${mainAyahApiBase}/page/${page}/quran-uthmani`, { cache: "force-cache" }),
+    ]);
+
+    const surahPayload = await surahResponse.json();
+    const pagePayload = await pageResponse.json();
+    const surahName = surahPayload?.data?.englishName ?? `Surah ${surahKey}`;
+    const ayahs = pagePayload?.data?.ayahs ?? [];
+    const targetAyah = ayahs[Math.min(bothChunkIndex * 3, Math.max(ayahs.length - 1, 0))];
+    const ayahNumber = targetAyah?.numberInSurah ?? 1;
+
+    if (mainQuranLast) {
+      mainQuranLast.textContent = surahName;
+    }
+
+    if (mainQuranLastMeta) {
+      mainQuranLastMeta.textContent = `Ayah ${ayahNumber} · Page ${page}`;
+    }
+  } catch {
+    if (mainQuranLast) {
+      mainQuranLast.textContent = "Continue reading";
+    }
+
+    if (mainQuranLastMeta) {
+      mainQuranLastMeta.textContent = "Open your reading and continue where you left off.";
+    }
+  }
 }
 
 function sanitizeFileNamePart(value) {
@@ -1157,7 +1180,7 @@ function loadMainQibla() {
   );
 }
 
-mainAyahDownload?.addEventListener("click", downloadAyahCard);
+mainAyahDownload?.addEventListener("click", copyMainAyah);
 window.addEventListener("resize", fitAyahCardText);
 mainNotificationButton?.addEventListener("click", enableMainNotifications);
 contactForm?.addEventListener("submit", async (event) => {
@@ -1185,6 +1208,7 @@ renderMainDailyChecklist();
 updateMainNotificationButton();
 loadMainPrayer();
 loadMainAyah();
+loadMainQuranLastReading();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();

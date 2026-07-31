@@ -162,7 +162,8 @@
               </div>
               <div class="main-quran-mini">
                 <div class="main-quran-icon" aria-hidden="true">۞</div>
-                <p class="main-mini-copy">Open your reading and continue where you left off.</p>
+                <p class="main-quran-last" id="main-quran-last">Continue reading</p>
+                <p class="main-mini-copy" id="main-quran-last-meta">Open your reading and continue where you left off.</p>
               </div>
             </a>
 
@@ -171,21 +172,19 @@
                 <div>
                   <strong>Ayah of the day</strong>
                 </div>
-                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Download ayah card">
-                  <span aria-hidden="true" class="main-download-icon">↓</span>
+                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Copy ayah">
+                  <span aria-hidden="true" class="main-download-icon">⧉</span>
                 </button>
               </div>
-              <div class="main-ayah-card-shell" id="main-ayah-card-shell">
-                <div class="main-ayah-card-art">
-                  <div class="main-ayah-card-inner">
-                    <div class="main-ayah-content">
-                      <p class="main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
-                      <p class="main-ayah-english" id="main-ayah-english">Loading ayah…</p>
-                    </div>
-                    <p class="main-mini-copy main-ayah-reference" id="main-ayah-reference"></p>
-                  </div>
+              <article class="quran-ayah-card quran-ayah-card-premium quran-ayah-card-both main-ayah-reader-card">
+                <div class="quran-ayah-card-accent" aria-hidden="true"></div>
+                <div class="quran-ayah-topline">
+                  <span id="main-ayah-reference">Loading...</span>
                 </div>
-              </div>
+                <p class="quran-dual-arabic quran-dual-arabic-single main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                <p class="quran-ayah-translation main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                <p class="main-copy-status" id="main-ayah-copy-status"></p>
+              </article>
             </section>
 
             <section class="main-card main-card-tasbeeh">
