@@ -1309,7 +1309,7 @@ function updateMainQiblaVisual() {
   } else {
     if (mainQiblaArrow) mainQiblaArrow.style.transform = `rotate(${mainBearing}deg)`;
     if (mainQiblaPhone) mainQiblaPhone.style.opacity = "0.16";
-    if (mainQiblaStatus) mainQiblaStatus.textContent = "Qibla bearing ready";
+    if (mainQiblaStatus) mainQiblaStatus.textContent = "Saved qibla bearing";
   }
 }
 
@@ -1345,7 +1345,7 @@ function loadMainQibla() {
 
   if (!navigator.geolocation) {
     if (mainQiblaStatus) {
-      mainQiblaStatus.textContent = storedLocation ? "Using saved qibla direction" : "Location unavailable";
+      mainQiblaStatus.textContent = storedLocation ? "Using saved qibla bearing" : "Location unavailable";
     }
     if (!storedLocation && mainQiblaPhone) {
       mainQiblaPhone.style.opacity = "0.16";
@@ -1361,7 +1361,7 @@ function loadMainQibla() {
     },
     () => {
       if (storedLocation) {
-        if (mainQiblaStatus) mainQiblaStatus.textContent = "Using saved qibla direction";
+        if (mainQiblaStatus) mainQiblaStatus.textContent = "Using saved qibla bearing";
         startMainQiblaCompass();
         return;
       }

@@ -4637,8 +4637,8 @@ h3 {
 .main-qibla-mini {
   display: grid;
   justify-items: center;
-  gap: 10px;
-  padding: 4px 0 2px;
+  gap: 8px;
+  padding: 6px 0 4px;
 }
 
 .main-quran-mini {
@@ -4703,7 +4703,8 @@ h3 {
 }
 
 .main-card-qibla .main-mini-copy {
-  margin-top: 2px;
+  margin-top: 0;
+  max-width: 14ch;
 }
 
 .main-download-button {
@@ -4872,7 +4873,7 @@ h3 {
 
 .qibla-helper-card {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   width: min(340px, 100%);
   padding: 12px 14px;
   border-radius: 18px;
@@ -4891,6 +4892,11 @@ h3 {
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.5;
+}
+
+.qibla-simple-status {
+  max-width: 22ch;
+  text-align: center;
 }
 
 .main-supporting-row .main-card,

@@ -35,7 +35,7 @@ function updateQiblaOfflineState() {
 
   if (!navigator.onLine) {
     qiblaStatus.textContent = currentBearing !== null
-      ? "Offline. Using saved location with your device compass."
+      ? "Offline. Using saved Qibla bearing."
       : "Offline. Connect once so Nooriva can confirm your location.";
     qiblaStatus.classList.add("is-offline");
     return;
@@ -203,7 +203,7 @@ function useBearingFallback(reason) {
   setAccuracyLabel("Manual guidance");
   setCompassMode("Bearing fallback");
   setFallbackLabel("North reference");
-  setHelper("Compass unavailable", "Face north first, then follow the gold arrow toward the Qibla.");
+  setHelper("Bearing mode", "Face north first, then follow the gold arrow toward the Qibla.");
   qiblaAngle.textContent = currentBearing
     ? `Qibla is ${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`
     : "Qibla bearing ready";
@@ -246,7 +246,7 @@ function updateAlignment(heading) {
   if (absoluteDiff <= 6) {
     setText(qiblaAlignment, "Aligned");
     qiblaAngle.textContent = "You are facing the Qibla";
-    qiblaStatus.textContent = "Aligned";
+    qiblaStatus.textContent = "Aligned with Qibla";
     updateQiblaOfflineState();
     setAccuracyLabel("Excellent");
     setHelper("Perfect", "You are facing the Qibla.");
@@ -267,7 +267,7 @@ function updateAlignment(heading) {
     setHelper("Re-align", "Move your phone in a figure-eight if the compass feels off.");
   }
 
-  qiblaStatus.textContent = "Move slowly and calibrate your phone if the compass drifts.";
+  qiblaStatus.textContent = "Move slowly until the arrows line up.";
   updateQiblaOfflineState();
   qiblaAngle.textContent =
     diff > 0
@@ -360,7 +360,7 @@ function applyLocation(position, sourceLabel) {
   );
   qiblaStatus.textContent =
     sourceLabel === "cached"
-      ? "Using your last known location."
+      ? "Using your saved location."
       : "Move your phone gently for the best result.";
 
   if (latestHeading !== null) {
