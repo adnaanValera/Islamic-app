@@ -29,8 +29,15 @@ const mainTasbeehLabel = document.getElementById("main-tasbeeh-label");
 const mainAyahCardShell = document.getElementById("main-ayah-card-shell");
 const mainDailyChecklist = document.getElementById("main-daily-checklist");
 const mainDailyProgressBar = document.getElementById("main-daily-progress-bar");
+const mainDailyHeadingCopy = document.getElementById("main-daily-heading-copy");
+const mainDailyCaption = document.getElementById("main-daily-caption");
 const mainQuranLast = document.getElementById("main-quran-last");
 const mainQuranLastMeta = document.getElementById("main-quran-last-meta");
+const mainDailyStoryKicker = document.getElementById("main-daily-story-kicker");
+const mainDailyStoryTitle = document.getElementById("main-daily-story-title");
+const mainDailyStoryBody = document.getElementById("main-daily-story-body");
+const mainConsistencyGrid = document.getElementById("main-consistency-grid");
+const mainConsistencyCopy = document.getElementById("main-consistency-copy");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -73,8 +80,46 @@ const mainAyahCandidates = [
   "113:1", "113:5",
   "114:1", "114:6",
 ];
+const mainDailyStoryEntries = [
+  {
+    kicker: "Prayer focus",
+    title: "Return for the next salah before the day pulls you away.",
+    body: "Nooriva works best when it becomes part of your daily rhythm, not just something you open occasionally.",
+  },
+  {
+    kicker: "Quran touch",
+    title: "Even a few ayahs a day keeps your connection alive.",
+    body: "Use the Quran section like a daily companion — small, steady reading always adds up.",
+  },
+  {
+    kicker: "Quiet reminder",
+    title: "A calm heart usually begins with a remembered prayer.",
+    body: "When the day feels full, returning to salah first can make everything else feel lighter.",
+  },
+  {
+    kicker: "Daily Noor",
+    title: "Consistency matters more than intensity.",
+    body: "The goal is not to do everything at once. It is to keep showing up, every single day.",
+  },
+  {
+    kicker: "Small action",
+    title: "Open Nooriva for what matters now, not for everything at once.",
+    body: "Current prayer, next adhan, one ayah, one dhikr — that alone can make the app worth reopening.",
+  },
+  {
+    kicker: "Tasbeeh",
+    title: "A short moment of dhikr can reset the tone of your day.",
+    body: "Keep one simple remembrance close so opening the app always leads to an immediate good action.",
+  },
+  {
+    kicker: "Jumu'ah mindset",
+    title: "Prepare for the important moments before they arrive.",
+    body: "Apps become part of life when they help you feel ready, not rushed.",
+  },
+];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
+const mainPrayerChecklistHistoryStorageKey = "nooriva-prayer-checklist-history";
 const quranHomeStorageKey = "nooriva-quran-state";
 const mainPrayerCacheStorageKey = "nooriva-main-prayer-cache";
 const mainAyahCacheStorageKey = "nooriva-main-ayah-cache";
@@ -316,6 +361,103 @@ function saveMainChecklistState(checked) {
       checked,
     }),
   );
+  updateMainChecklistHistory(dateKey, checked);
+}
+
+function loadMainChecklistHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(mainPrayerChecklistHistoryStorageKey) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function updateMainChecklistHistory(dateKey, checked) {
+  const completed = mainPrayers.filter((prayer) => Boolean(checked?.[prayer.label])).length;
+  const ratio = Math.max(0, Math.min(completed / mainPrayers.length, 1));
+  const history = loadMainChecklistHistory().filter((entry) => entry?.dateKey !== dateKey);
+  history.push({ dateKey, completed, ratio });
+  history.sort((a, b) => String(a.dateKey).localeCompare(String(b.dateKey)));
+  const trimmed = history.slice(-21);
+  localStorage.setItem(mainPrayerChecklistHistoryStorageKey, JSON.stringify(trimmed));
+}
+
+function renderMainDailyStory() {
+  const { dateKey } = getMainMalawiParts();
+  let seed = 0;
+
+  for (const character of dateKey) {
+    seed = (seed * 33 + character.charCodeAt(0)) % mainDailyStoryEntries.length;
+  }
+
+  const entry = mainDailyStoryEntries[seed % mainDailyStoryEntries.length];
+
+  if (mainDailyStoryKicker) {
+    mainDailyStoryKicker.textContent = entry.kicker;
+  }
+
+  if (mainDailyStoryTitle) {
+    mainDailyStoryTitle.textContent = entry.title;
+  }
+
+  if (mainDailyStoryBody) {
+    mainDailyStoryBody.textContent = entry.body;
+  }
+}
+
+function getMainWeekEntries() {
+  const history = loadMainChecklistHistory();
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: mainMalawiTimeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - index));
+    const dateKey = formatter.format(date);
+    const historyEntry = history.find((entry) => entry?.dateKey === dateKey);
+
+    return {
+      dateKey,
+      ratio: historyEntry?.ratio ?? 0,
+      completed: historyEntry?.completed ?? 0,
+    };
+  });
+}
+
+function renderMainConsistency() {
+  if (!mainConsistencyGrid || !mainConsistencyCopy) {
+    return;
+  }
+
+  const entries = getMainWeekEntries();
+  const completedDays = entries.filter((entry) => entry.ratio >= 1).length;
+  const activeDays = entries.filter((entry) => entry.completed > 0).length;
+
+  mainConsistencyGrid.innerHTML = entries
+    .map((entry, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - index));
+      const dayLabel = new Intl.DateTimeFormat("en-US", {
+        timeZone: mainMalawiTimeZone,
+        weekday: "narrow",
+      }).format(date);
+      const stateClass =
+        entry.ratio >= 1 ? "is-full" : entry.ratio >= 0.6 ? "is-strong" : entry.ratio > 0 ? "is-soft" : "";
+
+      return `<span class="main-consistency-day ${stateClass}" title="${dayLabel} · ${entry.completed}/5">${dayLabel}</span>`;
+    })
+    .join("");
+
+  mainConsistencyCopy.textContent =
+    completedDays > 0
+      ? `${completedDays} full day${completedDays === 1 ? "" : "s"} completed this week · ${activeDays} active day${activeDays === 1 ? "" : "s"}`
+      : activeDays > 0
+        ? `${activeDays} active day${activeDays === 1 ? "" : "s"} this week. Keep building your rhythm.`
+        : "Start with one prayer today and let the week build from there.";
 }
 
 function renderMainDailyChecklist() {
@@ -363,6 +505,26 @@ function renderMainDailyChecklist() {
     const progress = Math.max(0, Math.min((checkedCount / mainPrayers.length) * 100, 100));
     mainDailyProgressBar.style.width = `${progress}%`;
   }
+
+  if (mainDailyHeadingCopy) {
+    mainDailyHeadingCopy.textContent =
+      checkedCount === mainPrayers.length
+        ? "All 5 salah completed"
+        : checkedCount > 0
+          ? `${checkedCount} of 5 salah completed`
+          : "Track all 5 salah";
+  }
+
+  if (mainDailyCaption) {
+    mainDailyCaption.textContent =
+      checkedCount === mainPrayers.length
+        ? "Beautiful — today’s prayers are complete."
+        : checkedCount > 0
+          ? `${mainPrayers.length - checkedCount} prayer${mainPrayers.length - checkedCount === 1 ? "" : "s"} left for today.`
+          : "A simple check-in for your five prayers.";
+  }
+
+  renderMainConsistency();
 
   mainDailyChecklist.querySelectorAll("[data-main-prayer-check]").forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -1289,6 +1451,7 @@ contactForm?.addEventListener("submit", async (event) => {
 });
 
 renderMainGreeting();
+renderMainDailyStory();
 renderMainDailyChecklist();
 updateMainNotificationButton();
 loadMainPrayer();

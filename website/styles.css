@@ -4160,6 +4160,46 @@ h3 {
   box-shadow: 0 18px 32px rgba(79, 66, 39, 0.08);
 }
 
+.main-daily-story-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 26px;
+  border: 1px solid rgba(198, 161, 90, 0.18);
+  background:
+    radial-gradient(circle at top right, rgba(198, 161, 90, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 243, 235, 0.98));
+  box-shadow: 0 16px 30px rgba(79, 66, 39, 0.08);
+}
+
+.main-daily-story-shell {
+  display: grid;
+  gap: 8px;
+}
+
+.main-daily-story-kicker {
+  margin: 0;
+  color: var(--gold-soft);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.main-daily-story-title {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.main-daily-story-body {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
 .main-daily-progress {
   position: relative;
   overflow: hidden;
@@ -4794,6 +4834,46 @@ h3 {
   opacity: 0.96;
 }
 
+.main-card-consistency {
+  align-content: start;
+}
+
+.main-consistency-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.main-consistency-day {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(198, 161, 90, 0.14);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.main-consistency-day.is-soft {
+  background: linear-gradient(180deg, rgba(215, 183, 119, 0.12), rgba(255, 255, 255, 0.96));
+  color: var(--text-strong);
+}
+
+.main-consistency-day.is-strong {
+  background: linear-gradient(180deg, rgba(215, 183, 119, 0.2), rgba(255, 255, 255, 0.98));
+  border-color: rgba(198, 161, 90, 0.24);
+  color: var(--text-strong);
+}
+
+.main-consistency-day.is-full {
+  background: linear-gradient(180deg, rgba(198, 161, 90, 0.84), rgba(215, 183, 119, 0.96));
+  border-color: rgba(198, 161, 90, 0.34);
+  color: #fffaf2;
+  box-shadow: 0 12px 22px rgba(198, 161, 90, 0.16);
+}
+
 .main-tasbeeh-button.is-tapping {
   transform: scale(0.985);
 }
@@ -5005,6 +5085,11 @@ h3 {
     border-radius: 20px;
   }
 
+  .main-daily-story-card {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
   .main-daily-checklist {
     gap: 6px;
   }
@@ -5024,6 +5109,16 @@ h3 {
   .main-card {
     padding: 12px;
     border-radius: 20px;
+  }
+
+  .main-consistency-grid {
+    gap: 6px;
+  }
+
+  .main-consistency-day {
+    min-height: 40px;
+    border-radius: 14px;
+    font-size: 0.76rem;
   }
 
   .main-ayah-arabic {
