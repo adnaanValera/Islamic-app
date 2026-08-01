@@ -4075,7 +4075,20 @@ h3 {
 }
 
 .main-hero-section {
-  padding-bottom: 2px;
+  position: relative;
+  padding: 8px 0 6px;
+  margin-bottom: 2px;
+}
+
+.main-hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top center, rgba(198, 161, 90, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(249, 246, 240, 0));
+  pointer-events: none;
 }
 
 .main-hero-section .hero-copy > * {
@@ -4094,8 +4107,21 @@ h3 {
   line-height: 1.1;
 }
 
+.main-hero-subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: mainFadeUp 700ms ease forwards;
+  animation-delay: 120ms;
+}
+
 .main-hero-section .hero-actions {
-  animation-delay: 160ms;
+  margin-top: 14px;
+  animation-delay: 170ms;
 }
 
 .main-hero-section .install-status {
@@ -4104,7 +4130,7 @@ h3 {
 
 .main-dashboard-section {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .main-essentials-header {
@@ -4150,6 +4176,13 @@ h3 {
   background: linear-gradient(90deg, rgba(191, 149, 77, 0.7), rgba(212, 180, 118, 0.96));
   box-shadow: 0 0 16px rgba(212, 180, 118, 0.26);
   transition: width 260ms ease, box-shadow 220ms ease;
+}
+
+.main-daily-caption {
+  margin: -4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .main-daily-link {
@@ -4331,11 +4364,13 @@ h3 {
 }
 
 .main-card-prayer-hero {
-  padding: 20px;
+  padding: 22px;
   background:
-    radial-gradient(circle at top right, rgba(198, 161, 90, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 244, 236, 0.98));
-  box-shadow: 0 22px 38px rgba(79, 66, 39, 0.1);
+    radial-gradient(circle at top right, rgba(198, 161, 90, 0.22), transparent 28%),
+    radial-gradient(circle at 18% 18%, rgba(31, 46, 41, 0.05), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 244, 236, 0.99));
+  border-color: rgba(198, 161, 90, 0.22);
+  box-shadow: 0 24px 42px rgba(79, 66, 39, 0.11);
 }
 
 .main-card {
@@ -4506,11 +4541,17 @@ h3 {
   text-transform: uppercase;
 }
 
+.main-card-link-pill-live {
+  background: linear-gradient(180deg, rgba(215, 183, 119, 0.24), rgba(255, 255, 255, 0.92));
+  border-color: rgba(198, 161, 90, 0.28);
+  color: var(--text-strong);
+}
+
 .main-prayer-banner {
   min-height: 100%;
   gap: 10px;
   align-content: start;
-  padding: 8px 4px 4px;
+  padding: 12px 10px 8px;
   border-radius: 22px;
   transition: box-shadow 220ms ease, background 220ms ease;
 }
@@ -4540,14 +4581,14 @@ h3 {
 
 .main-prayer-meta {
   color: var(--text-strong);
-  font-size: 1.22rem;
+  font-size: 1.34rem;
   font-weight: 700;
 }
 
 .main-next-salah {
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.92rem;
+  line-height: 1.58;
   font-weight: 600;
 }
 
@@ -4815,6 +4856,25 @@ h3 {
   border-color: rgba(215, 183, 119, 0.18);
 }
 
+.home-mobile-bottom-nav {
+  border-radius: 30px;
+  border-color: rgba(198, 161, 90, 0.2);
+  background:
+    radial-gradient(circle at top center, rgba(198, 161, 90, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(244, 236, 223, 0.98));
+  box-shadow: 0 24px 44px rgba(79, 66, 39, 0.16);
+}
+
+.home-mobile-bottom-nav .mobile-bottom-nav-toggle {
+  min-height: 58px;
+  border-radius: 22px;
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.06);
+}
+
+.home-mobile-bottom-nav a[aria-current="page"] {
+  box-shadow: 0 10px 18px rgba(188, 135, 64, 0.22);
+}
+
 .cta-section .cta-card {
   opacity: 0;
   transform: translateY(18px);
@@ -4930,6 +4990,10 @@ h3 {
 
   .main-hero-section {
     padding-top: 4px;
+  }
+
+  .main-hero-subtitle {
+    font-size: 0.88rem;
   }
 
   .main-dashboard-section {
