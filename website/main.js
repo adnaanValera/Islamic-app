@@ -7,6 +7,7 @@ const mainPrayerLabel = document.getElementById("main-prayer-label");
 const mainPrayerName = document.getElementById("main-prayer-name");
 const mainPrayerTime = document.getElementById("main-prayer-time");
 const mainNextSalah = document.getElementById("main-next-salah");
+const mainPrayerGuidance = document.getElementById("main-prayer-guidance");
 const mainPrayerProgress = document.getElementById("main-prayer-progress");
 const mainQiblaArrow = document.getElementById("main-qibla-arrow");
 const mainQiblaPhone = document.getElementById("main-qibla-phone");
@@ -17,6 +18,7 @@ const mainAyahReference = document.getElementById("main-ayah-reference");
 const mainAyahDownload = document.getElementById("main-ayah-download");
 const mainAyahCopyStatus = document.getElementById("main-ayah-copy-status");
 const mainGreeting = document.getElementById("main-greeting");
+const mainHeroNote = document.getElementById("main-hero-note");
 const mainNotificationButton = document.getElementById("main-enable-notifications");
 const homeInstallStatus = document.getElementById("home-install-status");
 const contactForm = document.getElementById("contact-form");
@@ -33,6 +35,10 @@ const mainDailyHeadingCopy = document.getElementById("main-daily-heading-copy");
 const mainDailyCaption = document.getElementById("main-daily-caption");
 const mainQuranLast = document.getElementById("main-quran-last");
 const mainQuranLastMeta = document.getElementById("main-quran-last-meta");
+const mainQuranResumePill = document.getElementById("main-quran-resume-pill");
+const mainJumuahStrip = document.getElementById("main-jumuah-strip");
+const mainJumuahTitle = document.getElementById("main-jumuah-title");
+const mainJumuahMeta = document.getElementById("main-jumuah-meta");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -91,6 +97,7 @@ let currentAyahOfDay = null;
 let mainSession = loadMainSession();
 let mainPushPublicKey = "";
 let mainSpecialMoments = {};
+let mainJumuahTimes = { adhan: "--:--", khutbah: "--:--" };
 let mainLastToggledPrayerLabel = "";
 let mainLastToggleAt = 0;
 let mainLastNotificationMinuteKey = "";
@@ -141,6 +148,7 @@ function getMainMalawiParts() {
     dateKey: `${values.year}-${values.month}-${values.day}`,
     timeKey: `${values.hour}:${values.minute}`,
     secondKey: values.second,
+    weekday: new Intl.DateTimeFormat("en-US", { timeZone: mainMalawiTimeZone, weekday: "long" }).format(new Date()),
   };
 }
 
@@ -400,6 +408,16 @@ function renderMainGreeting() {
   if (mainGreeting) {
     mainGreeting.textContent = name ? `${salaam} ${name}` : salaam;
   }
+
+  if (mainHeroNote) {
+    const { weekday } = getMainMalawiParts();
+    mainHeroNote.textContent =
+      weekday === "Friday"
+        ? "May Allah accept your Jumu'ah and fill your day with barakah."
+        : weekday === "Monday"
+          ? "A new week begins gently — start with salah and one good intention."
+          : "May Allah put barakah in your day.";
+  }
 }
 
 function base64UrlToUint8Array(base64String) {
@@ -587,6 +605,18 @@ function renderMainPrayer() {
       : `Next salah · ${nextPrayer?.label ?? "--"} · ${nextPrayer?.displayTime ?? "--:--"} · ${formatHoursAndMinutes(minutesUntilNextSalah)}`;
   }
 
+  if (mainPrayerGuidance) {
+    if (currentPrayer?.kind === "prayer") {
+      mainPrayerGuidance.textContent = `${currentPrayer.label} is active now. Turn to Allah before the window passes.`;
+    } else if (currentPrayer) {
+      mainPrayerGuidance.textContent = `${currentPrayer.label} is active now. Stay aware of the next salah.`;
+    } else if (nextPrayer?.label) {
+      mainPrayerGuidance.textContent = `Prepare for ${nextPrayer.label} with wudhu, calm, and intention.`;
+    } else {
+      mainPrayerGuidance.textContent = "Stay close to your prayer times today.";
+    }
+  }
+
   if (mainPrayerProgress) {
     if (currentPrayer?.kind === "prayer" && currentAdhanMinutes) {
       const adhanWait = Math.max(currentAdhanMinutes - currentMinutes, 0);
@@ -634,9 +664,14 @@ async function loadMainPrayer() {
       istiwa: data?.istiwa ?? "--:--",
       zawaalEnd: data?.zawaalEnd ?? "--:--",
     };
+    mainJumuahTimes = {
+      adhan: data?.jumuahTime1 ?? "--:--",
+      khutbah: data?.jumuahTime3 ?? "--:--",
+    };
 
     renderMainPrayer();
     renderMainDailyChecklist();
+    renderMainJumuah();
     setMainConnectivityStatus("Ready.");
     if (!mainPrayerRefreshIntervalStarted) {
       window.setInterval(renderMainPrayer, 60000);
@@ -660,8 +695,13 @@ async function loadMainPrayer() {
         istiwa: data?.istiwa ?? "--:--",
         zawaalEnd: data?.zawaalEnd ?? "--:--",
       };
+      mainJumuahTimes = {
+        adhan: data?.jumuahTime1 ?? "--:--",
+        khutbah: data?.jumuahTime3 ?? "--:--",
+      };
       renderMainPrayer();
       renderMainDailyChecklist();
+      renderMainJumuah();
       setMainConnectivityStatus("Offline. Showing saved prayer times.", true);
       return;
     }
@@ -671,6 +711,23 @@ async function loadMainPrayer() {
     if (mainNextSalah) mainNextSalah.textContent = "Next salah unavailable";
     setMainConnectivityStatus("Offline. Connect once to load your prayer data.", true);
   }
+}
+
+function renderMainJumuah() {
+  if (!mainJumuahStrip || !mainJumuahMeta || !mainJumuahTitle) {
+    return;
+  }
+
+  const { weekday } = getMainMalawiParts();
+  const isFriday = weekday === "Friday";
+  mainJumuahStrip.hidden = !isFriday;
+
+  if (!isFriday) {
+    return;
+  }
+
+  mainJumuahTitle.textContent = "Jumu'ah today";
+  mainJumuahMeta.textContent = `Adhan ${mainJumuahTimes.adhan} · Khutbah ${mainJumuahTimes.khutbah}`;
 }
 
 function getAyahReferenceForToday() {
@@ -1182,13 +1239,13 @@ async function maybeSendMainPrayerNotification() {
 }
 
 function setupMainTasbeeh() {
-  renderMainTasbeeh();
+  renderMainTasbeehEnhanced();
 
   mainTasbeehButton?.addEventListener("click", () => {
     const state = getMainTasbeehState();
     state.count += 1;
     saveMainTasbeehState(state);
-    renderMainTasbeeh();
+    renderMainTasbeehEnhanced();
     mainTasbeehButton.classList.add("is-tapping");
     window.setTimeout(() => mainTasbeehButton.classList.remove("is-tapping"), 140);
   });
@@ -1285,7 +1342,111 @@ function loadMainQibla() {
   );
 }
 
-mainAyahDownload?.addEventListener("click", copyMainAyah);
+function copyMainAyahEnhanced() {
+  if (!currentAyahOfDay) {
+    return Promise.resolve();
+  }
+
+  const text = `${currentAyahOfDay.arabic}\n\n${currentAyahOfDay.english}\n\n${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`;
+
+  if (navigator.share) {
+    return navigator
+      .share({
+        title: `${currentAyahOfDay.surahName} ${currentAyahOfDay.ayahInSurah}`,
+        text,
+      })
+      .then(() => {
+        if (mainAyahCopyStatus) mainAyahCopyStatus.textContent = "Shared";
+      })
+      .catch(() => undefined);
+  }
+
+  return navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      if (mainAyahCopyStatus) {
+        mainAyahCopyStatus.textContent = "Copied";
+        window.setTimeout(() => {
+          if (mainAyahCopyStatus.textContent === "Copied") {
+            mainAyahCopyStatus.textContent = "";
+          }
+        }, 1800);
+      }
+    })
+    .catch(() => {
+      if (mainAyahCopyStatus) mainAyahCopyStatus.textContent = "Copy failed";
+    });
+}
+
+async function loadMainQuranLastReadingEnhanced() {
+  const state = loadQuranHomeState();
+  const surahKey = String(state?.lastReading?.surahKey || state?.selectedKey || "1");
+  const page = Math.max(1, Number(state?.lastReading?.page || state?.currentPage || 1));
+  const bothChunkIndex = Math.max(0, Number(state?.bothChunkIndex || 0));
+  const view = String(state?.lastReading?.view || state?.view || "both");
+
+  try {
+    const [surahResponse, pageResponse] = await Promise.all([
+      fetch(`${mainAyahApiBase}/surah/${surahKey}`, { cache: "force-cache" }),
+      fetch(`${mainAyahApiBase}/page/${page}/quran-uthmani`, { cache: "force-cache" }),
+    ]);
+
+    const surahPayload = await surahResponse.json();
+    const pagePayload = await pageResponse.json();
+    const surahName = surahPayload?.data?.englishName ?? `Surah ${surahKey}`;
+    const ayahs = pagePayload?.data?.ayahs ?? [];
+    const targetAyah = ayahs[Math.min(bothChunkIndex * 3, Math.max(ayahs.length - 1, 0))];
+    const ayahNumber = targetAyah?.numberInSurah ?? 1;
+    const viewLabel = view === "arabic" ? "Arabic" : view === "english" ? "English" : "Both";
+
+    if (mainQuranLast) {
+      mainQuranLast.textContent = surahName;
+    }
+
+    if (mainQuranLastMeta) {
+      mainQuranLastMeta.textContent = `Ayah ${ayahNumber} · Page ${page} · ${viewLabel}`;
+    }
+
+    if (mainQuranResumePill) {
+      mainQuranResumePill.textContent = `Resume ${surahName}`;
+    }
+  } catch {
+    if (mainQuranLast) {
+      mainQuranLast.textContent = "Continue reading";
+    }
+    if (mainQuranLastMeta) {
+      mainQuranLastMeta.textContent = "Open your reading and continue where you left off.";
+    }
+    if (mainQuranResumePill) {
+      mainQuranResumePill.textContent = "Resume";
+    }
+  }
+}
+
+function renderMainTasbeehEnhanced() {
+  const state = getMainTasbeehState();
+  if (mainTasbeehCount) mainTasbeehCount.textContent = String(state.count);
+
+  if (mainTasbeehLabel) {
+    try {
+      const raw = localStorage.getItem("nooriva-tasbeeh-state");
+      const parsed = JSON.parse(raw || "null");
+      const mode = parsed?.activeDhikr;
+      const labelMap = {
+        subhanallah: "SubhanAllah",
+        alhamdulillah: "Alhamdulillah",
+        allahuakbar: "Allahu Akbar",
+        astaghfirullah: "Astaghfirullah",
+        custom: parsed?.customDhikrLabel || "Today",
+      };
+      mainTasbeehLabel.textContent = labelMap[mode] || "Today";
+    } catch {
+      mainTasbeehLabel.textContent = "Today";
+    }
+  }
+}
+
+mainAyahDownload?.addEventListener("click", copyMainAyahEnhanced);
 window.addEventListener("resize", fitAyahCardText);
 mainNotificationButton?.addEventListener("click", enableMainNotifications);
 contactForm?.addEventListener("submit", async (event) => {
@@ -1313,7 +1474,7 @@ renderMainDailyChecklist();
 updateMainNotificationButton();
 loadMainPrayer();
 loadMainAyah();
-loadMainQuranLastReading();
+loadMainQuranLastReadingEnhanced();
 setupMainTasbeeh();
 loadMainQibla();
 loadMainPushPublicKey();
@@ -1325,7 +1486,7 @@ window.addEventListener("online", () => {
   setMainConnectivityStatus("Back online.");
   loadMainPrayer().catch(() => undefined);
   loadMainAyah().catch(() => undefined);
-  loadMainQuranLastReading().catch(() => undefined);
+  loadMainQuranLastReadingEnhanced().catch(() => undefined);
 });
 
 setInterval(() => {
