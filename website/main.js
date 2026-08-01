@@ -1273,6 +1273,19 @@ function normalizeMainHeading(degrees) {
   return (degrees % 360 + 360) % 360;
 }
 
+function loadStoredMainQiblaLocation() {
+  try {
+    const raw = localStorage.getItem("nooriva-qibla-last-location");
+    const parsed = JSON.parse(raw || "null");
+    if (typeof parsed?.latitude !== "number" || typeof parsed?.longitude !== "number") {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 function getMainScreenAngle() {
   if (window.screen?.orientation && typeof window.screen.orientation.angle === "number") {
     return window.screen.orientation.angle;
@@ -1296,7 +1309,7 @@ function updateMainQiblaVisual() {
   } else {
     if (mainQiblaArrow) mainQiblaArrow.style.transform = `rotate(${mainBearing}deg)`;
     if (mainQiblaPhone) mainQiblaPhone.style.opacity = "0.16";
-    if (mainQiblaStatus) mainQiblaStatus.textContent = "Compass opening";
+    if (mainQiblaStatus) mainQiblaStatus.textContent = "Qibla bearing ready";
   }
 }
 
@@ -1323,8 +1336,20 @@ function startMainQiblaCompass() {
 }
 
 function loadMainQibla() {
+  const storedLocation = loadStoredMainQiblaLocation();
+
+  if (storedLocation) {
+    mainBearing = calculateMainQiblaBearing(storedLocation.latitude, storedLocation.longitude);
+    updateMainQiblaVisual();
+  }
+
   if (!navigator.geolocation) {
-    if (mainQiblaStatus) mainQiblaStatus.textContent = "Location unavailable";
+    if (mainQiblaStatus) {
+      mainQiblaStatus.textContent = storedLocation ? "Using saved qibla direction" : "Location unavailable";
+    }
+    if (!storedLocation && mainQiblaPhone) {
+      mainQiblaPhone.style.opacity = "0.16";
+    }
     return;
   }
 
@@ -1335,6 +1360,12 @@ function loadMainQibla() {
       startMainQiblaCompass();
     },
     () => {
+      if (storedLocation) {
+        if (mainQiblaStatus) mainQiblaStatus.textContent = "Using saved qibla direction";
+        startMainQiblaCompass();
+        return;
+      }
+
       if (mainQiblaStatus) mainQiblaStatus.textContent = "Location needed";
     },
     {

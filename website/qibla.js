@@ -367,11 +367,29 @@ function applyLocation(position, sourceLabel) {
     updateAlignment(latestHeading);
   } else {
     qiblaAngle.textContent = "Preparing compass...";
+    if (currentBearing !== null) {
+      useBearingFallback(sourceLabel === "cached" ? "Using your saved location for Qibla bearing." : "Using your location for Qibla bearing.");
+    }
   }
 }
 
 function startLocationUpdates() {
   if (!navigator.geolocation) {
+    const storedLocation = loadStoredLocation();
+    if (storedLocation) {
+      applyLocation(
+        {
+          coords: {
+            latitude: storedLocation.latitude,
+            longitude: storedLocation.longitude,
+          },
+        },
+        "cached",
+      );
+      useBearingFallback("Geolocation is unavailable on this device. Using your saved location.");
+      return;
+    }
+
     qiblaStatus.textContent = "Geolocation is not supported on this device.";
     setText(qiblaAlignment, "Unavailable");
     setAccuracyLabel("Unavailable");
@@ -403,7 +421,11 @@ function startLocationUpdates() {
 
   navigator.geolocation.getCurrentPosition(
     (position) => applyLocation(position, "cached"),
-    () => undefined,
+    () => {
+      if (storedLocation) {
+        useBearingFallback("Using your saved location because live location is unavailable.");
+      }
+    },
     {
       enableHighAccuracy: false,
       timeout: 1500,
@@ -425,6 +447,8 @@ function startLocationUpdates() {
         setCompassMode("Unavailable");
         setFallbackLabel("No location");
         setHelper("Location blocked", "Allow location so Nooriva can calculate the Qibla properly.");
+      } else {
+        useBearingFallback("Using your saved location because live location is blocked.");
       }
     },
     {
