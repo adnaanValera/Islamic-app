@@ -721,8 +721,11 @@ function renderMainJumuah() {
   const { weekday } = getMainMalawiParts();
   const isFriday = weekday === "Friday";
   mainJumuahStrip.hidden = !isFriday;
+  mainJumuahStrip.setAttribute("aria-hidden", String(!isFriday));
 
   if (!isFriday) {
+    mainJumuahTitle.textContent = "Jumu'ah";
+    mainJumuahMeta.textContent = "";
     return;
   }
 
@@ -1471,6 +1474,7 @@ contactForm?.addEventListener("submit", async (event) => {
 
 renderMainGreeting();
 renderMainDailyChecklist();
+renderMainJumuah();
 updateMainNotificationButton();
 loadMainPrayer();
 loadMainAyah();
