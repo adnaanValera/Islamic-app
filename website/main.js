@@ -38,8 +38,6 @@ const mainDailyStoryTitle = document.getElementById("main-daily-story-title");
 const mainDailyStoryBody = document.getElementById("main-daily-story-body");
 const mainDailyStoryMeta = document.getElementById("main-daily-story-meta");
 const mainDailyStoryReference = document.getElementById("main-daily-story-reference");
-const mainConsistencyGrid = document.getElementById("main-consistency-grid");
-const mainConsistencyCopy = document.getElementById("main-consistency-copy");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -135,7 +133,6 @@ const mainDailyStoryEntries = [
 ];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
-const mainPrayerChecklistHistoryStorageKey = "nooriva-prayer-checklist-history";
 const quranHomeStorageKey = "nooriva-quran-state";
 const mainPrayerCacheStorageKey = "nooriva-main-prayer-cache";
 const mainAyahCacheStorageKey = "nooriva-main-ayah-cache";
@@ -377,25 +374,6 @@ function saveMainChecklistState(checked) {
       checked,
     }),
   );
-  updateMainChecklistHistory(dateKey, checked);
-}
-
-function loadMainChecklistHistory() {
-  try {
-    return JSON.parse(localStorage.getItem(mainPrayerChecklistHistoryStorageKey) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function updateMainChecklistHistory(dateKey, checked) {
-  const completed = mainPrayers.filter((prayer) => Boolean(checked?.[prayer.label])).length;
-  const ratio = Math.max(0, Math.min(completed / mainPrayers.length, 1));
-  const history = loadMainChecklistHistory().filter((entry) => entry?.dateKey !== dateKey);
-  history.push({ dateKey, completed, ratio });
-  history.sort((a, b) => String(a.dateKey).localeCompare(String(b.dateKey)));
-  const trimmed = history.slice(-21);
-  localStorage.setItem(mainPrayerChecklistHistoryStorageKey, JSON.stringify(trimmed));
 }
 
 function renderMainDailyStory() {
@@ -427,61 +405,6 @@ function renderMainDailyStory() {
   if (mainDailyStoryReference) {
     mainDailyStoryReference.textContent = entry.reference ?? "";
   }
-}
-
-function getMainWeekEntries() {
-  const history = loadMainChecklistHistory();
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: mainMalawiTimeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (6 - index));
-    const dateKey = formatter.format(date);
-    const historyEntry = history.find((entry) => entry?.dateKey === dateKey);
-
-    return {
-      dateKey,
-      ratio: historyEntry?.ratio ?? 0,
-      completed: historyEntry?.completed ?? 0,
-    };
-  });
-}
-
-function renderMainConsistency() {
-  if (!mainConsistencyGrid || !mainConsistencyCopy) {
-    return;
-  }
-
-  const entries = getMainWeekEntries();
-  const completedDays = entries.filter((entry) => entry.ratio >= 1).length;
-  const activeDays = entries.filter((entry) => entry.completed > 0).length;
-
-  mainConsistencyGrid.innerHTML = entries
-    .map((entry, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (6 - index));
-      const dayLabel = new Intl.DateTimeFormat("en-US", {
-        timeZone: mainMalawiTimeZone,
-        weekday: "narrow",
-      }).format(date);
-      const stateClass =
-        entry.ratio >= 1 ? "is-full" : entry.ratio >= 0.6 ? "is-strong" : entry.ratio > 0 ? "is-soft" : "";
-
-      return `<span class="main-consistency-day ${stateClass}" title="${dayLabel} · ${entry.completed}/5">${dayLabel}</span>`;
-    })
-    .join("");
-
-  mainConsistencyCopy.textContent =
-    completedDays > 0
-      ? `${completedDays} full day${completedDays === 1 ? "" : "s"} completed this week · ${activeDays} active day${activeDays === 1 ? "" : "s"}`
-      : activeDays > 0
-        ? `${activeDays} active day${activeDays === 1 ? "" : "s"} this week. Keep building your rhythm.`
-        : "Start with one prayer today and let the week build from there.";
 }
 
 function renderMainDailyChecklist() {
@@ -547,8 +470,6 @@ function renderMainDailyChecklist() {
           ? `${mainPrayers.length - checkedCount} prayer${mainPrayers.length - checkedCount === 1 ? "" : "s"} left for today.`
           : "A simple check-in for your five prayers.";
   }
-
-  renderMainConsistency();
 
   mainDailyChecklist.querySelectorAll("[data-main-prayer-check]").forEach((button) => {
     button.addEventListener("click", (event) => {
