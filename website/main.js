@@ -33,11 +33,6 @@ const mainDailyHeadingCopy = document.getElementById("main-daily-heading-copy");
 const mainDailyCaption = document.getElementById("main-daily-caption");
 const mainQuranLast = document.getElementById("main-quran-last");
 const mainQuranLastMeta = document.getElementById("main-quran-last-meta");
-const mainDailyStoryKicker = document.getElementById("main-daily-story-kicker");
-const mainDailyStoryTitle = document.getElementById("main-daily-story-title");
-const mainDailyStoryBody = document.getElementById("main-daily-story-body");
-const mainDailyStoryMeta = document.getElementById("main-daily-story-meta");
-const mainDailyStoryReference = document.getElementById("main-daily-story-reference");
 
 const mainPrayers = [
   { athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", label: "Fajr", endKey: "sunrise" },
@@ -79,57 +74,6 @@ const mainAyahCandidates = [
   "112:1", "112:2", "112:3", "112:4",
   "113:1", "113:5",
   "114:1", "114:6",
-];
-const mainDailyStoryEntries = [
-  {
-    type: "Reminder",
-    kicker: "Prayer focus",
-    title: "Return for the next salah before the day pulls you away.",
-    body: "Nooriva works best when it becomes part of your daily rhythm, not just something you open occasionally.",
-    reference: "Nooriva Daily",
-  },
-  {
-    type: "Reminder",
-    kicker: "Quran touch",
-    title: "Even a few ayahs a day keeps your connection alive.",
-    body: "Use the Quran section like a daily companion — small, steady reading always adds up.",
-    reference: "Nooriva Daily",
-  },
-  {
-    type: "Quran",
-    kicker: "Quran reminder",
-    title: "Indeed, in the remembrance of Allah do hearts find rest.",
-    body: "Open the Quran, even briefly, and let the day slow down around what matters.",
-    reference: "Surah Ar-Ra'd 13:28",
-  },
-  {
-    type: "Hadith",
-    kicker: "Daily hadith",
-    title: "The most beloved deeds to Allah are those done consistently, even if they are small.",
-    body: "A little every day builds a life of worship better than rare bursts that quickly disappear.",
-    reference: "Sahih al-Bukhari and Sahih Muslim",
-  },
-  {
-    type: "Reminder",
-    kicker: "Daily Noor",
-    title: "Consistency matters more than intensity.",
-    body: "The goal is not to do everything at once. It is to keep showing up, every single day.",
-    reference: "Nooriva Daily",
-  },
-  {
-    type: "Hadith",
-    kicker: "Daily hadith",
-    title: "The strong one is not the one who overcomes people by strength, but the one who controls himself while angry.",
-    body: "Let Nooriva be a place you return to before reacting, so worship shapes your response to the day.",
-    reference: "Sahih al-Bukhari",
-  },
-  {
-    type: "Quran",
-    kicker: "Quran reminder",
-    title: "And rush to forgiveness from your Lord and a Garden as wide as the heavens and earth.",
-    body: "Sometimes the best spiritual momentum starts with one small sincere action right now.",
-    reference: "Surah Aal 'Imran 3:133",
-  },
 ];
 const accountSessionStorageKey = "nooriva-account-session";
 const mainPrayerChecklistStorageKey = "nooriva-prayer-checklist";
@@ -374,37 +318,6 @@ function saveMainChecklistState(checked) {
       checked,
     }),
   );
-}
-
-function renderMainDailyStory() {
-  const { dateKey } = getMainMalawiParts();
-  let seed = 0;
-
-  for (const character of dateKey) {
-    seed = (seed * 33 + character.charCodeAt(0)) % mainDailyStoryEntries.length;
-  }
-
-  const entry = mainDailyStoryEntries[seed % mainDailyStoryEntries.length];
-
-  if (mainDailyStoryKicker) {
-    mainDailyStoryKicker.textContent = entry.kicker;
-  }
-
-  if (mainDailyStoryMeta) {
-    mainDailyStoryMeta.textContent = entry.type;
-  }
-
-  if (mainDailyStoryTitle) {
-    mainDailyStoryTitle.textContent = entry.title;
-  }
-
-  if (mainDailyStoryBody) {
-    mainDailyStoryBody.textContent = entry.body;
-  }
-
-  if (mainDailyStoryReference) {
-    mainDailyStoryReference.textContent = entry.reference ?? "";
-  }
 }
 
 function renderMainDailyChecklist() {
@@ -1396,7 +1309,6 @@ contactForm?.addEventListener("submit", async (event) => {
 });
 
 renderMainGreeting();
-renderMainDailyStory();
 renderMainDailyChecklist();
 updateMainNotificationButton();
 loadMainPrayer();

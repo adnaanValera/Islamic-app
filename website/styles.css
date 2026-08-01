@@ -4148,76 +4148,6 @@ h3 {
   box-shadow: 0 18px 32px rgba(79, 66, 39, 0.08);
 }
 
-.main-daily-story-card {
-  display: grid;
-  gap: 12px;
-  padding: 18px;
-  border-radius: 26px;
-  border: 1px solid rgba(198, 161, 90, 0.22);
-  background:
-    radial-gradient(circle at top right, rgba(198, 161, 90, 0.16), transparent 28%),
-    radial-gradient(circle at 14% 18%, rgba(31, 46, 41, 0.055), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 243, 235, 1));
-  box-shadow: 0 22px 40px rgba(79, 66, 39, 0.095);
-}
-
-.main-daily-story-shell {
-  display: grid;
-  gap: 10px;
-  padding: 10px 6px 4px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.16));
-}
-
-.main-daily-story-branding {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2px;
-}
-
-.main-daily-story-logo {
-  width: clamp(82px, 18vw, 112px);
-  height: auto;
-  display: block;
-  opacity: 0.96;
-}
-
-.main-daily-story-kicker {
-  margin: 0;
-  color: var(--gold-soft);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.main-daily-story-title {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: 1.16rem;
-  line-height: 1.46;
-  text-wrap: balance;
-  text-align: center;
-}
-
-.main-daily-story-body {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.main-daily-story-reference {
-  margin: 0;
-  color: var(--gold-soft);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-align: center;
-}
-
 .main-daily-progress {
   position: relative;
   overflow: hidden;
@@ -5061,11 +4991,6 @@ h3 {
 
   .main-daily-card {
     padding: 12px;
-    border-radius: 20px;
-  }
-
-  .main-daily-story-card {
-    padding: 14px;
     border-radius: 20px;
   }
 
