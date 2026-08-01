@@ -36,6 +36,8 @@ const mainQuranLastMeta = document.getElementById("main-quran-last-meta");
 const mainDailyStoryKicker = document.getElementById("main-daily-story-kicker");
 const mainDailyStoryTitle = document.getElementById("main-daily-story-title");
 const mainDailyStoryBody = document.getElementById("main-daily-story-body");
+const mainDailyStoryMeta = document.getElementById("main-daily-story-meta");
+const mainDailyStoryReference = document.getElementById("main-daily-story-reference");
 const mainConsistencyGrid = document.getElementById("main-consistency-grid");
 const mainConsistencyCopy = document.getElementById("main-consistency-copy");
 
@@ -82,39 +84,53 @@ const mainAyahCandidates = [
 ];
 const mainDailyStoryEntries = [
   {
+    type: "Reminder",
     kicker: "Prayer focus",
     title: "Return for the next salah before the day pulls you away.",
     body: "Nooriva works best when it becomes part of your daily rhythm, not just something you open occasionally.",
+    reference: "Nooriva Daily",
   },
   {
+    type: "Reminder",
     kicker: "Quran touch",
     title: "Even a few ayahs a day keeps your connection alive.",
     body: "Use the Quran section like a daily companion — small, steady reading always adds up.",
+    reference: "Nooriva Daily",
   },
   {
-    kicker: "Quiet reminder",
-    title: "A calm heart usually begins with a remembered prayer.",
-    body: "When the day feels full, returning to salah first can make everything else feel lighter.",
+    type: "Quran",
+    kicker: "Quran reminder",
+    title: "Indeed, in the remembrance of Allah do hearts find rest.",
+    body: "Open the Quran, even briefly, and let the day slow down around what matters.",
+    reference: "Surah Ar-Ra'd 13:28",
   },
   {
+    type: "Hadith",
+    kicker: "Daily hadith",
+    title: "The most beloved deeds to Allah are those done consistently, even if they are small.",
+    body: "A little every day builds a life of worship better than rare bursts that quickly disappear.",
+    reference: "Sahih al-Bukhari and Sahih Muslim",
+  },
+  {
+    type: "Reminder",
     kicker: "Daily Noor",
     title: "Consistency matters more than intensity.",
     body: "The goal is not to do everything at once. It is to keep showing up, every single day.",
+    reference: "Nooriva Daily",
   },
   {
-    kicker: "Small action",
-    title: "Open Nooriva for what matters now, not for everything at once.",
-    body: "Current prayer, next adhan, one ayah, one dhikr — that alone can make the app worth reopening.",
+    type: "Hadith",
+    kicker: "Daily hadith",
+    title: "The strong one is not the one who overcomes people by strength, but the one who controls himself while angry.",
+    body: "Let Nooriva be a place you return to before reacting, so worship shapes your response to the day.",
+    reference: "Sahih al-Bukhari",
   },
   {
-    kicker: "Tasbeeh",
-    title: "A short moment of dhikr can reset the tone of your day.",
-    body: "Keep one simple remembrance close so opening the app always leads to an immediate good action.",
-  },
-  {
-    kicker: "Jumu'ah mindset",
-    title: "Prepare for the important moments before they arrive.",
-    body: "Apps become part of life when they help you feel ready, not rushed.",
+    type: "Quran",
+    kicker: "Quran reminder",
+    title: "And rush to forgiveness from your Lord and a Garden as wide as the heavens and earth.",
+    body: "Sometimes the best spiritual momentum starts with one small sincere action right now.",
+    reference: "Surah Aal 'Imran 3:133",
   },
 ];
 const accountSessionStorageKey = "nooriva-account-session";
@@ -396,12 +412,20 @@ function renderMainDailyStory() {
     mainDailyStoryKicker.textContent = entry.kicker;
   }
 
+  if (mainDailyStoryMeta) {
+    mainDailyStoryMeta.textContent = entry.type;
+  }
+
   if (mainDailyStoryTitle) {
     mainDailyStoryTitle.textContent = entry.title;
   }
 
   if (mainDailyStoryBody) {
     mainDailyStoryBody.textContent = entry.body;
+  }
+
+  if (mainDailyStoryReference) {
+    mainDailyStoryReference.textContent = entry.reference ?? "";
   }
 }
 
