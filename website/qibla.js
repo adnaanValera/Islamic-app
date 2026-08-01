@@ -28,6 +28,22 @@ let absoluteCompassReady = false;
 const qiblaLocationStorageKey = "nooriva-qibla-last-location";
 const degreeSymbol = "\u00B0";
 
+function updateQiblaOfflineState() {
+  if (!qiblaStatus) {
+    return;
+  }
+
+  if (!navigator.onLine) {
+    qiblaStatus.textContent = currentBearing !== null
+      ? "Offline. Using saved location with your device compass."
+      : "Offline. Connect once so Nooriva can confirm your location.";
+    qiblaStatus.classList.add("is-offline");
+    return;
+  }
+
+  qiblaStatus.classList.remove("is-offline");
+}
+
 function degreesToCardinal(degrees) {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return directions[Math.round(degrees / 45) % 8];
@@ -192,6 +208,7 @@ function useBearingFallback(reason) {
     ? `Qibla is ${Math.round(currentBearing)}${degreeSymbol} ${degreesToCardinal(currentBearing)}`
     : "Qibla bearing ready";
   qiblaStatus.textContent = reason ?? "Compass unavailable. Using bearing direction.";
+  updateQiblaOfflineState();
 }
 
 function updateAlignment(heading) {
@@ -230,6 +247,7 @@ function updateAlignment(heading) {
     setText(qiblaAlignment, "Aligned");
     qiblaAngle.textContent = "You are facing the Qibla";
     qiblaStatus.textContent = "Aligned";
+    updateQiblaOfflineState();
     setAccuracyLabel("Excellent");
     setHelper("Perfect", "You are facing the Qibla.");
     return;
@@ -250,6 +268,7 @@ function updateAlignment(heading) {
   }
 
   qiblaStatus.textContent = "Move slowly and calibrate your phone if the compass drifts.";
+  updateQiblaOfflineState();
   qiblaAngle.textContent =
     diff > 0
       ? `Turn ${Math.round(absoluteDiff)}${degreeSymbol} clockwise`
@@ -431,6 +450,16 @@ function startQibla() {
 }
 
 enableQiblaButton?.addEventListener("click", startQibla);
+
+window.addEventListener("offline", updateQiblaOfflineState);
+window.addEventListener("online", () => {
+  qiblaStatus?.classList.remove("is-offline");
+  if (qiblaBooted) {
+    qiblaStatus.textContent = currentBearing === null ? "Still preparing your Qibla direction..." : "Qibla is active.";
+  }
+});
+
+updateQiblaOfflineState();
 
 window.setTimeout(() => {
   if (!qiblaBooted) {

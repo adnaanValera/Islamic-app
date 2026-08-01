@@ -29,6 +29,15 @@ const tasbeehCompletedRounds = document.getElementById("tasbeeh-completed-rounds
 const tasbeehHistoryList = document.getElementById("tasbeeh-history-list");
 const addCustomButton = document.getElementById("tasbeeh-add-custom");
 
+function setTasbeehStatus(message, isOffline = false) {
+  if (!tasbeehStatus) {
+    return;
+  }
+
+  tasbeehStatus.textContent = message;
+  tasbeehStatus.classList.toggle("is-offline", Boolean(isOffline));
+}
+
 function getDateKey(offsetDays = 0) {
   const baseDate = new Date();
   baseDate.setUTCDate(baseDate.getUTCDate() + offsetDays);
@@ -304,7 +313,7 @@ function addCount(amount = 1) {
   const wasBelowTarget = activeEntry.count < activeEntry.target;
   activeEntry.count += amount;
   activeEntry.todayTotal += amount;
-  tasbeehStatus.textContent = `${getActiveMode().label} updated.`;
+  setTasbeehStatus(`${getActiveMode().label} updated.`);
 
   if (tapButton) {
     tapButton.classList.remove("is-tapping");
@@ -320,7 +329,7 @@ function addCount(amount = 1) {
 
   if (wasBelowTarget && activeEntry.count >= activeEntry.target) {
     activeEntry.completedRounds += 1;
-    tasbeehStatus.textContent = `${getActiveMode().label} round completed.`;
+    setTasbeehStatus(`${getActiveMode().label} round completed.`);
     if (tapButton) {
       tapButton.classList.add("is-complete");
       window.setTimeout(() => tapButton.classList.remove("is-complete"), 600);
@@ -333,13 +342,13 @@ function addCount(amount = 1) {
 function setTarget(target) {
   const activeEntry = getActiveEntry();
   activeEntry.target = target;
-  tasbeehStatus.textContent = `Target set to ${target}.`;
+  setTasbeehStatus(`Target set to ${target}.`);
   renderTasbeeh();
 }
 
 function setDhikrMode(modeKey) {
   tasbeehState.activeDhikr = modeKey;
-  tasbeehStatus.textContent = `${getActiveMode().label} selected.`;
+  setTasbeehStatus(`${getActiveMode().label} selected.`);
   renderTasbeeh();
 }
 
@@ -351,7 +360,7 @@ function addCustomDhikr() {
 
   tasbeehState.customDhikrLabel = label.trim();
   tasbeehState.activeDhikr = "custom";
-  tasbeehStatus.textContent = `${tasbeehState.customDhikrLabel} added.`;
+  setTasbeehStatus(`${tasbeehState.customDhikrLabel} added.`);
   renderTasbeeh();
 }
 
@@ -363,5 +372,17 @@ dhikrButtons.forEach((button) => {
   button.addEventListener("click", () => setDhikrMode(button.dataset.dhikr));
 });
 addCustomButton?.addEventListener("click", addCustomDhikr);
+
+window.addEventListener("offline", () => {
+  setTasbeehStatus("Offline. Your tasbeeh stays saved on this device.", true);
+});
+
+window.addEventListener("online", () => {
+  setTasbeehStatus("Saved on this device.");
+});
+
+if (!navigator.onLine) {
+  setTasbeehStatus("Offline. Your tasbeeh stays saved on this device.", true);
+}
 
 renderTasbeeh();

@@ -4660,6 +4660,20 @@ h3 {
   min-height: 100%;
 }
 
+.main-ayah-branding {
+  display: flex;
+  justify-content: center;
+  margin: -2px 0 2px;
+  opacity: 0.96;
+}
+
+.main-ayah-branding-logo {
+  width: clamp(68px, 16vw, 94px);
+  height: auto;
+  display: block;
+  filter: saturate(0.96);
+}
+
 .main-ayah-arabic {
   margin: 0;
   color: var(--text-strong);
@@ -4688,6 +4702,9 @@ h3 {
 
 .main-card-ayah {
   grid-column: auto;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(249, 246, 240, 0.96)),
+    radial-gradient(circle at top, rgba(198, 161, 90, 0.08), transparent 52%);
 }
 
 .main-card-ayah .main-card-head {
@@ -4733,6 +4750,7 @@ h3 {
 
 .main-card-tasbeeh {
   align-content: start;
+  opacity: 0.96;
 }
 
 .main-tasbeeh-button.is-tapping {
@@ -4789,6 +4807,12 @@ h3 {
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.5;
+}
+
+.main-supporting-row .main-card,
+.main-card-tasbeeh {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(215, 183, 119, 0.18);
 }
 
 .cta-section .cta-card {

@@ -49,6 +49,15 @@ function clearSession() {
 
 let session = loadSession();
 
+function setAccountStatus(message, isOffline = false) {
+  if (!statusLine) {
+    return;
+  }
+
+  statusLine.textContent = message;
+  statusLine.classList.toggle("is-offline", Boolean(isOffline));
+}
+
 async function updateSyncStatus() {
   return syncStatusUrl;
 }
@@ -65,11 +74,12 @@ function renderSession() {
   const signedIn = Boolean(session?.user?.fullName);
   const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
 
-  if (statusLine) {
-    statusLine.textContent = signedIn
+  setAccountStatus(
+    signedIn
       ? `Signed in as ${session.user.fullName}.`
-      : "No account session yet.";
-  }
+      : "No account session yet.",
+    !navigator.onLine,
+  );
 
   if (signoutButton) {
     signoutButton.style.display = signedIn ? "inline-flex" : "none";
@@ -412,12 +422,12 @@ async function loadAdminOverview() {
 registerButton?.addEventListener("click", async () => {
   try {
     await submitAuth(registerUrl, registerFullName.value, registerPassword.value);
-    statusLine.textContent = "Account created and signed in.";
+    setAccountStatus("Account created and signed in.");
     setView("signin");
     registerFullName.value = "";
     registerPassword.value = "";
   } catch (error) {
-    statusLine.textContent = error.message;
+    setAccountStatus(error.message);
     setButtonsDisabled(false);
   }
 });
@@ -425,10 +435,10 @@ registerButton?.addEventListener("click", async () => {
 signinButton?.addEventListener("click", async () => {
   try {
     await submitAuth(signinUrl, signinFullName.value, signinPassword.value);
-    statusLine.textContent = "Signed in successfully.";
+    setAccountStatus("Signed in successfully.");
     signinPassword.value = "";
   } catch (error) {
-    statusLine.textContent = error.message;
+    setAccountStatus(error.message);
     setButtonsDisabled(false);
   }
 });
@@ -437,7 +447,7 @@ signoutButton?.addEventListener("click", () => {
   session = null;
   clearSession();
   renderSession();
-  statusLine.textContent = "Signed out.";
+  setAccountStatus("Signed out.");
 });
 
 showSigninButton?.addEventListener("click", () => setView("signin"));
@@ -465,3 +475,14 @@ renderSession();
 loadAdminOverview();
 renderAdminTemplatePreview();
 window.addEventListener("resize", renderAdminTemplatePreview);
+window.addEventListener("offline", () => {
+  if (session?.user?.fullName) {
+    setAccountStatus(`Signed in as ${session.user.fullName}.`, true);
+  } else {
+    setAccountStatus("Offline. Your saved account session is still available on this device.", true);
+  }
+});
+window.addEventListener("online", () => {
+  renderSession();
+  loadAdminOverview();
+});
