@@ -1273,6 +1273,13 @@ function normalizeMainHeading(degrees) {
   return (degrees % 360 + 360) % 360;
 }
 
+function getMainCompassPriority(source) {
+  if (source === "webkit") return 3;
+  if (source === "absolute") return 2;
+  if (source === "relative") return 1;
+  return 0;
+}
+
 function loadStoredMainQiblaLocation() {
   try {
     const raw = localStorage.getItem("nooriva-qibla-last-location");
@@ -1313,20 +1320,48 @@ function updateMainQiblaVisual() {
   }
 }
 
+function getMainQiblaReading(event) {
+  if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
+    return {
+      heading: normalizeMainHeading(event.webkitCompassHeading),
+      source: "webkit",
+    };
+  }
+
+  if (typeof event.alpha !== "number" || Number.isNaN(event.alpha)) {
+    return null;
+  }
+
+  if (event.absolute === true) {
+    return {
+      heading: normalizeMainHeading(360 - event.alpha),
+      source: "absolute",
+    };
+  }
+
+  return {
+    heading: normalizeMainHeading(360 - event.alpha - getMainScreenAngle()),
+    source: "relative",
+  };
+}
+
 function startMainQiblaCompass() {
   const handleOrientation = (event) => {
-    if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
-      mainAbsoluteCompassReady = true;
-      mainHeading = normalizeMainHeading(event.webkitCompassHeading);
-    } else if (typeof event.alpha === "number" && !Number.isNaN(event.alpha)) {
-      if (event.absolute === true) {
-        mainAbsoluteCompassReady = true;
-      } else if (mainAbsoluteCompassReady) {
-        return;
-      }
+    const reading = getMainQiblaReading(event);
 
-      mainHeading = normalizeMainHeading(360 - event.alpha - getMainScreenAngle());
+    if (!reading) {
+      return;
     }
+
+    if (
+      mainAbsoluteCompassReady &&
+      getMainCompassPriority(reading.source) < getMainCompassPriority(mainAbsoluteCompassReady)
+    ) {
+      return;
+    }
+
+    mainAbsoluteCompassReady = reading.source;
+    mainHeading = reading.heading;
 
     updateMainQiblaVisual();
   };

@@ -24,9 +24,15 @@ let qiblaBooted = false;
 let locationWatchId = null;
 let orientationHandler = null;
 let motionPermissionRequested = false;
-let absoluteCompassReady = false;
+let activeCompassSource = null;
 const qiblaLocationStorageKey = "nooriva-qibla-last-location";
 const degreeSymbol = "\u00B0";
+
+const compassSourcePriority = {
+  relative: 1,
+  absolute: 2,
+  webkit: 3,
+};
 
 function updateQiblaOfflineState() {
   if (!qiblaStatus) {
@@ -150,6 +156,10 @@ function setWaitingForHeading() {
   );
 }
 
+function getCompassSourcePriority(source) {
+  return compassSourcePriority[source] ?? 0;
+}
+
 function getScreenAngle() {
   if (window.screen?.orientation && typeof window.screen.orientation.angle === "number") {
     return window.screen.orientation.angle;
@@ -166,9 +176,25 @@ function normalizeHeading(degrees) {
   return (degrees % 360 + 360) % 360;
 }
 
+function setCompassReadiness(source) {
+  if (source === "webkit") {
+    setCompassMode("Live compass");
+    setFallbackLabel("Device compass");
+    return;
+  }
+
+  if (source === "absolute") {
+    setCompassMode("Live compass");
+    setFallbackLabel("Absolute sensor");
+    return;
+  }
+
+  setCompassMode("Compass estimate");
+  setFallbackLabel("Sensor estimate");
+}
+
 function getHeadingFromOrientationEvent(event) {
   if (typeof event.webkitCompassHeading === "number" && !Number.isNaN(event.webkitCompassHeading)) {
-    absoluteCompassReady = true;
     if (typeof event.webkitCompassAccuracy === "number" && !Number.isNaN(event.webkitCompassAccuracy)) {
       if (event.webkitCompassAccuracy <= 12) {
         setAccuracyLabel("High precision");
@@ -178,7 +204,10 @@ function getHeadingFromOrientationEvent(event) {
         setAccuracyLabel("Needs calibration");
       }
     }
-    return normalizeHeading(event.webkitCompassHeading);
+    return {
+      heading: normalizeHeading(event.webkitCompassHeading),
+      source: "webkit",
+    };
   }
 
   if (typeof event.alpha !== "number" || Number.isNaN(event.alpha)) {
@@ -186,12 +215,24 @@ function getHeadingFromOrientationEvent(event) {
   }
 
   if (event.absolute === true) {
-    absoluteCompassReady = true;
-  } else if (absoluteCompassReady) {
-    return null;
+    return {
+      heading: normalizeHeading(360 - event.alpha),
+      source: "absolute",
+    };
   }
 
-  return normalizeHeading(360 - event.alpha - getScreenAngle());
+  return {
+    heading: normalizeHeading(360 - event.alpha - getScreenAngle()),
+    source: "relative",
+  };
+}
+
+function shouldAcceptCompassSource(source) {
+  if (!activeCompassSource) {
+    return true;
+  }
+
+  return getCompassSourcePriority(source) >= getCompassSourcePriority(activeCompassSource);
 }
 
 function useBearingFallback(reason) {
@@ -211,18 +252,20 @@ function useBearingFallback(reason) {
   updateQiblaOfflineState();
 }
 
-function updateAlignment(heading) {
+function updateAlignment(heading, source) {
   if (currentBearing === null) {
     latestHeading = heading;
     smoothedHeading = heading;
+    activeCompassSource = source;
     setText(deviceHeading, `${Math.round(heading)}${degreeSymbol} ${degreesToCardinal(heading)}`);
-    setCompassMode("Compass ready");
+    setCompassReadiness(source);
     setAccuracyLabel("Waiting for location");
     setHelper("Location needed", "Compass is ready. Nooriva is still confirming your location.");
     return;
   }
 
   latestHeading = heading;
+  activeCompassSource = source;
   smoothedHeading =
     smoothedHeading === null
       ? heading
@@ -240,8 +283,7 @@ function updateAlignment(heading) {
     deviceHeading,
     `${Math.round(smoothedHeading)}${degreeSymbol} ${degreesToCardinal(smoothedHeading)}`,
   );
-  setCompassMode("Live compass");
-  setFallbackLabel("Compass first");
+  setCompassReadiness(source);
 
   if (absoluteDiff <= 6) {
     setText(qiblaAlignment, "Aligned");
@@ -303,16 +345,20 @@ function detachOrientationListeners() {
 
 function startCompass() {
   const handleOrientation = (event) => {
-    const heading = getHeadingFromOrientationEvent(event);
+    const reading = getHeadingFromOrientationEvent(event);
 
-    if (typeof heading !== "number" || Number.isNaN(heading)) {
+    if (!reading || typeof reading.heading !== "number" || Number.isNaN(reading.heading)) {
       return;
     }
 
-    updateAlignment(heading);
+    if (!shouldAcceptCompassSource(reading.source)) {
+      return;
+    }
+
+    updateAlignment(reading.heading, reading.source);
   };
 
-  absoluteCompassReady = false;
+  activeCompassSource = null;
   setWaitingForHeading();
   startCompassWatchdog();
 
