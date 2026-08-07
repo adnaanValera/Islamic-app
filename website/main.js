@@ -80,6 +80,7 @@ const contactForm = document.getElementById("contact-form");
 const contactName = document.getElementById("contact-name");
 const contactMessage = document.getElementById("contact-message");
 const contactStatus = document.getElementById("contact-status");
+const mainLinkedCards = Array.from(document.querySelectorAll("[data-main-link]"));
 
 const mainPrayers = [
   { label: "Fajr", athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", endKey: "sunrise" },
@@ -164,6 +165,27 @@ function formatHoursAndMinutes(totalMinutes) {
 
 function loadMainSession() {
   return loadCachedJson(accountSessionStorageKey, null);
+}
+
+function setupMainCardLinks() {
+  mainLinkedCards.forEach((card) => {
+    const href = card.getAttribute("data-main-link");
+    if (!href) return;
+
+    card.addEventListener("click", (event) => {
+      const interactiveTarget = event.target.closest("button, a, input, textarea, select, summary");
+      if (interactiveTarget && interactiveTarget !== card) return;
+      window.location.href = href;
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const interactiveTarget = event.target.closest("button, a, input, textarea, select, summary");
+      if (interactiveTarget && interactiveTarget !== card) return;
+      event.preventDefault();
+      window.location.href = href;
+    });
+  });
 }
 
 function renderMainGreeting() {
@@ -1024,6 +1046,7 @@ window.addEventListener("online", () => {
 });
 
 renderMainGreeting();
+setupMainCardLinks();
 updateMainNotificationButton();
 renderDailyCheckin();
 setupDailyCheckin();
