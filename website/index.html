@@ -90,11 +90,25 @@
               <span class="main-card-link-pill main-card-link-pill-live">Live</span>
             </div>
             <div class="next-prayer-banner main-prayer-banner">
+              <div class="main-prayer-live-row">
+                <span class="main-prayer-live-dot" aria-hidden="true"></span>
+                <span class="main-prayer-live-copy" id="main-prayer-live-copy">Prayer window live</span>
+              </div>
               <span class="next-prayer-label" id="main-prayer-label">Current</span>
               <strong class="next-prayer-name" id="main-prayer-name">Loading...</strong>
               <div class="main-prayer-detail-grid">
                 <span class="main-prayer-meta" id="main-prayer-time">Salah --:--</span>
                 <span class="main-next-salah" id="main-next-salah">Adhan --:--</span>
+              </div>
+              <div class="main-prayer-hero-strip">
+                <div class="main-prayer-hero-chip">
+                  <span>Window</span>
+                  <strong id="main-prayer-window">--</strong>
+                </div>
+                <div class="main-prayer-hero-chip">
+                  <span>Countdown</span>
+                  <strong id="main-prayer-countdown">--</strong>
+                </div>
               </div>
               <p class="main-prayer-guidance" id="main-prayer-guidance">Preparing your day...</p>
               <div class="next-prayer-progress main-prayer-progress-wrap" aria-hidden="true">
@@ -118,18 +132,19 @@
                   <p class="eyebrow">Today's Noor</p>
                   <h2>Come back to Allah today.</h2>
                   <p class="main-noor-subcopy">Quran, dua, reflection, and gentle reminders to help you reconnect.</p>
-                  <div class="main-noor-pills" aria-hidden="true">
-                    <span class="main-noor-pill">Ayah</span>
-                    <span class="main-noor-pill">Salah</span>
-                    <span class="main-noor-pill">Dua</span>
-                    <span class="main-noor-pill">Reminder</span>
+                  <div class="main-noor-pills" id="main-noor-pills" aria-label="Today's Noor sections">
+                    <button class="main-noor-pill is-active" type="button" data-main-noor-target="ayah">Ayah</button>
+                    <button class="main-noor-pill" type="button" data-main-noor-target="salah">Salah</button>
+                    <button class="main-noor-pill" type="button" data-main-noor-target="dua">Dua</button>
+                    <button class="main-noor-pill" type="button" data-main-noor-target="reminder">Reminder</button>
+                    <button class="main-noor-pill" type="button" data-main-noor-target="history">History</button>
                   </div>
                 </div>
                 <button class="main-checkin-button" id="main-daily-checkin" type="button">I showed up today</button>
               </div>
 
               <div class="main-noor-grid">
-                <section class="main-card main-card-ayah main-card-noor-feature" data-main-link="./quran.html" role="link" tabindex="0" aria-label="Open Quran page">
+                <section class="main-card main-card-ayah main-card-noor-feature" data-main-link="./quran.html" data-main-noor-card="ayah" role="link" tabindex="0" aria-label="Open Quran page">
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Ayah of the Day</strong>
@@ -157,7 +172,7 @@
                   </article>
                 </section>
 
-                <section class="main-daily-card main-daily-card-priority main-daily-card-inline">
+                <section class="main-daily-card main-daily-card-priority main-daily-card-inline" data-main-noor-card="salah">
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Daily Salah</strong>
@@ -197,7 +212,7 @@
                   </div>
                 </section>
 
-                <section class="main-card main-card-dua" data-main-link="./dua.html" role="link" tabindex="0" aria-label="Open Dua page">
+                <section class="main-card main-card-dua" data-main-link="./dua.html" data-main-noor-card="dua" role="link" tabindex="0" aria-label="Open Dua page">
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Dua of the Day</strong>
@@ -212,7 +227,7 @@
                   </div>
                 </section>
 
-                <section class="main-card main-card-reminder">
+                <section class="main-card main-card-reminder" data-main-noor-card="reminder">
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Daily Islamic Reminder</strong>
@@ -226,7 +241,7 @@
                   </div>
                 </section>
 
-                <section class="main-card main-card-history">
+                <section class="main-card main-card-history" data-main-noor-card="history">
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Today in Islamic History</strong>

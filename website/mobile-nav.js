@@ -10,6 +10,8 @@
     nav.setAttribute("data-expanded", "false");
 
     const links = Array.from(nav.querySelectorAll("a"));
+    const currentLink = links.find((link) => link.getAttribute("aria-current") === "page");
+    const currentLabel = currentLink?.textContent?.trim() || "Main";
     const linksWrapper = document.createElement("div");
     linksWrapper.className = "mobile-bottom-nav-links";
 
@@ -21,7 +23,7 @@
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Open navigation");
     toggle.innerHTML =
-      '<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>Nooriva</strong><small>Sections</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>';
+      `<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>${currentLabel}</strong><small>Open menu</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>`;
 
     toggle.addEventListener("click", () => {
       const expanded = nav.getAttribute("data-expanded") === "true";
@@ -31,7 +33,7 @@
       const detail = toggle.querySelector("small");
 
       if (detail) {
-        detail.textContent = expanded ? "Sections" : "Tap to close";
+        detail.textContent = expanded ? "Open menu" : "Tap to close";
       }
     });
 

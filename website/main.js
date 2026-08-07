@@ -25,6 +25,9 @@ const mainPrayerLabel = document.getElementById("main-prayer-label");
 const mainPrayerName = document.getElementById("main-prayer-name");
 const mainPrayerTime = document.getElementById("main-prayer-time");
 const mainNextSalah = document.getElementById("main-next-salah");
+const mainPrayerLiveCopy = document.getElementById("main-prayer-live-copy");
+const mainPrayerWindow = document.getElementById("main-prayer-window");
+const mainPrayerCountdown = document.getElementById("main-prayer-countdown");
 const mainPrayerGuidance = document.getElementById("main-prayer-guidance");
 const mainPrayerProgress = document.getElementById("main-prayer-progress");
 const mainJumuahStrip = document.getElementById("main-jumuah-strip");
@@ -82,6 +85,8 @@ const contactName = document.getElementById("contact-name");
 const contactMessage = document.getElementById("contact-message");
 const contactStatus = document.getElementById("contact-status");
 const mainLinkedCards = Array.from(document.querySelectorAll("[data-main-link]"));
+const mainNoorPills = Array.from(document.querySelectorAll("[data-main-noor-target]"));
+const mainNoorCards = Array.from(document.querySelectorAll("[data-main-noor-card]"));
 
 const mainPrayers = [
   { label: "Fajr", athanKey: "fajrAthan", salahKey: "fajrJamaah", startKey: "fajrStarts", endKey: "sunrise" },
@@ -152,7 +157,7 @@ function getMinutes(value) {
   return hours * 60 + minutes;
 }
 
-function normalizeText(value, fallback = "—") {
+function normalizeText(value, fallback = "\u2014") {
   return String(value ?? fallback).replace(/\s*\n+\s*/g, " ").replace(/\s+/g, " ").trim();
 }
 
@@ -160,7 +165,7 @@ function formatHoursAndMinutes(totalMinutes) {
   const safeMinutes = Math.max(totalMinutes, 0);
   const hours = Math.floor(safeMinutes / 60);
   const minutes = safeMinutes % 60;
-  if (hours <= 0) return `${minutes} min`;
+  if (hours <= 0) return `${minutes}m`;
   return `${hours}h ${minutes}m`;
 }
 
@@ -189,10 +194,40 @@ function setupMainCardLinks() {
   });
 }
 
+function setActiveMainNoorTab(target) {
+  if (!mainNoorPills.length || !mainNoorCards.length) return;
+
+  mainNoorPills.forEach((pill) => {
+    const isActive = pill.dataset.mainNoorTarget === target;
+    pill.classList.toggle("is-active", isActive);
+    pill.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+
+  mainNoorCards.forEach((card) => {
+    const isActive = card.dataset.mainNoorCard === target;
+    card.classList.toggle("is-active", isActive);
+    card.toggleAttribute("data-noor-active", isActive);
+  });
+}
+
+function setupMainNoorTabs() {
+  if (!mainNoorPills.length) return;
+
+  mainNoorPills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      const target = pill.dataset.mainNoorTarget;
+      if (!target) return;
+      setActiveMainNoorTab(target);
+    });
+  });
+
+  setActiveMainNoorTab("ayah");
+}
+
 function renderMainGreeting() {
   const session = loadMainSession();
   const name = session?.user?.fullName?.trim();
-  const salaam = "السلام عليكم";
+  const salaam = "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064a\u0643\u0645";
   const dateLabel = new Intl.DateTimeFormat("en-US", {
     timeZone: mainMalawiTimeZone,
     weekday: "short",
@@ -216,7 +251,6 @@ function renderMainGreeting() {
         : "Open Nooriva for salah, Quran, and one moment of sincere return to Allah.";
   }
 }
-
 function getMainChecklistState() {
   const { dateKey } = getMainMalawiParts();
   const raw = loadCachedJson(mainPrayerChecklistStorageKey, null);
@@ -351,10 +385,39 @@ function renderMainPrayer() {
   if (mainNextSalah) {
     if (current) {
       const nextAthanWait = Math.max((nextAdhan?.effectiveAthan ?? currentMinutes) - currentMinutes, 0);
-      mainNextSalah.textContent = `Next adhan · ${nextAdhan?.label ?? "--"} · ${nextAdhan?.athan ?? "--:--"} · ${formatHoursAndMinutes(nextAthanWait)}`;
+      mainNextSalah.textContent = `Next adhan - ${nextAdhan?.label ?? "--"} - ${nextAdhan?.athan ?? "--:--"} - ${formatHoursAndMinutes(nextAthanWait)}`;
     } else {
       const nextWait = Math.max((next?.effectiveStart ?? currentMinutes) - currentMinutes, 0);
-      mainNextSalah.textContent = `Next salah · ${next?.label ?? "--"} · ${next?.displayTime ?? "--:--"} · ${formatHoursAndMinutes(nextWait)}`;
+      mainNextSalah.textContent = `Next salah - ${next?.label ?? "--"} - ${next?.displayTime ?? "--:--"} - ${formatHoursAndMinutes(nextWait)}`;
+    }
+  }
+
+  if (mainPrayerLiveCopy) {
+    mainPrayerLiveCopy.textContent = current?.kind === "prayer" ? `${current.label} window live` : "Watching your next prayer";
+  }
+
+  if (mainPrayerWindow) {
+    if (current) {
+      const endWait = Math.max(current.endMinutes - currentMinutes, 0);
+      mainPrayerWindow.textContent =
+        current.kind === "prayer" ? `Ends in ${formatHoursAndMinutes(endWait)}` : `${current.label} now`;
+    } else if (next) {
+      const nextWait = Math.max((next.effectiveStart ?? currentMinutes) - currentMinutes, 0);
+      mainPrayerWindow.textContent = `Starts in ${formatHoursAndMinutes(nextWait)}`;
+    } else {
+      mainPrayerWindow.textContent = "--";
+    }
+  }
+
+  if (mainPrayerCountdown) {
+    if (current && nextAdhan) {
+      const nextAthanWait = Math.max((nextAdhan.effectiveAthan ?? currentMinutes) - currentMinutes, 0);
+      mainPrayerCountdown.textContent = `${nextAdhan.label} adhan in ${formatHoursAndMinutes(nextAthanWait)}`;
+    } else if (next) {
+      const nextWait = Math.max((next.effectiveStart ?? currentMinutes) - currentMinutes, 0);
+      mainPrayerCountdown.textContent = `${next.label} in ${formatHoursAndMinutes(nextWait)}`;
+    } else {
+      mainPrayerCountdown.textContent = "--";
     }
   }
 
@@ -425,7 +488,7 @@ function renderMainDailyChecklist() {
               type="button"
               data-main-prayer-check="${prayer.label}"
               aria-pressed="${isChecked ? "true" : "false"}"
-            >☾ ${prayer.label}</button>
+            >\u263E ${prayer.label}</button>
           </div>
           <button
             class="main-daily-tick-button"
@@ -456,7 +519,7 @@ function renderMainDailyChecklist() {
   if (mainDailyCaption) {
     mainDailyCaption.textContent =
       checkedCount === mainPrayers.length
-        ? "Beautiful — today’s prayers are complete."
+        ? "Beautiful \u2014 today's prayers are complete."
         : checkedCount > 0
           ? `${mainPrayers.length - checkedCount} prayer${mainPrayers.length - checkedCount === 1 ? "" : "s"} left for today.`
           : "A simple check-in for your five prayers.";
@@ -485,7 +548,7 @@ function renderMainJumuah() {
   }
 
   mainJumuahTitle.textContent = "Jumu'ah today";
-  mainJumuahMeta.textContent = `Adhan ${mainJumuahTimes.adhan} · Khutbah ${mainJumuahTimes.khutbah}`;
+  mainJumuahMeta.textContent = `Adhan ${mainJumuahTimes.adhan} - Khutbah ${mainJumuahTimes.khutbah}`;
 }
 
 async function loadMainPrayer() {
@@ -594,7 +657,7 @@ function renderMainDailyNoor(payload) {
   if (mainAyahCopyStatus) mainAyahCopyStatus.textContent = "";
 
   if (mainDuaTitle) mainDuaTitle.textContent = payload.dua?.title ?? "Dua of the day";
-  if (mainDuaArabic) mainDuaArabic.textContent = payload.dua?.arabic ?? "—";
+  if (mainDuaArabic) mainDuaArabic.textContent = payload.dua?.arabic ?? "\u2014";
   if (mainDuaTransliteration) mainDuaTransliteration.textContent = payload.dua?.transliteration ?? "";
   if (mainDuaEnglish) mainDuaEnglish.textContent = payload.dua?.english ?? "";
   if (mainDuaSource) mainDuaSource.textContent = payload.dua?.source ?? "Authentic source";
@@ -702,7 +765,7 @@ async function loadMainQuranLastReading() {
     const viewLabel = view === "arabic" ? "Arabic" : view === "english" ? "English" : "Both";
 
     if (mainQuranLast) mainQuranLast.textContent = surahName;
-    if (mainQuranLastMeta) mainQuranLastMeta.textContent = `Ayah ${ayahNumber} · Page ${page} · ${viewLabel}`;
+    if (mainQuranLastMeta) mainQuranLastMeta.textContent = `Ayah ${ayahNumber} - Page ${page} - ${viewLabel}`;
     if (mainQuranResumePill) mainQuranResumePill.textContent = `Resume ${surahName}`;
   } catch {
     if (mainQuranLast) mainQuranLast.textContent = "Continue reading";
@@ -865,7 +928,7 @@ function updateMainNotificationButton() {
 
 async function showMainPrayerNotification(prayer) {
   const title = `${prayer.label} time`;
-  const body = "The Messenger of Allah ﷺ said: ‘The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.’";
+  const body = "The Messenger of Allah (\uFDFA) said: 'The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.'";
 
   try {
     const registration = await navigator.serviceWorker.ready.catch(() => null);

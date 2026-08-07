@@ -2147,6 +2147,18 @@ h3 {
   box-shadow: 0 10px 18px rgba(79, 66, 39, 0.05);
 }
 
+button.main-noor-pill {
+  cursor: pointer;
+  font: inherit;
+}
+
+.main-noor-pill.is-active {
+  background: linear-gradient(180deg, rgba(31, 46, 41, 0.96), rgba(42, 56, 51, 0.94));
+  border-color: rgba(31, 46, 41, 0.18);
+  color: #f9f6f0;
+  box-shadow: 0 14px 28px rgba(31, 46, 41, 0.16);
+}
+
 .main-app-pill-live {
   background: linear-gradient(180deg, rgba(212, 180, 118, 0.22), rgba(255, 255, 255, 0.92));
   border-color: rgba(198, 161, 90, 0.28);
@@ -2210,6 +2222,11 @@ h3 {
 
 .main-card-noor-feature {
   grid-row: span 2;
+}
+
+.main-noor-grid [data-main-noor-card][data-noor-active] {
+  border-color: rgba(198, 161, 90, 0.26);
+  box-shadow: 0 18px 34px rgba(79, 66, 39, 0.09);
 }
 
 .main-daily-card-inline {
@@ -2405,6 +2422,14 @@ h3 {
     gap: 10px;
   }
 
+  .main-noor-grid [data-main-noor-card] {
+    display: none;
+  }
+
+  .main-noor-grid [data-main-noor-card][data-noor-active] {
+    display: grid;
+  }
+
   .main-card {
     padding: 12px;
     border-radius: 22px;
@@ -2430,6 +2455,10 @@ h3 {
 
   .main-card-head-row {
     gap: 10px;
+  }
+
+  .main-prayer-hero-strip {
+    grid-template-columns: 1fr;
   }
 
   .main-download-button {
@@ -4756,6 +4785,62 @@ h3 {
   box-shadow: 0 14px 24px rgba(79, 66, 39, 0.07);
 }
 
+.main-prayer-live-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(198, 161, 90, 0.18);
+}
+
+.main-prayer-live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #f9f6f0 8%, #c6a15a 42%, #1f2e29 100%);
+  box-shadow: 0 0 0 4px rgba(198, 161, 90, 0.12);
+}
+
+.main-prayer-live-copy {
+  color: var(--text-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.main-prayer-hero-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.main-prayer-hero-chip {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(198, 161, 90, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.main-prayer-hero-chip span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.main-prayer-hero-chip strong {
+  color: var(--text-strong);
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
 .main-intention-card {
   gap: 8px;
   padding: 15px 16px;
@@ -5336,11 +5421,21 @@ h3 {
   box-shadow: 0 10px 18px rgba(79, 66, 39, 0.06);
 }
 
+.home-mobile-bottom-nav .mobile-bottom-nav-toggle-text strong {
+  letter-spacing: 0.01em;
+}
+
+.home-mobile-bottom-nav .mobile-bottom-nav-links {
+  gap: 10px;
+}
+
 .home-mobile-bottom-nav a[aria-current="page"] {
   box-shadow: 0 10px 18px rgba(188, 135, 64, 0.22);
 }
 
 .home-mobile-bottom-nav a {
+  min-height: 54px;
+  border-radius: 18px;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
 }
 
