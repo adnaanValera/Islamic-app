@@ -1,5 +1,18 @@
 (function () {
   const navs = document.querySelectorAll(".mobile-bottom-nav");
+  const transitionDurationMs = 180;
+
+  function navigateWithTransition(href) {
+    if (!href || href.startsWith("#")) {
+      window.location.href = href;
+      return;
+    }
+
+    document.body.classList.add("page-is-transitioning");
+    window.setTimeout(() => {
+      window.location.href = href;
+    }, transitionDurationMs);
+  }
 
   navs.forEach((nav) => {
     if (nav.dataset.enhanced === "true") {
@@ -16,6 +29,15 @@
     linksWrapper.className = "mobile-bottom-nav-links";
 
     links.forEach((link) => linksWrapper.appendChild(link));
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const href = link.getAttribute("href");
+        if (!href || href.startsWith("#")) return;
+        event.preventDefault();
+        navigateWithTransition(href);
+      });
+    });
 
     const toggle = document.createElement("button");
     toggle.type = "button";

@@ -1511,7 +1511,7 @@ h3 {
 }
 
 .quran-surah-card.is-saved strong::after {
-  content: " • Saved";
+  content: " \2022 Saved";
   color: var(--gold-soft);
   font-size: 0.84rem;
 }
@@ -2313,7 +2313,7 @@ button.main-noor-pill {
   margin: 0;
   color: var(--text-strong);
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-size: clamp(1.45rem, 2.7vw, 1.85rem);
   line-height: 1.04;
 }
 
@@ -2809,7 +2809,7 @@ button.main-noor-pill {
 }
 
 .quran-surah-card.is-saved strong::after {
-  content: " • Saved";
+  content: " \2022 Saved";
 }
 
 .quran-full-reader-card {
@@ -3445,7 +3445,7 @@ button.main-noor-pill {
 }
 
 .quran-surah-card.is-saved strong::after {
-  content: " • Saved";
+  content: " \2022 Saved";
 }
 
 .quran-surah-empty {
@@ -4845,7 +4845,7 @@ button.main-noor-pill {
 }
 
 .main-daily-link::after {
-  content: "→";
+  content: "\2192";
   font-size: 0.92rem;
   line-height: 1;
 }
@@ -5674,6 +5674,8 @@ button.main-noor-pill {
     linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(244, 236, 223, 0.98));
   box-shadow: 0 24px 44px rgba(79, 66, 39, 0.16);
   backdrop-filter: blur(18px);
+  transform: translateY(0);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .home-mobile-bottom-nav .mobile-bottom-nav-toggle {
@@ -6193,3 +6195,17 @@ button.main-noor-pill {
 }
 
 
+
+body.page-is-transitioning .page-shell,
+body.page-is-transitioning .page-shell-prayer {
+  opacity: 0;
+  transform: translateY(10px) scale(0.995);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.page-shell,
+.page-shell-prayer {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
