@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/push-send?mode=ayah",
-      "schedule": "0 9 * * *"
-    }
-  ]
-}

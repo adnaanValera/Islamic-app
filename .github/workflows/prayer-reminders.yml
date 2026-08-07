@@ -1,4 +1,4 @@
-name: Prayer reminders
+name: Nooriva daily notifications
 
 on:
   schedule:
@@ -9,40 +9,37 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Nooriva prayer reminders
+      - name: Trigger Nooriva notification cycle
         env:
           REMINDER_URL: ${{ secrets.NOORIVA_PRAYER_REMINDER_URL }}
           SITE_URL: ${{ secrets.NOORIVA_SITE_URL }}
           CRON_SECRET: ${{ secrets.NOORIVA_CRON_SECRET }}
         run: |
-          TARGET_URL="$REMINDER_URL"
+          BASE_URL="$REMINDER_URL"
 
-          if [ -z "$TARGET_URL" ] && [ -n "$SITE_URL" ]; then
-            TARGET_URL="${SITE_URL%/}/api/push-send?mode=prayer"
+          if [ -z "$BASE_URL" ] && [ -n "$SITE_URL" ]; then
+            BASE_URL="${SITE_URL%/}/api/push-send"
           fi
 
-          if [ -z "$TARGET_URL" ]; then
+          if [ -z "$BASE_URL" ]; then
             echo "Set NOORIVA_PRAYER_REMINDER_URL or NOORIVA_SITE_URL"
             exit 1
           fi
 
-          TARGET_URL="$(printf '%s' "$TARGET_URL" | sed 's#/api/push-send-prayer-reminders#/api/push-send?mode=prayer#')"
+          BASE_URL="$(printf '%s' "$BASE_URL" | sed 's#/api/push-send-prayer-reminders#/api/push-send#')"
+          BASE_URL="$(printf '%s' "$BASE_URL" | sed 's#?mode=.*$##')"
 
-          case "$TARGET_URL" in
-            *"mode=prayer"*) ;;
-            *\?*) TARGET_URL="${TARGET_URL}&mode=prayer" ;;
-            *) TARGET_URL="${TARGET_URL}?mode=prayer" ;;
-          esac
+          PRAYER_URL="${BASE_URL}?mode=prayer&window=10"
+          AYAH_URL="${BASE_URL}?mode=ayah"
 
-          case "$TARGET_URL" in
-            *"window="*) ;;
-            *\?*) TARGET_URL="${TARGET_URL}&window=180" ;;
-            *) TARGET_URL="${TARGET_URL}?window=180" ;;
-          esac
-
-          echo "Triggering $TARGET_URL"
-
+          echo "Triggering $PRAYER_URL"
           curl --fail-with-body \
             -X POST \
             -H "x-cron-secret: $CRON_SECRET" \
-            "$TARGET_URL"
+            "$PRAYER_URL"
+
+          echo "Triggering $AYAH_URL"
+          curl --fail-with-body \
+            -X POST \
+            -H "x-cron-secret: $CRON_SECRET" \
+            "$AYAH_URL"

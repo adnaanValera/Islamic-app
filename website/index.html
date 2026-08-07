@@ -6,7 +6,7 @@
     <title>Nooriva | Main</title>
     <meta
       name="description"
-      content="Nooriva main dashboard with prayer, qibla, ayah of the day, and tasbeeh."
+      content="Nooriva main dashboard with prayer, Today's Noor, qibla, Quran, and tasbeeh."
     />
     <meta name="theme-color" content="#F9F6F0" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
@@ -53,8 +53,8 @@
 
         <section class="hero-section hero-section-simple hero-section-clean main-hero-section">
           <div class="hero-copy">
-            <h1 id="main-greeting">&#x627;&#x644;&#x633;&#x644;&#x627;&#x645; &#x639;&#x644;&#x64A;&#x643;&#x645;</h1>
-            <p class="main-hero-subtitle">Start now, even if its small, Allah looks at your effort.</p>
+            <h1 id="main-greeting">السلام عليكم</h1>
+            <p class="main-hero-subtitle">Start now, even if it is small. Allah looks at your effort.</p>
             <p class="main-hero-note" id="main-hero-note">May Allah put barakah in your day.</p>
             <div class="hero-actions" id="home-install-actions">
               <button class="button button-primary" id="home-download-app" type="button">
@@ -101,7 +101,7 @@
           <section class="main-daily-card main-daily-card-priority">
             <div class="main-card-head main-card-head-row">
               <div>
-                <strong>Nooriva daily</strong>
+                <strong>Daily Salah</strong>
                 <span id="main-daily-heading-copy">Track all 5 salah</span>
               </div>
               <a class="main-daily-link" href="./prayer.html">Prayer</a>
@@ -138,8 +138,124 @@
             </div>
           </section>
 
-          <div class="main-dashboard-grid">
-            <div class="main-supporting-row">
+          <div class="main-dashboard-grid main-dashboard-grid-noor">
+            <section class="main-noor-section">
+              <div class="main-noor-header">
+                <div>
+                  <p class="eyebrow">Today's Noor</p>
+                  <h2>Come back to Allah today.</h2>
+                  <p class="main-noor-subcopy">Quran, dua, reflection, and gentle reminders to help you reconnect.</p>
+                </div>
+                <button class="main-checkin-button" id="main-daily-checkin" type="button">I showed up today</button>
+              </div>
+
+              <div class="main-noor-grid">
+                <section class="main-card main-card-ayah main-card-noor-feature">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>Ayah of the Day</strong>
+                      <span id="main-ayah-reference">Loading...</span>
+                    </div>
+                    <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Copy ayah">
+                      <span aria-hidden="true" class="main-download-icon">⧉</span>
+                    </button>
+                  </div>
+                  <article class="quran-ayah-card quran-ayah-card-premium quran-ayah-card-both main-ayah-reader-card">
+                    <div class="quran-ayah-card-accent" aria-hidden="true"></div>
+                    <div class="main-ayah-branding" aria-hidden="true">
+                      <img
+                        class="main-ayah-branding-logo"
+                        src="./assets/nooriva-logo-transparent.png"
+                        alt=""
+                      />
+                    </div>
+                    <p class="quran-dual-arabic quran-dual-arabic-single main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                    <p class="quran-ayah-translation main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                    <div class="main-noor-source">
+                      <strong>Reflection</strong>
+                      <p id="main-ayah-reflection">Loading reflection…</p>
+                      <span id="main-ayah-source">Quran</span>
+                    </div>
+                    <p class="main-copy-status" id="main-ayah-copy-status"></p>
+                  </article>
+                </section>
+
+                <section class="main-card main-card-dua">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>Dua of the Day</strong>
+                      <span id="main-dua-source">Loading…</span>
+                    </div>
+                  </div>
+                  <div class="main-noor-stack">
+                    <p class="main-noor-title" id="main-dua-title">Loading dua…</p>
+                    <p class="main-noor-arabic" id="main-dua-arabic" dir="rtl" lang="ar">…</p>
+                    <p class="main-noor-transliteration" id="main-dua-transliteration">Loading…</p>
+                    <p class="main-noor-copy" id="main-dua-english">Loading…</p>
+                  </div>
+                </section>
+
+                <section class="main-card main-card-reminder">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>Daily Islamic Reminder</strong>
+                      <span id="main-reminder-source">Loading…</span>
+                    </div>
+                  </div>
+                  <div class="main-noor-stack">
+                    <p class="main-noor-title" id="main-reminder-title">Loading…</p>
+                    <p class="main-noor-quote" id="main-reminder-quote">Loading…</p>
+                    <p class="main-noor-copy" id="main-reminder-reflection">Loading…</p>
+                  </div>
+                </section>
+
+                <section class="main-card main-card-history">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>Today in Islamic History</strong>
+                      <span id="main-history-source">Daily feature</span>
+                    </div>
+                  </div>
+                  <div class="main-noor-stack">
+                    <p class="main-noor-title" id="main-history-title">Loading…</p>
+                    <p class="main-noor-copy" id="main-history-summary">Loading…</p>
+                  </div>
+                </section>
+
+                <a class="main-card main-card-quran main-card-continue" href="./quran.html">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>Continue Quran</strong>
+                      <span>Open where you left off</span>
+                    </div>
+                    <span class="main-card-link-pill">Read</span>
+                  </div>
+                  <div class="main-quran-mini">
+                    <div class="main-quran-icon" aria-hidden="true">۞</div>
+                    <p class="main-quran-last" id="main-quran-last">Continue reading</p>
+                    <p class="main-mini-copy" id="main-quran-last-meta">Open your reading and continue where you left off.</p>
+                    <p class="main-quran-resume-pill" id="main-quran-resume-pill">Resume</p>
+                  </div>
+                </a>
+
+                <section class="main-card main-card-reflection">
+                  <div class="main-card-head main-card-head-row">
+                    <div>
+                      <strong>My reflection</strong>
+                      <span>Saved only on this device</span>
+                    </div>
+                  </div>
+                  <textarea
+                    class="main-reflection-input"
+                    id="main-reflection-note"
+                    placeholder="Write one sincere thought, dua, or intention for today…"
+                  ></textarea>
+                  <p class="main-reflection-status" id="main-reflection-status">Ready.</p>
+                </section>
+              </div>
+            </section>
+
+            <div class="main-supporting-row main-supporting-row-bottom">
               <a class="main-card main-card-qibla" href="./qibla.html">
                 <div class="main-card-head main-card-head-row">
                   <strong>Qibla</strong>
@@ -159,59 +275,18 @@
                 </div>
               </a>
 
-              <a class="main-card main-card-quran" href="./quran.html">
+              <section class="main-card main-card-tasbeeh">
                 <div class="main-card-head main-card-head-row">
-                  <strong>Quran</strong>
-                  <span class="main-card-link-pill">Read</span>
+                  <strong>Tasbeeh</strong>
+                  <span class="main-card-link-pill">Today</span>
                 </div>
-                <div class="main-quran-mini">
-                  <div class="main-quran-icon" aria-hidden="true">۞</div>
-                  <p class="main-quran-last" id="main-quran-last">Continue reading</p>
-                  <p class="main-mini-copy" id="main-quran-last-meta">Open your reading and continue where you left off.</p>
-                  <p class="main-quran-resume-pill" id="main-quran-resume-pill">Resume</p>
-                </div>
-              </a>
-            </div>
-
-            <section class="main-card main-card-ayah">
-              <div class="main-card-head main-card-head-row">
-                <div>
-                  <strong>Ayah of the day</strong>
-                </div>
-                <button class="main-download-button" id="main-ayah-download" type="button" aria-label="Copy ayah">
-                  <span aria-hidden="true" class="main-download-icon">⧉</span>
+                <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
+                  <span class="main-tasbeeh-ring"></span>
+                  <strong id="main-tasbeeh-count">0</strong>
+                  <span id="main-tasbeeh-label">Today</span>
                 </button>
-              </div>
-              <article class="quran-ayah-card quran-ayah-card-premium quran-ayah-card-both main-ayah-reader-card">
-                <div class="quran-ayah-card-accent" aria-hidden="true"></div>
-                <div class="main-ayah-branding" aria-hidden="true">
-                  <img
-                    class="main-ayah-branding-logo"
-                    src="./assets/nooriva-logo-transparent.png"
-                    alt=""
-                  />
-                </div>
-                <div class="quran-ayah-topline">
-                  <span id="main-ayah-reference">Loading...</span>
-                </div>
-                <p class="quran-dual-arabic quran-dual-arabic-single main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
-                <p class="quran-ayah-translation main-ayah-english" id="main-ayah-english">Loading ayah…</p>
-                <p class="main-copy-status" id="main-ayah-copy-status"></p>
-              </article>
-            </section>
-
-            <section class="main-card main-card-tasbeeh">
-              <div class="main-card-head main-card-head-row">
-                <strong>Tasbeeh</strong>
-                <span class="main-card-link-pill">Today</span>
-              </div>
-              <button class="main-tasbeeh-button" id="main-tasbeeh-button" type="button" aria-label="Increase tasbeeh counter">
-                <span class="main-tasbeeh-ring"></span>
-                <strong id="main-tasbeeh-count">0</strong>
-                <span id="main-tasbeeh-label">Today</span>
-              </button>
-            </section>
-
+              </section>
+            </div>
           </div>
         </section>
 

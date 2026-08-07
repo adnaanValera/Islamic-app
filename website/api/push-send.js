@@ -1,4 +1,5 @@
 import { fetchAyahOfTheDay } from "./_lib/ayah-of-day.js";
+import { getCompanionReminderSlots } from "./_lib/daily-noor.js";
 import { loadChecklistStateMap, pruneChecklistStateMap } from "./_lib/prayer-checklist-state.js";
 import { fetchPrayerBoard, getMalawiTimeParts, getPrayerTimesFromPayload } from "./_lib/prayer-data.js";
 import { loadSubscriptions, removeSubscription } from "./_lib/push-store.js";
@@ -57,6 +58,15 @@ function normalizeCurrentMinutes(prayers, currentMinutes) {
 
 function getDuePrayers(prayers, timeKey) {
   return prayers.filter((prayer) => String(prayer.athan || "") === String(timeKey || ""));
+}
+
+function getDuePrayerStarts(prayers, currentMinutes, windowMinutes) {
+  const lowerBound = Math.max(currentMinutes - Math.max(windowMinutes, 1), 0);
+
+  return prayers.filter((prayer) => {
+    const athanMinutes = getMinutes(prayer.athan);
+    return athanMinutes !== null && athanMinutes >= lowerBound && athanMinutes <= currentMinutes;
+  });
 }
 
 function getPrayerWindows(prayers) {
@@ -220,15 +230,17 @@ async function handlePrayer(request, response) {
   }
 
   const currentMinutes = normalizeCurrentMinutes(prayers, rawCurrentMinutes);
-  const duePrayers = getDuePrayers(prayers, timeKey);
+  const duePrayers = getDuePrayerStarts(prayers, currentMinutes, windowMinutes);
   const dueRunningOut = getDueRunningOutReminders(prayers, currentMinutes, windowMinutes);
+  const dueCompanion = getCompanionReminderSlots(prayers, dateKey, rawCurrentMinutes, windowMinutes);
 
-  if (duePrayers.length === 0 && dueRunningOut.length === 0) {
+  if (duePrayers.length === 0 && dueRunningOut.length === 0 && dueCompanion.length === 0) {
     response.status(200).json({
       ok: true,
       sent: 0,
       due: [],
       runningOut: [],
+      companion: [],
       windowMinutes,
       message: `No prayer reminders due at ${timeKey} on ${dateKey}.`,
     });
@@ -262,13 +274,24 @@ async function handlePrayer(request, response) {
     return !hasSent;
   });
 
-  if (pendingPrayers.length === 0 && pendingRunningOut.length === 0) {
+  const pendingCompanion = dueCompanion.filter((entry) => {
+    const hasSent = reminderState[entry.slotKey] === dateKey;
+
+    if (hasSent) {
+      alreadySent.push(entry.slotKey);
+    }
+
+    return !hasSent;
+  });
+
+  if (pendingPrayers.length === 0 && pendingRunningOut.length === 0 && pendingCompanion.length === 0) {
     response.status(200).json({
       ok: true,
       sent: 0,
       removed: 0,
       due: duePrayers.map((prayer) => prayer.label),
       runningOut: dueRunningOut.map((prayer) => prayer.label),
+      companion: dueCompanion.map((entry) => entry.title),
       skipped: alreadySent.length,
       windowMinutes,
       timeKey,
@@ -352,6 +375,36 @@ async function handlePrayer(request, response) {
     }
   }
 
+  for (const entry of pendingCompanion) {
+    let deliveredForEntry = 0;
+
+    for (const subscription of subscriptions) {
+      try {
+        await sendPushNotification(subscription, {
+          title: entry.title,
+          body: entry.body,
+          kind: "companion",
+          prayer: entry.prayer ?? "daily",
+          url: entry.url ?? "/index.html",
+        });
+        sent += 1;
+        deliveredForEntry += 1;
+      } catch (error) {
+        const statusCode = error?.statusCode ?? error?.status ?? 0;
+
+        if (statusCode === 404 || statusCode === 410) {
+          removed.add(subscription.endpoint);
+        } else {
+          failed += 1;
+        }
+      }
+    }
+
+    if (deliveredForEntry > 0) {
+      reminderState[entry.slotKey] = dateKey;
+    }
+  }
+
   for (const endpoint of removed) {
     await removeSubscription(endpoint);
   }
@@ -365,6 +418,7 @@ async function handlePrayer(request, response) {
     removed: removed.size,
     due: pendingPrayers.map((prayer) => prayer.label),
     runningOut: pendingRunningOut.map((prayer) => prayer.label),
+    companion: pendingCompanion.map((entry) => entry.title),
     windowMinutes,
     timeKey,
     dateKey,
