@@ -1,4 +1,5 @@
-import { fetchAyahOfTheDay, getMalawiTimeParts } from "./ayah-of-day.js";
+import { fetchAyahOfTheDay } from "./ayah-of-day.js";
+import { getMalawiTimeParts } from "./prayer-data.js";
 import { loadDailyNoorOverrideForDate } from "./daily-noor-store.js";
 
 const DAILY_DUAS = [
