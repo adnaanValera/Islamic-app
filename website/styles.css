@@ -1066,10 +1066,22 @@ h3 {
 .qibla-hero-card {
   display: grid;
   place-items: center;
-  padding: 24px;
+  gap: 16px;
+  padding: 22px;
   background:
     radial-gradient(circle at top, rgba(197, 150, 78, 0.18), transparent 38%),
     linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
+}
+
+.qibla-hero-copy-block {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.qibla-hero-copy-block .prayer-hero-title {
+  margin: 0;
 }
 
 .qibla-hero-card .qibla-compass-shell {
@@ -1248,6 +1260,8 @@ h3 {
 
 .tasbeeh-hero-card {
   padding: 22px;
+  border-color: rgba(198, 161, 90, 0.22);
+  box-shadow: 0 18px 34px rgba(79, 66, 39, 0.08);
 }
 
 .tasbeeh-active-dhikr {
@@ -1389,6 +1403,17 @@ h3 {
   background:
     radial-gradient(circle at top right, rgba(197, 150, 78, 0.14), transparent 30%),
     linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(241, 232, 217, 0.98));
+}
+
+.quran-reader-header-shell {
+  justify-items: start;
+  text-align: left;
+  gap: 8px;
+  padding: 18px 18px 8px;
+}
+
+.quran-reader-home-pills {
+  margin-top: 2px;
 }
 
 .prayer-hero-quran,
@@ -2744,6 +2769,10 @@ button.main-noor-pill {
   gap: 14px;
 }
 
+.prayer-hero-copy-compact .prayer-hero-pills {
+  margin-top: -2px;
+}
+
 .tasbeeh-targets-simple {
   margin-top: 0;
 }
@@ -2761,6 +2790,16 @@ button.main-noor-pill {
 @media (max-width: 720px) {
   .prayer-hero-tasbeeh-simple .prayer-table-card {
     order: -1;
+  }
+
+  .qibla-hero-card {
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .quran-reader-header-shell {
+    padding: 14px 14px 6px;
+    gap: 7px;
   }
 }
 
