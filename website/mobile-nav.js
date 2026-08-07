@@ -1,6 +1,17 @@
 (function () {
   const navs = document.querySelectorAll(".mobile-bottom-nav");
   const transitionDurationMs = 180;
+  const iconMap = {
+    Main: "◌",
+    Prayer: "◓",
+    Quran: "۞",
+    Qibla: "⌂",
+    Tasbeeh: "◎",
+    Account: "◍",
+    Dua: "✦",
+    Help: "?",
+    Contact: "✉",
+  };
 
   function navigateWithTransition(href) {
     if (!href || href.startsWith("#")) {
@@ -28,7 +39,12 @@
     const linksWrapper = document.createElement("div");
     linksWrapper.className = "mobile-bottom-nav-links";
 
-    links.forEach((link) => linksWrapper.appendChild(link));
+    links.forEach((link) => {
+      const label = link.textContent?.trim() || "";
+      const icon = iconMap[label] || "•";
+      link.innerHTML = `<span class="mobile-bottom-nav-link-icon" aria-hidden="true">${icon}</span><span class="mobile-bottom-nav-link-label">${label}</span>`;
+      linksWrapper.appendChild(link);
+    });
 
     links.forEach((link) => {
       link.addEventListener("click", (event) => {
@@ -45,7 +61,7 @@
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Open navigation");
     toggle.innerHTML =
-      `<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>${currentLabel}</strong><small>Open menu</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>`;
+      `<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>${currentLabel}</strong><small>Nooriva menu</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>`;
 
     toggle.addEventListener("click", () => {
       const expanded = nav.getAttribute("data-expanded") === "true";
@@ -55,7 +71,7 @@
       const detail = toggle.querySelector("small");
 
       if (detail) {
-        detail.textContent = expanded ? "Open menu" : "Tap to close";
+        detail.textContent = expanded ? "Nooriva menu" : "Tap to close";
       }
     });
 
