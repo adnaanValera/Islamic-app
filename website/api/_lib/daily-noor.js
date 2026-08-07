@@ -1,4 +1,5 @@
 import { fetchAyahOfTheDay, getMalawiTimeParts } from "./ayah-of-day.js";
+import { loadDailyNoorOverrideForDate } from "./daily-noor-store.js";
 
 const DAILY_DUAS = [
   {
@@ -194,13 +195,27 @@ export function getDailyHistory(dateKey) {
 export async function getDailyNoorPayload(date = new Date()) {
   const { dateKey } = getMalawiTimeParts(date);
   const [ayah] = await Promise.all([fetchAyahOfTheDay(date)]);
+  const override = await loadDailyNoorOverrideForDate(dateKey);
 
   return {
     dateKey,
-    ayah,
-    dua: getDailyDua(dateKey),
-    reminder: getDailyReminder(dateKey),
-    history: getDailyHistory(dateKey),
+    ayah: {
+      ...ayah,
+      ...(override?.ayah ?? {}),
+    },
+    dua: {
+      ...getDailyDua(dateKey),
+      ...(override?.dua ?? {}),
+    },
+    reminder: {
+      ...getDailyReminder(dateKey),
+      ...(override?.reminder ?? {}),
+    },
+    history: {
+      ...getDailyHistory(dateKey),
+      ...(override?.history ?? {}),
+    },
+    overrideUpdatedAt: override?.updatedAt ?? null,
   };
 }
 

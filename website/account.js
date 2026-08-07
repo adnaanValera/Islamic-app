@@ -28,8 +28,21 @@ const adminTemplatePreview = document.getElementById("admin-template-preview");
 const adminTemplateTitle = document.getElementById("admin-template-title");
 const adminTemplateBody = document.getElementById("admin-template-body");
 const adminCardDownloadButton = document.getElementById("admin-card-download");
+const adminDailyNoorDate = document.getElementById("admin-daily-noor-date");
+const adminDailyNoorSaveButton = document.getElementById("admin-daily-noor-save");
+const adminDailyNoorStatus = document.getElementById("admin-daily-noor-status");
+const adminReminderTitle = document.getElementById("admin-reminder-title");
+const adminReminderQuote = document.getElementById("admin-reminder-quote");
+const adminReminderReflection = document.getElementById("admin-reminder-reflection");
+const adminHistoryTitle = document.getElementById("admin-history-title");
+const adminHistorySummary = document.getElementById("admin-history-summary");
+const adminDuaTitle = document.getElementById("admin-dua-title");
+const adminDuaArabic = document.getElementById("admin-dua-arabic");
+const adminDuaTransliteration = document.getElementById("admin-dua-transliteration");
+const adminDuaEnglish = document.getElementById("admin-dua-english");
 const accountButtons = [registerButton, signinButton];
 const adminOverviewUrl = "/api/admin-overview";
+const adminDailyNoorUrl = "/api/admin-daily-noor";
 
 function loadSession() {
   try {
@@ -368,6 +381,7 @@ async function submitAuth(url, fullName, password) {
   saveSession(session);
   renderSession();
   loadAdminOverview();
+  loadAdminDailyNoor();
   setButtonsDisabled(false);
 }
 
@@ -419,6 +433,90 @@ async function loadAdminOverview() {
   } catch {}
 }
 
+async function saveAdminDailyNoor() {
+  if (!session?.token) {
+    return;
+  }
+
+  if (adminDailyNoorStatus) {
+    adminDailyNoorStatus.textContent = "Saving…";
+  }
+
+  try {
+    const response = await fetch(adminDailyNoorUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify({
+        reminder: {
+          title: adminReminderTitle?.value?.trim(),
+          quote: adminReminderQuote?.value?.trim(),
+          reflection: adminReminderReflection?.value?.trim(),
+        },
+        history: {
+          title: adminHistoryTitle?.value?.trim(),
+          summary: adminHistorySummary?.value?.trim(),
+        },
+        dua: {
+          title: adminDuaTitle?.value?.trim(),
+          arabic: adminDuaArabic?.value?.trim(),
+          transliteration: adminDuaTransliteration?.value?.trim(),
+          english: adminDuaEnglish?.value?.trim(),
+        },
+      }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload?.error || "Unable to save Today's Noor content.");
+    }
+
+    if (adminDailyNoorStatus) {
+      adminDailyNoorStatus.textContent = `Saved for ${payload.dateKey}.`;
+    }
+  } catch (error) {
+    if (adminDailyNoorStatus) {
+      adminDailyNoorStatus.textContent = error.message || "Unable to save Today's Noor content.";
+    }
+  }
+}
+
+async function loadAdminDailyNoor() {
+  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
+  if (!isAdmin || !session?.token) {
+    return;
+  }
+
+  try {
+    const response = await fetch(adminDailyNoorUrl, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
+    const payload = await response.json();
+    const override = payload.override || {};
+
+    if (adminDailyNoorDate) adminDailyNoorDate.textContent = payload.dateKey || "Today";
+    if (adminReminderTitle) adminReminderTitle.value = override?.reminder?.title || "";
+    if (adminReminderQuote) adminReminderQuote.value = override?.reminder?.quote || "";
+    if (adminReminderReflection) adminReminderReflection.value = override?.reminder?.reflection || "";
+    if (adminHistoryTitle) adminHistoryTitle.value = override?.history?.title || "";
+    if (adminHistorySummary) adminHistorySummary.value = override?.history?.summary || "";
+    if (adminDuaTitle) adminDuaTitle.value = override?.dua?.title || "";
+    if (adminDuaArabic) adminDuaArabic.value = override?.dua?.arabic || "";
+    if (adminDuaTransliteration) adminDuaTransliteration.value = override?.dua?.transliteration || "";
+    if (adminDuaEnglish) adminDuaEnglish.value = override?.dua?.english || "";
+  } catch {}
+}
+
 registerButton?.addEventListener("click", async () => {
   try {
     await submitAuth(registerUrl, registerFullName.value, registerPassword.value);
@@ -455,6 +553,7 @@ showRegisterButton?.addEventListener("click", () => setView("register"));
 adminCardTitleInput?.addEventListener("input", renderAdminTemplatePreview);
 adminCardBodyInput?.addEventListener("input", renderAdminTemplatePreview);
 adminCardDownloadButton?.addEventListener("click", downloadAdminCard);
+adminDailyNoorSaveButton?.addEventListener("click", saveAdminDailyNoor);
 
 signinPassword?.addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
@@ -473,6 +572,7 @@ registerPassword?.addEventListener("keydown", async (event) => {
 setView("signin");
 renderSession();
 loadAdminOverview();
+loadAdminDailyNoor();
 renderAdminTemplatePreview();
 window.addEventListener("resize", renderAdminTemplatePreview);
 window.addEventListener("offline", () => {
@@ -485,4 +585,5 @@ window.addEventListener("offline", () => {
 window.addEventListener("online", () => {
   renderSession();
   loadAdminOverview();
+  loadAdminDailyNoor();
 });

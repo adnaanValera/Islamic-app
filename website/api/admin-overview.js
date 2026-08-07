@@ -1,5 +1,7 @@
 import { findSession, loadUsers } from "./_lib/account-store.js";
 import { loadMessages } from "./_lib/message-store.js";
+import { getMalawiTimeParts } from "./_lib/prayer-data.js";
+import { loadDailyNoorOverrideForDate } from "./_lib/daily-noor-store.js";
 
 async function getSessionFromRequest(request) {
   const bearer = request.headers.authorization?.replace(/^Bearer\s+/i, "");
@@ -22,14 +24,18 @@ export default async function handler(request, response) {
 
   const users = await loadUsers();
   const messages = await loadMessages();
+  const dateKey = getMalawiTimeParts().dateKey;
+  const dailyNoorOverride = await loadDailyNoorOverrideForDate(dateKey);
 
   response.status(200).json({
     ok: true,
+    dateKey,
     users: users.map((user) => ({
       id: user.id,
       fullName: user.fullName,
       createdAt: user.createdAt,
     })),
     messages,
+    dailyNoorOverride: dailyNoorOverride ?? {},
   });
 }
