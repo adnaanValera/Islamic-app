@@ -2374,7 +2374,7 @@ button.main-noor-pill {
 
 @media (max-width: 640px) {
   .main-dashboard-section {
-    gap: 12px;
+    gap: 10px;
   }
 
   .main-dashboard-section > .main-jumuah-strip {
@@ -2383,7 +2383,7 @@ button.main-noor-pill {
   }
 
   .main-dashboard-section > .main-card-prayer-hero {
-    padding: 15px 14px 14px;
+    padding: 15px 14px 15px;
   }
 
   .main-dashboard-section > .main-daily-card-priority {
@@ -2391,13 +2391,13 @@ button.main-noor-pill {
   }
 
   .main-dashboard-grid-noor {
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 13px;
     border-radius: 24px;
   }
 
   .main-noor-header {
-    gap: 8px;
+    gap: 7px;
     padding-inline: 0;
   }
 
@@ -2419,7 +2419,7 @@ button.main-noor-pill {
   }
 
   .main-noor-grid {
-    gap: 10px;
+    gap: 9px;
   }
 
   .main-noor-grid [data-main-noor-card] {
@@ -2431,13 +2431,13 @@ button.main-noor-pill {
   }
 
   .main-card {
-    padding: 12px;
-    border-radius: 22px;
+    padding: 11px;
+    border-radius: 20px;
   }
 
   .main-supporting-row-bottom {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .main-noor-arabic {
@@ -2459,6 +2459,12 @@ button.main-noor-pill {
 
   .main-prayer-hero-strip {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .main-prayer-banner {
+    gap: 10px;
+    padding: 12px 10px 9px;
   }
 
   .main-download-button {
@@ -4510,7 +4516,7 @@ button.main-noor-pill {
 
 .main-dashboard-section {
   display: grid;
-  gap: 16px;
+  gap: 13px;
 }
 
 .main-dashboard-section > .main-dashboard-grid-noor {
@@ -4536,7 +4542,7 @@ button.main-noor-pill {
 .main-jumuah-strip {
   display: grid;
   gap: 3px;
-  padding: 12px 15px;
+  padding: 11px 14px;
   border-radius: 18px;
   border: 1px solid rgba(198, 161, 90, 0.22);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 243, 235, 0.98));
@@ -4559,8 +4565,8 @@ button.main-noor-pill {
 
 .main-daily-card {
   display: grid;
-  gap: 10px;
-  padding: 14px 15px;
+  gap: 9px;
+  padding: 13px 14px;
   border-radius: 24px;
   border: 1px solid rgba(191, 149, 77, 0.14);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(250, 244, 236, 0.96));
@@ -4776,13 +4782,14 @@ button.main-noor-pill {
 }
 
 .main-card-prayer-hero {
-  padding: 17px 17px 16px;
+  padding: 18px 18px 17px;
   background:
+    radial-gradient(circle at 14% 14%, rgba(198, 161, 90, 0.16), transparent 20%),
     radial-gradient(circle at top right, rgba(198, 161, 90, 0.14), transparent 28%),
     radial-gradient(circle at 18% 18%, rgba(31, 46, 41, 0.05), transparent 26%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 244, 236, 0.97));
-  border-color: rgba(198, 161, 90, 0.16);
-  box-shadow: 0 14px 24px rgba(79, 66, 39, 0.07);
+  border-color: rgba(198, 161, 90, 0.22);
+  box-shadow: 0 18px 32px rgba(79, 66, 39, 0.085);
 }
 
 .main-prayer-live-row {
@@ -4868,8 +4875,8 @@ button.main-noor-pill {
 
 .main-card {
   display: grid;
-  gap: 10px;
-  padding: 13px;
+  gap: 9px;
+  padding: 12px;
   border-radius: 24px;
   border: 1px solid rgba(191, 149, 77, 0.1);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(250, 244, 236, 0.92));
@@ -4905,10 +4912,15 @@ button.main-noor-pill {
 
 .main-card:hover,
 .main-card:focus-visible {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: 0 18px 34px rgba(79, 66, 39, 0.1);
   border-color: rgba(191, 149, 77, 0.24);
   filter: saturate(1.03);
+}
+
+.main-card-prayer-hero:hover,
+.main-card-prayer-hero:focus-visible {
+  transform: translateY(-4px) scale(1.003);
 }
 
 .main-card-head {
@@ -5076,18 +5088,20 @@ button.main-noor-pill {
 
 .main-prayer-banner {
   min-height: 100%;
-  gap: 9px;
+  gap: 11px;
   align-content: start;
-  padding: 11px 9px 7px;
-  border-radius: 20px;
-  transition: box-shadow 220ms ease, background 220ms ease;
+  padding: 13px 11px 10px;
+  border-radius: 22px;
+  border: 1px solid rgba(198, 161, 90, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.18));
+  transition: box-shadow 220ms ease, background 220ms ease, transform 220ms ease, border-color 220ms ease;
 }
 
 .main-prayer-guidance {
   margin: 0;
   color: var(--text);
-  font-size: 0.79rem;
-  line-height: 1.44;
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 .main-prayer-detail-grid {
@@ -5096,9 +5110,12 @@ button.main-noor-pill {
 }
 
 .main-prayer-banner.is-active {
-  background: radial-gradient(circle at top, rgba(212, 180, 118, 0.18), rgba(255, 255, 255, 0));
-  box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.08), 0 0 22px rgba(197, 150, 78, 0.12);
-  animation: mainPrayerPulse 2.8s ease-in-out infinite;
+  background:
+    radial-gradient(circle at top, rgba(212, 180, 118, 0.2), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.9), rgba(255, 255, 255, 0.42));
+  border-color: rgba(191, 149, 77, 0.22);
+  box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.08), 0 0 28px rgba(197, 150, 78, 0.16);
+  animation: mainPrayerPulse 2.8s ease-in-out infinite, mainPrayerFloat 5.6s ease-in-out infinite;
 }
 
 .main-prayer-banner .next-prayer-progress-fill {
@@ -5106,7 +5123,7 @@ button.main-noor-pill {
 }
 
 .main-prayer-progress-wrap {
-  margin-top: 6px;
+  margin-top: 2px;
   height: 10px;
   border-radius: 999px;
   background: rgba(198, 161, 90, 0.12);
@@ -5115,15 +5132,22 @@ button.main-noor-pill {
 
 .main-prayer-meta {
   color: var(--text-strong);
-  font-size: 1.24rem;
+  font-size: 1.34rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .main-next-salah {
   color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.5;
+  font-size: 0.84rem;
+  line-height: 1.45;
   font-weight: 600;
+}
+
+.main-intention-card {
+  gap: 7px;
+  padding: 13px 15px;
+  border-radius: 20px;
 }
 
 @keyframes mainPrayerPulse {
@@ -5134,6 +5158,17 @@ button.main-noor-pill {
 
   50% {
     box-shadow: 0 0 0 1px rgba(191, 149, 77, 0.12), 0 0 28px rgba(197, 150, 78, 0.18);
+  }
+}
+
+@keyframes mainPrayerFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
   }
 }
 
@@ -5437,6 +5472,10 @@ button.main-noor-pill {
   min-height: 54px;
   border-radius: 18px;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.home-mobile-bottom-nav a:hover {
+  transform: translateY(-1px);
 }
 
 .home-mobile-bottom-nav a:active {
