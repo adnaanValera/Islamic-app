@@ -2,15 +2,15 @@
   const navs = document.querySelectorAll(".mobile-bottom-nav");
   const transitionDurationMs = 180;
   const iconMap = {
-    Main: "◌",
-    Prayer: "◓",
-    Quran: "۞",
-    Qibla: "⌂",
-    Tasbeeh: "◎",
-    Account: "◍",
-    Dua: "✦",
+    Main: "\u25CC",
+    Prayer: "\u25D3",
+    Quran: "\u06DE",
+    Qibla: "\u2302",
+    Tasbeeh: "\u25CE",
+    Account: "\u25CD",
+    Dua: "\u2726",
     Help: "?",
-    Contact: "✉",
+    Contact: "\u2709",
   };
 
   function navigateWithTransition(href) {
@@ -26,27 +26,21 @@
   }
 
   navs.forEach((nav) => {
-    if (nav.dataset.enhanced === "true") {
-      return;
-    }
+    if (nav.dataset.enhanced === "true") return;
 
     nav.dataset.enhanced = "true";
-    nav.setAttribute("data-expanded", "false");
+    nav.classList.add("mobile-bottom-nav-persistent");
 
     const links = Array.from(nav.querySelectorAll("a"));
     const currentLink = links.find((link) => link.getAttribute("aria-current") === "page");
-    const currentLabel = currentLink?.textContent?.trim() || "Main";
-    const linksWrapper = document.createElement("div");
-    linksWrapper.className = "mobile-bottom-nav-links";
+    if (currentLink) {
+      nav.setAttribute("data-current", currentLink.textContent?.trim() || "Main");
+    }
 
     links.forEach((link) => {
       const label = link.textContent?.trim() || "";
-      const icon = iconMap[label] || "•";
+      const icon = iconMap[label] || "\u2022";
       link.innerHTML = `<span class="mobile-bottom-nav-link-icon" aria-hidden="true">${icon}</span><span class="mobile-bottom-nav-link-label">${label}</span>`;
-      linksWrapper.appendChild(link);
-    });
-
-    links.forEach((link) => {
       link.addEventListener("click", (event) => {
         const href = link.getAttribute("href");
         if (!href || href.startsWith("#")) return;
@@ -54,29 +48,5 @@
         navigateWithTransition(href);
       });
     });
-
-    const toggle = document.createElement("button");
-    toggle.type = "button";
-    toggle.className = "mobile-bottom-nav-toggle";
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.setAttribute("aria-label", "Open navigation");
-    toggle.innerHTML =
-      `<span class="mobile-bottom-nav-toggle-chip"><span class="mobile-bottom-nav-toggle-icon" aria-hidden="true"><span></span><span></span></span><span class="mobile-bottom-nav-toggle-text"><strong>${currentLabel}</strong><small>Nooriva menu</small></span></span><span class="mobile-bottom-nav-toggle-arrow" aria-hidden="true"></span>`;
-
-    toggle.addEventListener("click", () => {
-      const expanded = nav.getAttribute("data-expanded") === "true";
-      nav.setAttribute("data-expanded", expanded ? "false" : "true");
-      toggle.setAttribute("aria-expanded", expanded ? "false" : "true");
-      toggle.setAttribute("aria-label", expanded ? "Open navigation" : "Close navigation");
-      const detail = toggle.querySelector("small");
-
-      if (detail) {
-        detail.textContent = expanded ? "Nooriva menu" : "Tap to close";
-      }
-    });
-
-    nav.innerHTML = "";
-    nav.appendChild(toggle);
-    nav.appendChild(linksWrapper);
   });
 })();
