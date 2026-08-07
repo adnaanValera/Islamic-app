@@ -4398,6 +4398,257 @@ button.main-noor-pill {
   max-width: 100%;
 }
 
+.page-brand-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 32px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 161, 90, 0.2);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 12px 22px rgba(79, 66, 39, 0.06);
+}
+
+.prayer-hero-copy-premium,
+.qibla-hero-copy-block,
+.account-hero-card-simple .quran-hero-shell {
+  gap: 10px;
+}
+
+.prayer-hero-copy-premium .hero-text,
+.qibla-hero-text,
+.account-card-note {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.prayer-table-card-hero-premium,
+.qibla-hero-card-simple,
+.tasbeeh-hero-card-simple,
+.account-hero-card-simple,
+.quran-reader-shell-premium {
+  border-radius: 30px;
+  border-color: rgba(198, 161, 90, 0.2);
+  box-shadow: 0 24px 42px rgba(79, 66, 39, 0.1);
+}
+
+.prayer-table-card-hero-premium {
+  overflow: hidden;
+}
+
+.prayer-table-card-hero-premium .next-prayer-banner {
+  gap: 10px;
+  padding: 20px 22px 18px;
+  background:
+    radial-gradient(circle at top left, rgba(212, 180, 118, 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(197, 150, 78, 0.18), rgba(37, 68, 60, 0.08));
+}
+
+.prayer-table-card-hero-premium .prayer-table-head {
+  background: linear-gradient(180deg, rgba(31, 46, 41, 0.08), rgba(255, 255, 255, 0.58));
+}
+
+.prayer-table-section-premium .section-heading {
+  margin-bottom: 12px;
+}
+
+.prayer-table-section-premium .prayer-table-card {
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(245, 236, 223, 0.96));
+}
+
+.jumuah-split-card {
+  min-height: 118px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 18px 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(249, 246, 240, 0.9));
+}
+
+.jumuah-split-card span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.jumuah-split-card strong {
+  color: var(--text-strong);
+  font-size: 1.45rem;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.qibla-hero-card-simple {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 24px 22px;
+}
+
+.qibla-hero-card-simple .prayer-hero-pills,
+.qibla-hero-card-simple .page-brand-kicker {
+  justify-self: center;
+}
+
+.qibla-helper-card {
+  width: min(100%, 360px);
+  padding: 15px 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(249, 246, 240, 0.92));
+}
+
+.quran-reader-shell-premium {
+  padding-top: 14px;
+}
+
+.quran-reader-header-premium {
+  gap: 8px;
+}
+
+.quran-reader-header-premium .page-brand-kicker {
+  justify-self: center;
+}
+
+.quran-reader-toolbar {
+  background: rgba(252, 248, 241, 0.92);
+  box-shadow: 0 16px 28px rgba(79, 66, 39, 0.08);
+}
+
+.quran-reading-stage {
+  gap: 12px;
+}
+
+.quran-reading-page-premium,
+.quran-ayah-card-premium {
+  box-shadow: 0 18px 34px rgba(79, 66, 39, 0.08);
+}
+
+.tasbeeh-hero-card-simple {
+  max-width: 440px;
+}
+
+.prayer-hero-copy-compact {
+  align-content: start;
+}
+
+.tasbeeh-meta-simple .prayer-meta-pill {
+  min-width: 0;
+  text-align: center;
+}
+
+.tasbeeh-chip {
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.05);
+}
+
+.account-hero-card-simple {
+  max-width: 520px;
+  padding: 22px;
+}
+
+.account-hero-card-simple .page-brand-kicker,
+.account-hero-card-simple .eyebrow,
+.account-hero-card-simple .prayer-hero-title,
+.account-hero-card-simple .account-card-note {
+  justify-self: center;
+  text-align: center;
+}
+
+.account-hero-title {
+  max-width: none;
+}
+
+.account-form-card,
+.account-signed-in-card,
+.admin-template-card {
+  box-shadow: 0 14px 28px rgba(79, 66, 39, 0.06);
+}
+
+.admin-template-card {
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(191, 149, 77, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.admin-template-controls {
+  gap: 12px;
+}
+
+.admin-dropdown-summary {
+  padding-bottom: 14px;
+}
+
+.main-download-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 720px) {
+  .prayer-table-card-hero-premium .next-prayer-banner {
+    padding: 16px 16px 14px;
+  }
+
+  .qibla-hero-card-simple,
+  .tasbeeh-hero-card-simple,
+  .account-hero-card-simple,
+  .quran-reader-shell-premium {
+    border-radius: 22px;
+  }
+
+  .quran-reader-shell-premium {
+    padding-top: 10px;
+  }
+
+  .jumuah-split-card {
+    min-height: 94px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-brand-kicker {
+    min-height: 30px;
+    padding-inline: 11px;
+    font-size: 0.7rem;
+  }
+
+  .prayer-hero-copy-premium,
+  .qibla-hero-copy-block,
+  .account-hero-card-simple .quran-hero-shell {
+    gap: 8px;
+  }
+
+  .prayer-table-card-hero-premium .next-prayer-banner {
+    padding: 14px 14px 13px;
+  }
+
+  .jumuah-split-card {
+    min-height: 84px;
+    padding: 14px 12px;
+  }
+
+  .jumuah-split-card strong {
+    font-size: 1.22rem;
+  }
+
+  .qibla-hero-card-simple,
+  .tasbeeh-hero-card-simple,
+  .account-hero-card-simple,
+  .quran-reader-shell-premium {
+    border-radius: 18px;
+  }
+}
+
 .quran-page-surah-chip {
   justify-self: center;
   padding: 0.3rem 0.7rem;
