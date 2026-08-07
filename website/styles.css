@@ -2110,8 +2110,8 @@ h3 {
 
 .main-dashboard-grid-noor {
   display: grid;
-  gap: 18px;
-  padding: 18px;
+  gap: 14px;
+  padding: 14px;
   border-radius: 30px;
   border: 1px solid rgba(198, 161, 90, 0.16);
   background:
@@ -2169,7 +2169,7 @@ h3 {
 .main-noor-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 .main-card-noor-feature {
@@ -2282,7 +2282,7 @@ h3 {
 }
 
 .main-supporting-row-bottom {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .main-card-continue .main-quran-mini,
@@ -2357,7 +2357,7 @@ h3 {
   }
 
   .main-noor-grid {
-    gap: 12px;
+    gap: 10px;
   }
 
   .main-card {
@@ -2367,6 +2367,7 @@ h3 {
 
   .main-supporting-row-bottom {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .main-noor-arabic {
@@ -2384,6 +2385,13 @@ h3 {
 
   .main-card-head-row {
     gap: 10px;
+  }
+
+  .main-download-button {
+    min-width: 54px;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 0.78rem;
   }
 
   .main-card-head-row > div:last-child,
@@ -4783,6 +4791,22 @@ h3 {
 .main-card-head-row {
   grid-template-columns: 1fr auto;
   align-items: start;
+  gap: 10px;
+}
+
+.main-card-head-row > div:first-child {
+  min-width: 0;
+}
+
+.main-card-head-row span,
+.main-card-head-row strong,
+.main-noor-copy,
+.main-noor-transliteration,
+.main-noor-quote,
+.main-mini-copy,
+.main-daily-caption,
+.main-intention-copy {
+  overflow-wrap: anywhere;
 }
 
 .admin-panel {
@@ -5039,19 +5063,21 @@ h3 {
 }
 
 .main-download-button {
-  width: 38px;
+  min-width: 58px;
   height: 38px;
+  padding: 0 12px;
   border: 1px solid rgba(191, 149, 77, 0.18);
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(247, 240, 228, 0.94));
   color: var(--gold-soft);
   font: inherit;
-  font-size: 1rem;
+  font-size: 0.82rem;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 12px 22px rgba(79, 66, 39, 0.08);
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
@@ -5064,14 +5090,9 @@ h3 {
   transform: scale(0.96);
 }
 
-.main-download-icon {
-  display: inline-block;
-  transform: translateY(-1px);
-}
-
 .main-ayah-reader-card {
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 14px;
   min-height: 100%;
 }
 
