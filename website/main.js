@@ -29,6 +29,8 @@ const mainPrayerProgress = document.getElementById("main-prayer-progress");
 const mainJumuahStrip = document.getElementById("main-jumuah-strip");
 const mainJumuahTitle = document.getElementById("main-jumuah-title");
 const mainJumuahMeta = document.getElementById("main-jumuah-meta");
+const mainIntentionTitle = document.getElementById("main-intention-title");
+const mainIntentionCopy = document.getElementById("main-intention-copy");
 
 const mainDailyChecklist = document.getElementById("main-daily-checklist");
 const mainDailyProgressBar = document.getElementById("main-daily-progress-bar");
@@ -332,6 +334,19 @@ function renderMainPrayer() {
       mainPrayerGuidance.textContent = `Prepare for ${next.label} with wudhu, calm, and intention.`;
     } else {
       mainPrayerGuidance.textContent = "Stay close to your prayer times today.";
+    }
+  }
+
+  if (mainIntentionTitle && mainIntentionCopy) {
+    if (current?.kind === "prayer") {
+      mainIntentionTitle.textContent = `${current.label} first`;
+      mainIntentionCopy.textContent = `Answer ${current.label} with calm, presence, and sincerity. Let the rest of your day follow from this salah.`;
+    } else if (next?.label) {
+      mainIntentionTitle.textContent = `Prepare for ${next.label}`;
+      mainIntentionCopy.textContent = `Keep your heart ready for ${next.label}. A day anchored in salah makes room for everything else to carry barakah.`;
+    } else {
+      mainIntentionTitle.textContent = "For today";
+      mainIntentionCopy.textContent = "Begin with your salah, then let the rest of your day follow from it.";
     }
   }
 

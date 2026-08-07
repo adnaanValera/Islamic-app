@@ -4432,15 +4432,19 @@ h3 {
 }
 
 .main-dashboard-section > .main-dashboard-grid-noor {
-  order: 1;
+  order: 3;
 }
 
 .main-dashboard-section > .main-card-prayer-hero {
+  order: 1;
+}
+
+.main-dashboard-section > .main-intention-card {
   order: 2;
 }
 
 .main-dashboard-section > .main-daily-card-priority {
-  order: 3;
+  order: 4;
 }
 
 .main-dashboard-section > .main-jumuah-strip {
@@ -4697,6 +4701,31 @@ h3 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 244, 236, 0.97));
   border-color: rgba(198, 161, 90, 0.16);
   box-shadow: 0 14px 24px rgba(79, 66, 39, 0.07);
+}
+
+.main-intention-card {
+  gap: 8px;
+  padding: 15px 16px;
+  border-radius: 22px;
+  border-color: rgba(198, 161, 90, 0.14);
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.94), rgba(249, 246, 240, 0.96));
+}
+
+.main-intention-copy {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.main-card-continue {
+  order: 5;
+  grid-column: 1 / -1;
+}
+
+.main-supporting-row-bottom {
+  order: 6;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .main-card {
