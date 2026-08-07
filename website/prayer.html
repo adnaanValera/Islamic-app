@@ -49,6 +49,11 @@
           <div class="prayer-hero-copy">
             <p class="eyebrow">Prayer</p>
             <h1 class="prayer-hero-title">Prayer times for today.</h1>
+            <div class="prayer-hero-pills" aria-hidden="true">
+              <span class="prayer-hero-pill prayer-hero-pill-live">Live board</span>
+              <span class="prayer-hero-pill">Daily checklist</span>
+              <span class="prayer-hero-pill">Reminders</span>
+            </div>
             <div class="hero-actions" id="prayer-actions">
               <button class="button button-secondary" id="download-app" type="button">
                 Download app
@@ -67,6 +72,10 @@
 
           <div class="prayer-table-card prayer-table-card-hero">
             <div class="next-prayer-banner" id="next-prayer-banner">
+              <div class="prayer-banner-live">
+                <span class="prayer-banner-live-dot" aria-hidden="true"></span>
+                <span>Prayer status</span>
+              </div>
               <span class="next-prayer-label" id="next-prayer-label">Next prayer</span>
               <strong class="next-prayer-name" id="next-prayer-name">Loading...</strong>
               <span class="next-prayer-time" id="next-prayer-time">--:--</span>
