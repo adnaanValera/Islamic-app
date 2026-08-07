@@ -2176,6 +2176,11 @@ h3 {
   grid-row: span 2;
 }
 
+.main-daily-card-inline {
+  min-height: 100%;
+  align-content: start;
+}
+
 .main-card-dua,
 .main-card-reminder,
 .main-card-history,
@@ -2301,6 +2306,10 @@ h3 {
   }
 
   .main-card-noor-feature {
+    grid-row: auto;
+  }
+
+  .main-daily-card-inline {
     grid-row: auto;
   }
 
