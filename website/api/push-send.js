@@ -7,7 +7,7 @@ import { loadReminderState, pruneReminderState, saveReminderState } from "./_lib
 import { isPushConfigured, sendPushNotification } from "./_lib/web-push.js";
 
 const prayerReminderBody =
-  "The Messenger of Allah (ﷺ) said: ‘The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.’";
+  "The Messenger of Allah (\uFDFA) said: 'The covenant that distinguishes between us and them is prayer; so whoever leaves it, he has committed Kufr.'";
 
 function isAuthorized(request) {
   const expected = process.env.CRON_SECRET;
