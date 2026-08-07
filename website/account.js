@@ -41,8 +41,8 @@ const adminDuaArabic = document.getElementById("admin-dua-arabic");
 const adminDuaTransliteration = document.getElementById("admin-dua-transliteration");
 const adminDuaEnglish = document.getElementById("admin-dua-english");
 const accountButtons = [registerButton, signinButton];
-const adminOverviewUrl = "/api/admin-overview";
-const adminDailyNoorUrl = "/api/admin-daily-noor";
+const adminOverviewUrl = "/api/admin";
+const adminDailyNoorUrl = "/api/admin?mode=daily-noor";
 
 function loadSession() {
   try {
