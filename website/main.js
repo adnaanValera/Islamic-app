@@ -17,6 +17,7 @@ const mainDailyCheckinStorageKey = "nooriva-main-daily-checkin";
 
 const mainGreeting = document.getElementById("main-greeting");
 const mainHeroNote = document.getElementById("main-hero-note");
+const mainDatePill = document.getElementById("main-date-pill");
 const homeInstallStatus = document.getElementById("home-install-status");
 const mainNotificationButton = document.getElementById("main-enable-notifications");
 
@@ -192,9 +193,19 @@ function renderMainGreeting() {
   const session = loadMainSession();
   const name = session?.user?.fullName?.trim();
   const salaam = "السلام عليكم";
+  const dateLabel = new Intl.DateTimeFormat("en-US", {
+    timeZone: mainMalawiTimeZone,
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(new Date());
 
   if (mainGreeting) {
     mainGreeting.textContent = name ? `${salaam} ${name}` : salaam;
+  }
+
+  if (mainDatePill) {
+    mainDatePill.textContent = dateLabel;
   }
 
   if (mainHeroNote) {
@@ -596,6 +607,24 @@ function renderMainDailyNoor(payload) {
   if (mainHistoryTitle) mainHistoryTitle.textContent = payload.history?.title ?? "From Islamic history";
   if (mainHistorySummary) mainHistorySummary.textContent = payload.history?.summary ?? "";
   if (mainHistorySource) mainHistorySource.textContent = payload.history?.source ?? "Daily feature";
+
+  [
+    mainAyahArabic,
+    mainAyahEnglish,
+    mainAyahReflection,
+    mainAyahSource,
+    mainDuaSource,
+    mainDuaTitle,
+    mainDuaArabic,
+    mainDuaTransliteration,
+    mainDuaEnglish,
+    mainReminderSource,
+    mainReminderTitle,
+    mainReminderQuote,
+    mainReminderReflection,
+    mainHistoryTitle,
+    mainHistorySummary,
+  ].forEach((element) => element?.classList.remove("is-loading"));
 
   fitAyahCardText();
 }

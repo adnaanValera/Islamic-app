@@ -2120,6 +2120,38 @@ h3 {
   box-shadow: 0 18px 34px rgba(79, 66, 39, 0.08);
 }
 
+.main-app-pills,
+.main-noor-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.main-app-pills {
+  margin-top: 12px;
+}
+
+.main-app-pill,
+.main-noor-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 161, 90, 0.18);
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--text-strong);
+  font-size: 0.77rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 18px rgba(79, 66, 39, 0.05);
+}
+
+.main-app-pill-live {
+  background: linear-gradient(180deg, rgba(212, 180, 118, 0.22), rgba(255, 255, 255, 0.92));
+  border-color: rgba(198, 161, 90, 0.28);
+}
+
 .main-noor-section {
   display: grid;
   gap: 16px;
@@ -2147,6 +2179,10 @@ h3 {
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.58;
+}
+
+.main-noor-pills {
+  margin-top: 12px;
 }
 
 .main-checkin-button {
@@ -4762,7 +4798,8 @@ h3 {
     transform 220ms ease,
     box-shadow 220ms ease,
     border-color 220ms ease,
-    background 220ms ease;
+    background 220ms ease,
+    filter 220ms ease;
 }
 
 .main-card:nth-child(1) {
@@ -4786,6 +4823,7 @@ h3 {
   transform: translateY(-4px);
   box-shadow: 0 18px 34px rgba(79, 66, 39, 0.1);
   border-color: rgba(191, 149, 77, 0.24);
+  filter: saturate(1.03);
 }
 
 .main-card-head {
@@ -4816,6 +4854,22 @@ h3 {
 .main-daily-caption,
 .main-intention-copy {
   overflow-wrap: anywhere;
+}
+
+.is-loading {
+  position: relative;
+  color: transparent !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(230, 222, 207, 0.55), rgba(255, 255, 255, 0.9), rgba(230, 222, 207, 0.55));
+  background-size: 200% 100%;
+  animation: mainShimmer 1.6s linear infinite;
 }
 
 .admin-panel {
@@ -5273,6 +5327,7 @@ h3 {
     radial-gradient(circle at top center, rgba(198, 161, 90, 0.08), transparent 42%),
     linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(244, 236, 223, 0.98));
   box-shadow: 0 24px 44px rgba(79, 66, 39, 0.16);
+  backdrop-filter: blur(18px);
 }
 
 .home-mobile-bottom-nav .mobile-bottom-nav-toggle {
@@ -5283,6 +5338,14 @@ h3 {
 
 .home-mobile-bottom-nav a[aria-current="page"] {
   box-shadow: 0 10px 18px rgba(188, 135, 64, 0.22);
+}
+
+.home-mobile-bottom-nav a {
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.home-mobile-bottom-nav a:active {
+  transform: scale(0.98);
 }
 
 .cta-section .cta-card {
@@ -5312,6 +5375,16 @@ h3 {
 
   50% {
     transform: translateY(-4px);
+  }
+}
+
+@keyframes mainShimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
   }
 }
 

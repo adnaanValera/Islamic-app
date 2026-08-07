@@ -56,6 +56,11 @@
             <h1 id="main-greeting">السلام عليكم</h1>
             <p class="main-hero-subtitle">Start now, even if it is small. Allah looks at your effort.</p>
             <p class="main-hero-note" id="main-hero-note">May Allah put barakah in your day.</p>
+            <div class="main-app-pills" aria-label="Daily dashboard status">
+              <span class="main-app-pill" id="main-date-pill">Today</span>
+              <span class="main-app-pill main-app-pill-live">Live prayer</span>
+              <span class="main-app-pill">Daily Noor</span>
+            </div>
             <div class="hero-actions" id="home-install-actions">
               <button class="button button-primary" id="home-download-app" type="button">
                 Download app
@@ -113,6 +118,12 @@
                   <p class="eyebrow">Today's Noor</p>
                   <h2>Come back to Allah today.</h2>
                   <p class="main-noor-subcopy">Quran, dua, reflection, and gentle reminders to help you reconnect.</p>
+                  <div class="main-noor-pills" aria-hidden="true">
+                    <span class="main-noor-pill">Ayah</span>
+                    <span class="main-noor-pill">Salah</span>
+                    <span class="main-noor-pill">Dua</span>
+                    <span class="main-noor-pill">Reminder</span>
+                  </div>
                 </div>
                 <button class="main-checkin-button" id="main-daily-checkin" type="button">I showed up today</button>
               </div>
@@ -135,12 +146,12 @@
                         alt=""
                       />
                     </div>
-                    <p class="quran-dual-arabic quran-dual-arabic-single main-ayah-arabic" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
-                    <p class="quran-ayah-translation main-ayah-english" id="main-ayah-english">Loading ayah…</p>
+                    <p class="quran-dual-arabic quran-dual-arabic-single main-ayah-arabic is-loading" id="main-ayah-arabic" dir="rtl" lang="ar">Loading…</p>
+                    <p class="quran-ayah-translation main-ayah-english is-loading" id="main-ayah-english">Loading ayah…</p>
                     <div class="main-noor-source">
                       <strong>Reflection</strong>
-                      <p id="main-ayah-reflection">Loading reflection…</p>
-                      <span id="main-ayah-source">Quran</span>
+                      <p class="is-loading" id="main-ayah-reflection">Loading reflection…</p>
+                      <span class="is-loading" id="main-ayah-source">Quran</span>
                     </div>
                     <p class="main-copy-status" id="main-ayah-copy-status"></p>
                   </article>
@@ -190,14 +201,14 @@
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Dua of the Day</strong>
-                      <span id="main-dua-source">Loading…</span>
+                      <span class="is-loading" id="main-dua-source">Loading…</span>
                     </div>
                   </div>
                   <div class="main-noor-stack">
-                    <p class="main-noor-title" id="main-dua-title">Loading dua…</p>
-                    <p class="main-noor-arabic" id="main-dua-arabic" dir="rtl" lang="ar">…</p>
-                    <p class="main-noor-transliteration" id="main-dua-transliteration">Loading…</p>
-                    <p class="main-noor-copy" id="main-dua-english">Loading…</p>
+                    <p class="main-noor-title is-loading" id="main-dua-title">Loading dua…</p>
+                    <p class="main-noor-arabic is-loading" id="main-dua-arabic" dir="rtl" lang="ar">…</p>
+                    <p class="main-noor-transliteration is-loading" id="main-dua-transliteration">Loading…</p>
+                    <p class="main-noor-copy is-loading" id="main-dua-english">Loading…</p>
                   </div>
                 </section>
 
@@ -205,13 +216,13 @@
                   <div class="main-card-head main-card-head-row">
                     <div>
                       <strong>Daily Islamic Reminder</strong>
-                      <span id="main-reminder-source">Loading…</span>
+                      <span class="is-loading" id="main-reminder-source">Loading…</span>
                     </div>
                   </div>
                   <div class="main-noor-stack">
-                    <p class="main-noor-title" id="main-reminder-title">Loading…</p>
-                    <p class="main-noor-quote" id="main-reminder-quote">Loading…</p>
-                    <p class="main-noor-copy" id="main-reminder-reflection">Loading…</p>
+                    <p class="main-noor-title is-loading" id="main-reminder-title">Loading…</p>
+                    <p class="main-noor-quote is-loading" id="main-reminder-quote">Loading…</p>
+                    <p class="main-noor-copy is-loading" id="main-reminder-reflection">Loading…</p>
                   </div>
                 </section>
 
@@ -223,8 +234,8 @@
                     </div>
                   </div>
                   <div class="main-noor-stack">
-                    <p class="main-noor-title" id="main-history-title">Loading…</p>
-                    <p class="main-noor-copy" id="main-history-summary">Loading…</p>
+                    <p class="main-noor-title is-loading" id="main-history-title">Loading…</p>
+                    <p class="main-noor-copy is-loading" id="main-history-summary">Loading…</p>
                   </div>
                 </section>
 
