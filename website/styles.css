@@ -142,7 +142,7 @@ h1 {
 h2 {
   font-size: clamp(1.85rem, 3vw, 2.8rem);
   line-height: 0.98;
-  max-width: 14ch;
+  max-width: 18ch;
   letter-spacing: -0.02em;
 }
 
@@ -164,7 +164,7 @@ h3 {
 .hero-text {
   max-width: 50ch;
   margin: 14px 0 0;
-  font-size: 0.98rem;
+  font-size: 0.92rem;
 }
 
 .hero-actions,
@@ -307,7 +307,7 @@ h3 {
 .dashboard-card-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .dashboard-card-top {
@@ -346,7 +346,7 @@ h3 {
   display: grid;
   gap: 4px;
   padding: 18px;
-  border-radius: 20px;
+  border-radius: 18px;
   border: 1px solid rgba(191, 149, 77, 0.14);
   background: linear-gradient(135deg, rgba(197, 150, 78, 0.18), rgba(255, 255, 255, 0.78));
 }
@@ -434,7 +434,8 @@ h3 {
 
 .home-quick-links {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
   gap: 14px;
   padding: 2px 0 12px;
 }
@@ -2309,26 +2310,26 @@ button.main-noor-pill {
 
 .main-noor-header {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 0 4px 4px;
+  gap: 14px;
+  padding: 0 2px 2px;
 }
 
 .main-noor-header h2 {
   margin: 0;
   color: var(--text-strong);
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(2rem, 4vw, 2.5rem);
-  line-height: 0.98;
+  font-size: clamp(1.75rem, 3.5vw, 2.15rem);
+  line-height: 1;
 }
 
 .main-noor-subcopy {
-  margin: 7px 0 0;
-  max-width: 30rem;
+  margin: 4px 0 0;
+  max-width: 26rem;
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.56;
+  font-size: 0.86rem;
+  line-height: 1.48;
 }
 
 .main-noor-pills {
@@ -2337,10 +2338,10 @@ button.main-noor-pill {
 
 .main-home-hub {
   display: grid;
-  gap: 12px;
-  margin-top: 6px;
-  padding: 14px;
-  border-radius: 30px;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: 26px;
   border: 1px solid rgba(198, 161, 90, 0.14);
   background:
     radial-gradient(circle at top left, rgba(198, 161, 90, 0.09), transparent 26%),
@@ -2352,22 +2353,22 @@ button.main-noor-pill {
   margin: 0;
   color: var(--text-strong);
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(1.45rem, 2.7vw, 1.85rem);
+  font-size: clamp(1.25rem, 2.4vw, 1.55rem);
   line-height: 1.04;
 }
 
 .main-home-hub-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 11px;
+  gap: 9px;
 }
 
 .main-home-hub-tile {
   display: grid;
-  gap: 6px;
-  min-height: 118px;
-  padding: 14px 13px;
-  border-radius: 24px;
+  gap: 5px;
+  min-height: 106px;
+  padding: 12px 11px;
+  border-radius: 20px;
   border: 1px solid rgba(198, 161, 90, 0.14);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(249, 246, 240, 0.92));
   color: inherit;
@@ -2407,14 +2408,14 @@ button.main-noor-pill {
 
 .main-home-hub-tile strong {
   color: inherit;
-  font-size: 0.98rem;
+  font-size: 0.92rem;
   line-height: 1.2;
 }
 
 .main-home-hub-tile small {
   color: rgba(42, 56, 51, 0.78);
-  font-size: 0.8rem;
-  line-height: 1.45;
+  font-size: 0.75rem;
+  line-height: 1.35;
 }
 
 .main-home-hub-tile.is-primary small {
@@ -2426,7 +2427,7 @@ button.main-noor-pill {
   background: rgba(255, 253, 248, 0.92);
   color: var(--text-strong);
   border-radius: 999px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   font: inherit;
   font-weight: 700;
   box-shadow: var(--shadow-soft);
@@ -2542,15 +2543,15 @@ button.main-noor-pill {
 
 .main-card-reflection {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .main-reflection-input {
   width: 100%;
-  min-height: 136px;
-  resize: vertical;
+  min-height: 148px;
+  resize: none;
   border: 1px solid rgba(198, 161, 90, 0.22);
-  border-radius: 20px;
+  border-radius: 18px;
   background: rgba(255, 252, 247, 0.92);
   padding: 14px 15px;
   color: var(--text-strong);
@@ -2564,7 +2565,14 @@ button.main-noor-pill {
 }
 
 .main-supporting-row-bottom {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.main-supporting-row-secondary {
+  order: 7;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
 .main-card-continue .main-quran-mini,
@@ -2575,6 +2583,12 @@ button.main-noor-pill {
 .main-card-qibla,
 .main-card-tasbeeh {
   background: linear-gradient(180deg, rgba(255, 252, 247, 0.94) 0%, rgba(249, 246, 240, 0.92) 100%);
+}
+
+.main-card-qibla .main-qibla-mini,
+.main-card-reflection,
+.main-card-tasbeeh {
+  align-content: start;
 }
 
 .main-card-continue,
@@ -2653,8 +2667,8 @@ button.main-noor-pill {
   }
 
   .main-noor-header h2 {
-    font-size: 1.72rem;
-    max-width: 11ch;
+    font-size: 1.46rem;
+    max-width: none;
   }
 
   .main-noor-subcopy {
@@ -2686,9 +2700,10 @@ button.main-noor-pill {
     border-radius: 20px;
   }
 
-  .main-supporting-row-bottom {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .main-supporting-row-bottom,
+  .main-supporting-row-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
   }
 
   .main-noor-arabic {
@@ -2701,7 +2716,7 @@ button.main-noor-pill {
   }
 
   .main-reflection-input {
-    min-height: 120px;
+    min-height: 132px;
   }
 
   .main-card-head-row {
@@ -6506,4 +6521,45 @@ body.page-is-transitioning .page-shell-prayer {
   opacity: 1;
   transform: translateY(0) scale(1);
   transition: opacity 220ms ease, transform 220ms ease;
+}
+
+@media (max-width: 480px) {
+  .main-home-hub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .main-noor-header {
+    gap: 6px;
+  }
+
+  .main-supporting-row-bottom {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .main-supporting-row-secondary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .main-card-qibla,
+  .main-card-reflection {
+    padding: 10px;
+  }
+
+  .main-card-qibla .main-qibla-frame {
+    width: 88px;
+    height: 88px;
+  }
+
+  .main-reflection-input {
+    min-height: 120px;
+    padding: 12px;
+    font-size: 0.92rem;
+  }
+
+  .main-card-qibla .main-mini-copy {
+    max-width: none;
+    font-size: 0.78rem;
+  }
 }
