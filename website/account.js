@@ -62,6 +62,13 @@ function clearSession() {
 
 let session = loadSession();
 
+function isAdminName(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase() === "adnaan valera";
+}
+
 function setAccountStatus(message, isOffline = false) {
   if (!statusLine) {
     return;
@@ -85,7 +92,7 @@ function setView(mode) {
 
 function renderSession() {
   const signedIn = Boolean(session?.user?.fullName);
-  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
+  const isAdmin = isAdminName(session?.user?.fullName);
 
   setAccountStatus(
     signedIn
@@ -386,7 +393,7 @@ async function submitAuth(url, fullName, password) {
 }
 
 async function loadAdminOverview() {
-  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
+  const isAdmin = isAdminName(session?.user?.fullName);
   if (!isAdmin || !session?.token) {
     return;
   }
@@ -485,7 +492,7 @@ async function saveAdminDailyNoor() {
 }
 
 async function loadAdminDailyNoor() {
-  const isAdmin = String(session?.user?.fullName ?? "").toLowerCase() === "adnaan valera";
+  const isAdmin = isAdminName(session?.user?.fullName);
   if (!isAdmin || !session?.token) {
     return;
   }

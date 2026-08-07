@@ -9,6 +9,13 @@ async function getSessionFromRequest(request) {
   return findSession(bearer);
 }
 
+function isAdminName(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase() === "adnaan valera";
+}
+
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -17,7 +24,7 @@ export default async function handler(request, response) {
   }
 
   const session = await getSessionFromRequest(request);
-  if (!session || String(session.fullName).toLowerCase() !== "adnaan valera") {
+  if (!session || !isAdminName(session.fullName)) {
     response.status(403).json({ ok: false, error: "Forbidden." });
     return;
   }

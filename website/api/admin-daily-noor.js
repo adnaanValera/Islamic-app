@@ -9,7 +9,13 @@ async function getSessionFromRequest(request) {
 }
 
 function isAdminSession(session) {
-  return Boolean(session && String(session.fullName).toLowerCase() === "adnaan valera");
+  return Boolean(
+    session &&
+      String(session.fullName ?? "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase() === "adnaan valera",
+  );
 }
 
 export default async function handler(request, response) {

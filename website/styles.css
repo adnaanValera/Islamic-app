@@ -2111,6 +2111,13 @@ h3 {
 .main-dashboard-grid-noor {
   display: grid;
   gap: 18px;
+  padding: 18px;
+  border-radius: 30px;
+  border: 1px solid rgba(198, 161, 90, 0.16);
+  background:
+    radial-gradient(circle at top right, rgba(198, 161, 90, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 244, 236, 0.98));
+  box-shadow: 0 18px 34px rgba(79, 66, 39, 0.08);
 }
 
 .main-noor-section {
@@ -2314,7 +2321,7 @@ h3 {
   }
 
   .main-dashboard-section > .main-card-prayer-hero {
-    padding: 18px 16px 16px;
+    padding: 15px 14px 14px;
   }
 
   .main-dashboard-section > .main-daily-card-priority {
@@ -2323,6 +2330,8 @@ h3 {
 
   .main-dashboard-grid-noor {
     gap: 12px;
+    padding: 14px;
+    border-radius: 24px;
   }
 
   .main-noor-header {
@@ -4681,13 +4690,13 @@ h3 {
 }
 
 .main-card-prayer-hero {
-  padding: 21px 21px 19px;
+  padding: 17px 17px 16px;
   background:
-    radial-gradient(circle at top right, rgba(198, 161, 90, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(198, 161, 90, 0.14), transparent 28%),
     radial-gradient(circle at 18% 18%, rgba(31, 46, 41, 0.05), transparent 26%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 244, 236, 0.99));
-  border-color: rgba(198, 161, 90, 0.22);
-  box-shadow: 0 24px 42px rgba(79, 66, 39, 0.11);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 244, 236, 0.97));
+  border-color: rgba(198, 161, 90, 0.16);
+  box-shadow: 0 14px 24px rgba(79, 66, 39, 0.07);
 }
 
 .main-card {
