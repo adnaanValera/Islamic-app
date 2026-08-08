@@ -1857,7 +1857,7 @@ h3 {
   .page-shell,
   .page-shell-prayer {
     width: calc(100% - 16px);
-    padding: 10px 0 104px;
+    padding: 10px 0 120px;
   }
 
   .site-header {
@@ -2068,9 +2068,9 @@ h3 {
 
   .mobile-bottom-nav {
     position: fixed;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
+    left: 12px;
+    right: 12px;
+    bottom: 20px;
     z-index: 40;
     display: block;
     padding: 8px;
@@ -2155,7 +2155,7 @@ h3 {
   }
 
   .site-footer {
-    padding-bottom: 104px;
+    padding-bottom: 120px;
   }
 }
 
@@ -6484,5 +6484,6 @@ body.page-is-transitioning .page-shell-prayer {
     font-size: 0.78rem;
   }
 }
+
 
 
