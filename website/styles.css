@@ -1649,7 +1649,8 @@ h3 {
 }
 
 @media (max-width: 720px) {
-  .page-shell {
+  .page-shell,
+  .page-shell-prayer {
     width: min(100% - 20px, 1180px);
     padding: 12px 0 24px;
   }
@@ -1853,9 +1854,10 @@ h3 {
 }
 
 @media (max-width: 480px) {
-  .page-shell {
+  .page-shell,
+  .page-shell-prayer {
     width: calc(100% - 16px);
-    padding: 10px 0 20px;
+    padding: 10px 0 104px;
   }
 
   .site-header {
@@ -2152,8 +2154,8 @@ h3 {
     width: 94px;
   }
 
-.site-footer {
-    padding-bottom: 72px;
+  .site-footer {
+    padding-bottom: 104px;
   }
 }
 
