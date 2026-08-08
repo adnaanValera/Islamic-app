@@ -6444,6 +6444,27 @@ body.page-is-transitioning .page-shell-prayer {
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
+@media (max-width: 720px) {
+  .mobile-bottom-nav {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 18px) !important;
+    top: auto !important;
+    margin: 0 !important;
+    z-index: 999 !important;
+  }
+
+  .page-shell,
+  .page-shell-prayer {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 128px) !important;
+  }
+
+  .site-footer {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 128px) !important;
+  }
+}
+
 @media (max-width: 480px) {
   .main-home-hub-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
