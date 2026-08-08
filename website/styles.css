@@ -735,7 +735,7 @@ h3 {
 
 .prayer-hero-text {
   max-width: 42ch;
-  margin-top: 10px;
+  margin-
 }
 
 .next-prayer-banner {
@@ -1691,7 +1691,7 @@ h3 {
   .features-section,
   .cta-section,
   .prayer-table-section {
-    padding-top: 10px;
+    padding-
     padding-bottom: 10px;
   }
 
@@ -1857,7 +1857,7 @@ h3 {
   .page-shell,
   .page-shell-prayer {
     width: calc(100% - 16px);
-    padding: 10px 0 20px;
+    padding: 10px 0 calc(env(safe-area-inset-bottom, 0px) + 132px);
   }
 
   .site-header {
@@ -1865,7 +1865,7 @@ h3 {
   }
 
   .prayer-mobile-header {
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 30;
     padding: 8px 0 10px;
@@ -1874,7 +1874,7 @@ h3 {
   }
 
   .home-mobile-header {
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 30;
     padding: 8px 0 10px;
@@ -2067,15 +2067,13 @@ h3 {
   }
 
   .mobile-bottom-nav {
-    position: sticky;
-    top: 10px;
-    left: auto;
-    right: auto;
-    bottom: auto;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
     z-index: 40;
     display: block;
     padding: 8px;
-    margin: 0 0 14px;
     border: 1px solid var(--line);
     border-radius: 24px;
     background: linear-gradient(180deg, rgba(255, 252, 246, 0.97), rgba(244, 236, 223, 0.96));
@@ -2157,7 +2155,7 @@ h3 {
   }
 
   .site-footer {
-    padding-bottom: 72px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 132px);
   }
 }
 
@@ -2454,7 +2452,7 @@ button.main-noor-pill {
 .main-noor-source {
   display: grid;
   gap: 6px;
-  padding-top: 10px;
+  padding-
   border-top: 1px solid rgba(198, 161, 90, 0.16);
 }
 
@@ -2942,7 +2940,7 @@ button.main-noor-pill {
 .quran-reader-toolbar {
   display: grid;
   gap: 12px;
-  position: sticky;
+  position: fixed;
   top: 74px;
   z-index: 18;
   padding: 10px;
@@ -3709,7 +3707,7 @@ button.main-noor-pill {
 }
 
 .account-page-simple {
-  padding-top: 10px;
+  padding-
 }
 
 .account-hero-card-simple .quran-hero-shell {
@@ -4554,7 +4552,7 @@ button.main-noor-pill {
   }
 
   .quran-reader-shell-premium {
-    padding-top: 10px;
+    padding-
   }
 
   .jumuah-split-card {
@@ -5437,7 +5435,7 @@ button.main-noor-pill {
 .admin-panel {
   display: grid;
   gap: 14px;
-  margin-top: 10px;
+  margin-
 }
 
 .admin-template-card {
@@ -6335,7 +6333,7 @@ button.main-noor-pill {
 
 @media (max-width: 720px) {
   .dua-toolbar-top {
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 3;
     margin: 0;
@@ -6486,6 +6484,7 @@ body.page-is-transitioning .page-shell-prayer {
     font-size: 0.78rem;
   }
 }
+
 
 
 
