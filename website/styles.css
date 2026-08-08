@@ -1857,7 +1857,7 @@ h3 {
   .page-shell,
   .page-shell-prayer {
     width: calc(100% - 16px);
-    padding: 10px 0 calc(env(safe-area-inset-bottom, 0px) + 132px);
+    padding: 10px 0 20px;
   }
 
   .site-header {
@@ -2067,13 +2067,15 @@ h3 {
   }
 
   .mobile-bottom-nav {
-    position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+    position: sticky;
+    top: 10px;
+    left: auto;
+    right: auto;
+    bottom: auto;
     z-index: 40;
     display: block;
     padding: 8px;
+    margin: 0 0 14px;
     border: 1px solid var(--line);
     border-radius: 24px;
     background: linear-gradient(180deg, rgba(255, 252, 246, 0.97), rgba(244, 236, 223, 0.96));
@@ -2155,7 +2157,7 @@ h3 {
   }
 
   .site-footer {
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 132px);
+    padding-bottom: 72px;
   }
 }
 
@@ -6484,6 +6486,7 @@ body.page-is-transitioning .page-shell-prayer {
     font-size: 0.78rem;
   }
 }
+
 
 
 

@@ -32,6 +32,11 @@
     nav.dataset.enhanced = "true";
     nav.classList.add("mobile-bottom-nav-persistent");
 
+    const main = nav.closest("main");
+    if (main && main.firstElementChild !== nav) {
+      main.insertBefore(nav, main.firstElementChild || null);
+    }
+
     const existingWrapper = nav.querySelector(".mobile-bottom-nav-links");
     const links = Array.from(nav.querySelectorAll("a"));
     let linksWrapper = existingWrapper;
