@@ -1857,7 +1857,7 @@ h3 {
   .page-shell,
   .page-shell-prayer {
     width: calc(100% - 16px);
-    padding: 10px 0 120px;
+    padding: 10px 0 calc(env(safe-area-inset-bottom, 0px) + 132px);
   }
 
   .site-header {
@@ -2070,7 +2070,7 @@ h3 {
     position: fixed;
     left: 12px;
     right: 12px;
-    bottom: 20px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
     z-index: 40;
     display: block;
     padding: 8px;
@@ -2155,7 +2155,7 @@ h3 {
   }
 
   .site-footer {
-    padding-bottom: 120px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 132px);
   }
 }
 
@@ -6484,6 +6484,7 @@ body.page-is-transitioning .page-shell-prayer {
     font-size: 0.78rem;
   }
 }
+
 
 
 
